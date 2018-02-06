@@ -220,18 +220,18 @@ with open("non_vendor_samples.txt", "w", encoding="utf-8") as non_vendor_samples
 							if re_sample_time_trumpland_match:
 								found_time = True
 								trump += 1
-								sample_time = "{year}-{month}-{day}".format(year=re_sample_time_trumpland_match.group("year"),month=re_sample_time_trumpland_match.group("month"),day=re_sample_time_trumpland_match.group("day"))
+								sample_time = "{year}-{month:0>2}-{day:0>2}".format(year=re_sample_time_trumpland_match.group("year"),month=re_sample_time_trumpland_match.group("month"),day=re_sample_time_trumpland_match.group("day"))
 							elif re_sample_time_europe_match:
 								found_time = True
 								europe += 1
-								sample_time = "{year}-{month}-{day}".format(year=re_sample_time_europe_match.group("year"),month=re_sample_time_europe_match.group("month"),day=re_sample_time_europe_match.group("day"))
+								sample_time = "{year}-{month:0>2}-{day:0>2}".format(year=re_sample_time_europe_match.group("year"),month=re_sample_time_europe_match.group("month"),day=re_sample_time_europe_match.group("day"))
 							elif re_sample_time_intl_match:
 								found_time = True
 								intl += 1
-								sample_time = "{year}-{month}-{day}".format(year=re_sample_time_intl_match.group("year"),month=re_sample_time_intl_match.group("month"),day=re_sample_time_intl_match.group("day"))
+								sample_time = "{year}-{month:0>2}-{day:0>2}".format(year=re_sample_time_intl_match.group("year"),month=re_sample_time_intl_match.group("month"),day=re_sample_time_intl_match.group("day"))
 						if not found_time:
 							non_time_samples_counter += 1
-							sample_time = "19700420"
+							sample_time = "1970-04-20"
 							non_time_samples_file_writer.writerow({"Filename":raw_sample_file_name})
 
 						#provider
