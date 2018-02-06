@@ -272,7 +272,7 @@ with open("non_vendor_samples.txt", "w", encoding="utf-8") as non_vendor_samples
 						# 	sample_database_writer.writerow(sample_data)
 						# else:
 
-log_this("Results:",
+print("Results:",
 	"parsed {} files.".format(len(file_list)),
 	"{} samples did not have UID.".format(non_uid_samples_counter),
 	"{} samples did not have a name.".format(non_name_samples_counter),
