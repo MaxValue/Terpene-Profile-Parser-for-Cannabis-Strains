@@ -18,7 +18,7 @@ import re, os, csv, argparse
 from lxml import html
 
 parser = argparse.ArgumentParser(description="Clean raw weed data.")
-parser.add_argument("database", nargs='?', default="dump/database_dump/", help="The location of the database dump.")
+parser.add_argument("database", nargs='?', default="database_dump/", help="The location of the database dump.")
 parser.add_argument("-d", "--debug", action="store_true", help="Turns on debug mode.")
 args = parser.parse_args()
 
