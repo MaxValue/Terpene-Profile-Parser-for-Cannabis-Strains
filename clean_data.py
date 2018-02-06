@@ -3,7 +3,7 @@
 #
 """
 TODO:
-parse vendor, sample type
+sample type
 fix terpene parsing
 
 get list of files
