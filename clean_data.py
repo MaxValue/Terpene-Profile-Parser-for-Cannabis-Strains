@@ -43,13 +43,17 @@ terpene_names = [
 	"TERPENE-TOTAL"
 ]
 
+# Matches strings like "   <    343459.30032   %    Limonene    "
 # re_terpen = re.compile(r"^<?\s*(?P<percentage>\d+(.\d+)?)\s*%\s*(?P<name>[-\s\w]+?)\s*$", re.IGNORECASE)
-re_terpen = re.compile(r"^\s*(?P<percentage>(<|>)?\s*\d+(.\d+)?)\s*%\s*(?P<name>("+r"|".join(terpene_names)+r"))\s*$", re.IGNORECASE)
+re_terpen = re.compile(r"^\s*(?P<percentage>(<|>)?\s*\d+(\.\d+)?)\s*%\s*(?P<name>("+r"|".join(terpene_names)+r"))\s*$", re.IGNORECASE)
 
+# Matches strings like: "    Test   Result     UID    :    jfkgbnFGBFG34394129_fkgljh345_345dfgdg    "
 re_sample_id = re.compile(r"^\s*Test\s*Result\s*UID\s*:?\s*(?P<uid>\w+)\s*$", re.IGNORECASE)
+# Matches strings like: "   Date   Tested   "
 re_sample_time_europe = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<day>(0?[0-9]|1[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
 re_sample_time_trumpland = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
 re_sample_time_intl = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<year>2\d{3})\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|3[0-1])))\s*$", re.IGNORECASE)
+# Finds the text of the first header in the page content:
 xpath_sample_name = """//div[@class='maincontent']/*[
 													self::h1
 													or self::h2
@@ -59,6 +63,7 @@ xpath_sample_name = """//div[@class='maincontent']/*[
 													or self::h6
 												][1]/text()"""
 
+# Finds text of all headers which text content starts with the words "available from", ignoring the case
 xpath_sample_vendor = """//div[@class='maincontent']//*[
 													self::h1
 													or self::h2
@@ -77,6 +82,7 @@ xpath_sample_vendor = """//div[@class='maincontent']//*[
 													)
 												]/following-sibling::*//a/text()"""
 
+# Finds text of all headers which text content starts with the words "test result uid", ignoring the case
 xpath_sample_id = """//div[@class='maincontent']/*[
 													self::h1
 													or self::h2
@@ -95,6 +101,7 @@ xpath_sample_id = """//div[@class='maincontent']/*[
 													)
 												]/text()"""
 
+# Finds text of all headers which text content starts with the words "date", ignoring the case
 xpath_sample_time = """//div[@class='maincontent']/*[
 													self::h1
 													or self::h2
@@ -112,6 +119,8 @@ xpath_sample_time = """//div[@class='maincontent']/*[
 																'date'
 													)
 												]/text()"""
+
+# Finds text of all list items which are preceeded by the words "terpen" and "profil", ignoring the case
 xpath_raw_terpenes = """//*[
 								contains(
 										translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),
