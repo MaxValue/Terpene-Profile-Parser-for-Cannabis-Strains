@@ -11,8 +11,8 @@ This repository contains:
 ## How to use
 ### The web crawler
 This crawler utilizes [scrapy](https://scrapy.org/) to go through all search results of the string `" "`. You will need:
-* Python3: `sudo apt-get install python3`
-* Scrapy:  `sudo apt-get install python3-pip; python3 -m pip install scrapy`
+* Python3: `sudo apt-get install python3 python3-pip`
+* Scrapy:  `python3 -m pip install scrapy`
 
 The crawler can be run like this:
 `scrapy run weed_spider`
