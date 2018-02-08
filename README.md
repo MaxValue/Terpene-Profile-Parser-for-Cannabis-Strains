@@ -6,22 +6,22 @@ This repository contains:
 * A web crawler to download lab test results of different cannabis strains as HTML-pages from [Analytical360](http://archive.analytical360.com)
 * A parser to extract the actual terpene profile from each of those HTML-pages as CSV-list
 * The CSV list of extracted terpene profiles
-* If some data points could not be extracted also a list of files where the extraction of a specific datapoint failed
+* If some data points could not be extracted also an assortment of files where the extraction of a specific datapoint failed
 
 ## How to use
 ### The web crawler
-This crawler utilizes [scrapy](https://scrapy.org/) to go through all search results of the string `" "`. You will need:
+This crawler utilizes [Scrapy](https://scrapy.org/) to go through all search results of the string `" "`. You will need:
 * Python3: `sudo apt-get install python3 python3-pip`
 * Scrapy:  `python3 -m pip install scrapy`
 
 The crawler can be run like this:
 `scrapy run weed_spider`
 
-It will produce a folder called `dump` containing all sample pages counting upwards in order of their download.
+It will produce a folder called `database_dump` containing all sample pages counting upwards in order of their download.
 
 ### The parser
 This parser runs multiple XPath queries and RegEx expressions to find the wanted data in those HTML-files. You can run it like this:
-`python3 clean_data.py dump/ -d`
+`python3 clean_data.py database_dump/ -d`
 
 If you use the shown `-d` option you will be informed of any piece of data which gets extracted and every error which occurs during the extraction process.
 After this is done you will have `results.csv` file and (if some extractions failed) a number of other files containing filenames where some datapoints couldn't be extracted.
