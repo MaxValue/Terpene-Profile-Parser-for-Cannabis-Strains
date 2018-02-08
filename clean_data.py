@@ -46,13 +46,15 @@ terpene_names = [
 # Matches strings like "   <    343459.30032   %    Limonene    "
 # re_terpen = re.compile(r"^<?\s*(?P<percentage>\d+(.\d+)?)\s*%\s*(?P<name>[-\s\w]+?)\s*$", re.IGNORECASE)
 re_terpen = re.compile(r"^\s*(?P<percentage>(<|>)?\s*\d+(\.\d+)?)\s*%\s*(?P<name>("+r"|".join(terpene_names)+r"))\s*$", re.IGNORECASE)
-
 # Matches strings like: "    Test   Result     UID    :    jfkgbnFGBFG34394129_fkgljh345_345dfgdg    "
 re_sample_id = re.compile(r"^\s*Test\s*Result\s*UID\s*:?\s*(?P<uid>\w+)\s*$", re.IGNORECASE)
-# Matches strings like: "   Date   Tested   "
-re_sample_time_europe = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<day>(0?[0-9]|1[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
-re_sample_time_trumpland = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
-re_sample_time_intl = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<year>2\d{3})\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|3[0-1])))\s*$", re.IGNORECASE)
+# Matches strings like: "   Date   Tested   01    /   23   .   2019     "
+re_sample_time_trumpland = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
+# Matches strings like: "   Date   Tested   23    /   01   .   2019     "
+re_sample_time_europe = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
+# Matches strings like: "   Date   Tested   2019    /   23   .    01    "
+re_sample_time_intl = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<year>2\d{3})\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1])))\s*$", re.IGNORECASE)
+xpath_provider_page = """//"""
 # Finds the text of the first header in the page content:
 xpath_sample_name = """//div[@class='maincontent']/*[
 													self::h1
@@ -144,8 +146,6 @@ intl = 0
 
 log_this("Loading file list . . .")
 
-#os.chdir(os.path.expanduser(RAW_DATABASE_DUMP_PATH))
-#file_list = os.walk(os.getcwd()).__next__()[2]
 file_list = os.walk(os.path.expanduser(RAW_DATABASE_DUMP_PATH)).__next__()[2]
 
 print("Before we start, a heads up:",
@@ -188,6 +188,9 @@ with open("non_vendor_samples.txt", "w", encoding="utf-8") as non_vendor_samples
 						with open(os.path.join(os.path.expanduser(RAW_DATABASE_DUMP_PATH),raw_sample_file_name),encoding="utf-8") as raw_sample_file:
 							tree = html.fromstring(raw_sample_file.read())
 							#DEBUG: tree = html.fromstring(response.content)
+
+						# check first if this is a provider page
+
 
 						for sample_id_candidate in tree.xpath(xpath_sample_id):
 							re_sample_id_match = re_sample_id.match(sample_id_candidate)
@@ -234,7 +237,6 @@ with open("non_vendor_samples.txt", "w", encoding="utf-8") as non_vendor_samples
 							sample_time = "1970-04-20"
 							non_time_samples_file_writer.writerow({"Filename":raw_sample_file_name})
 
-						#provider
 						raw_sample_provider = tree.xpath(xpath_sample_vendor)
 						if len(raw_sample_provider) == 0:
 							non_provider_samples_counter += 1
@@ -277,9 +279,6 @@ print("Results:",
 	"{} samples did not have UID.".format(non_uid_samples_counter),
 	"{} samples did not have a name.".format(non_name_samples_counter),
 	"{} samples did not have a date.".format(non_time_samples_counter),
-	#"{} samples did use american dates.".format(trump),
-	#"{} samples did use european dates.".format(europe),
-	#"{} samples did use international dates.".format(intl),
 	"{} samples did not have percentage values for terpenes or no terpene profile at all.".format(non_percentage_terpene_profiles),
 	sep="\n")
 log_this("All files have been processed. Please check for any lines starting with 'ERROR: '. Those couldn't be parsed correctly. Sorry for that.")
