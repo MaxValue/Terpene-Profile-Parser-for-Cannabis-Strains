@@ -3,48 +3,48 @@ _Parser and Database to index the Terpene Profile of different Strains Of Cannab
 
 ## Description
 This repository contains:
-* A web crawler to download lab test results of different cannabis strains as HTML-pages from [Analytical360](http://archive.analytical360.com)
-* A parser to extract the actual terpene profile from each of those HTML-pages as CSV-list
-* The CSV list of extracted terpene profiles
-* If some data points could not be extracted also an assortment of files where the extraction of a specific datapoint failed
+* A folder for each online database which displays test results about the terpene profile of cannabis strains. These folders usually contain:
+  * A web crawler to download lab test results of different cannabis strains from the database
+  * A parser to extract the actual terpene profile from each of those HTML-pages as CSV-list
+  * The CSV list of extracted terpene profiles
+  * If some data points could not be extracted also an assortment of files where the extraction of a specific datapoint failed
+
+## FAQ
+### What are Terpenes? What is a Terpene?
+A terpene is a chemical compound which can have physiological effects on the human body. It can make you sleepy, awake, more concentrated, relaxed or less anxious. Read more [on Wikipedia](https://en.wikipedia.org/wiki/Terpene). [This page](https://tandcsurf.github.io/terpeneuses/) has some information which is also useful.
+### What is a Terpene Profile?
+A terpene profile is a listing of terpenes present in a biological sample.
+This project is only concerned with specific terpenes such as Linalool, Caryophyllene oxide, Myrcene, beta-Pinene, Limonene, Terpinolene, alpha-Pinene, Humulene and Caryophyllene, but Linalool, beta-Pinene, Limonene, alpha-Pinene are the most important ones.
+Also we are only interested in the terpene profile of strains from the species [Cannabis sativa](https://en.wikipedia.org/wiki/Cannabis_sativa).
+### What is a cannabis strain? What is a strain?
+A strain is like a dog breed. As dogs all belong to the same species, but can look really different to each other, we distinguish them by breed. This is the same for Cannabis: There are several "breeds" and each one of them has different effects on the human physiology/psyche. Also strains/breeds were emphasized by humans, not by nature.
+### So what is this all about? What sense makes all of this?
+Research suggests that Cannabis sativa can (in the right circumstances) have positive (reduce/cure depression/anxiety, improve concentration, help with sleep problems) effects on the human body.
+The thing is: Each strain acts differently on the body and we do not know which acts in what way, because the plant is illegal in most countries currently.
+This results in a lot of incorrect information spreading about which strain acts in what way and even which plant is actually belonging to a specific strain. This produces a number of problems:
+Many samples are therefore labelled incorrectly,
+many samples weren't raised under controlled lab conditions which produces very varying results
+and the devices for testing the samples are somewhat (really) expensive.
+
+The good part is that in some countries it is not illegal or at least legal enough to conduct scientific research on it.
+Some of those research institutions (or labs) publish their chemical analysis results of the different samples online.
+This data is not really machine readable (to analyse it further) but it can be extracted using modern web crawling.
+By building statistical models we can filter away the incorrect data from the differing growing conditions of the samples.
+In the future a sort-of search engine is planned to search by terpene profile which gives you a sorted list of fitting strains.
 
 ## How to use
-### The web crawler
-This crawler utilizes [Scrapy](https://scrapy.org/) to go through all search results of the string `" "`. You will need:
-* Python3: `sudo apt-get install python3 python3-pip`
-* Scrapy:  `python3 -m pip install scrapy`
+See the regarding folders' README.md file for instructions.
 
-The crawler can be run like this:
-`scrapy run weed_spider`
+## How to contribute
+Let me know if:
+* I missed some data
+* There is an online database i haven't noticed
+* The scientific information to explain the project is wrong
 
-It will produce a folder called `database_dump` containing all sample pages counting upwards in order of their download.
-
-### The parser
-This parser runs multiple XPath queries and RegEx expressions to find the wanted data in those HTML-files. You can run it like this:
-`python3 clean_data.py database_dump/ -d`
-
-If you use the shown `-d` option you will be informed of any piece of data which gets extracted and every error which occurs during the extraction process.
-After this is done you will have `results.csv` file and (if some extractions failed) a number of other files containing filenames where some datapoints couldn't be extracted.
-
-### The database
-The database contains the following fields/columns/datapoints:
-* Test Result UID: The UID provided by Analytical360 labs. If it couldn't be extracted an artificial one is generated to provide reliable distinction between samples.
-* Test Result Name: The name of the sample. Most often this is the name of the provided strain.
-* Test Result Date: The date when this test was run. We expect this to be always in american format in the source files. Gets converted to ISO-8601.
-* Provider: The name of the company which provided this sample.
-* Linalool: The percentage amount of Linalool present in this sample.
-* Caryophyllene oxide: The percentage amount of Caryophyllene oxide present in this sample.
-* Myrcene: The percentage amount of Myrcene present in this sample.
-* beta-Pinene: The percentage amount of beta-Pinene present in this sample.
-* Limonene: The percentage amount of Limonene present in this sample.
-* Terpinolene: The percentage amount of Terpinolene present in this sample.
-* alpha-Pinene: The percentage amount of alpha-Pinene present in this sample.
-* Humulene: The percentage amount of Humulene present in this sample.
-* Caryophyllene: The percentage amount of Caryophyllene present in this sample.
-* TERPENE-TOTAL: The total percentage amount of terpenes present in this sample.
+As with all those points: Please provide sources/proofs that your information (query, link, scientifc sources) is more valid than the present one.
 
 ## Project history
-The idea for this project comes from Paul Fuxjäger who wants to find high quality medical cannabis for new health treatment options. The code was written by Max Fuxjäger.
+The idea for this project comes from Paul Fuxjäger who wants to find high quality medical cannabis for new health treatment options. The code for extracting and cleaning the data was written by Max Fuxjäger.
 
 ## Copyright
 Have fun. We hope you can use this data to do good for humanity.
