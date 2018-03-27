@@ -1,0 +1,23 @@
+Sample:{
+	details:{
+		clientInformation:{
+			clientId
+		},
+		potencyResults:{
+			analystsNotes,
+			description,
+			moistureContent
+		},
+		potencyTestComplete,
+		privacy,//can be 'Anonymous'
+		residualSolventTestComplete,
+		sampleType,//can be 'edible concentrate'
+		solventResults:{
+			footnotes
+		},
+		terpeneTestComplete,
+		potencyChemicals,
+		pdfs,
+		photos
+	}
+}
