@@ -1,0 +1,10 @@
+//*[
+	contains(
+			translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),
+			'terpen'
+	)
+	and contains(
+			translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),
+			'profil'
+	)
+]/following-sibling::*[1]//li//text()
