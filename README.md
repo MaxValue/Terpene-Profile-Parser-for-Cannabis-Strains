@@ -11,7 +11,7 @@ This repository contains:
 
 ## FAQ
 ### What are Terpenes? What is a Terpene?
-A terpene is a chemical compound which can have physiological effects on the human body. It can make you sleepy, awake, more concentrated, relaxed or less anxious. Read more [on Wikipedia](https://en.wikipedia.org/wiki/Terpene). [This page](https://tandcsurf.github.io/terpeneuses/) has some information which is also useful.
+A terpene is a chemical compound which can have physiological effects on the human body. It can make you sleepy, awake, more concentrated, relaxed or less anxious. Read more [on Wikipedia](https://en.wikipedia.org/wiki/Terpene). [This page](https://tandcsurf.github.io/terpeneuses/) and [this lab page](https://psilabs.org/services/) has some information which is also useful.
 ### What is a Terpene Profile?
 A terpene profile is a listing of terpenes present in a biological sample.
 This project is only concerned with specific terpenes such as Linalool, Caryophyllene oxide, Myrcene, beta-Pinene, Limonene, Terpinolene, alpha-Pinene, Humulene and Caryophyllene, but Linalool, beta-Pinene, Limonene, alpha-Pinene are the most important ones.
