@@ -105,7 +105,8 @@ venv.bak/
 .mypy_cache/
 
 # Hiding the dump folder
-/database_dump/*
+/analytical360/database_dump/*
+test*/*
 
 # Hiding the damn fuse hidden file
 .fuse_hidden*
