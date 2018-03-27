@@ -36,7 +36,7 @@ In the future a sort-of search engine is planned to search by terpene profile wh
 See the regarding folders' README.md file for instructions.
 
 ## How to contribute
-[Let me know if](issues/new):
+[Let me know if](https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains/issues/new):
 * I missed some data
 * There is an online database i haven't noticed
 * The scientific information to explain the project is wrong
