@@ -6,7 +6,7 @@ if not os.path.exists(SAVE_FOLDER):
     os.makedirs(SAVE_FOLDER)
 
 class QuotesSpider(scrapy.Spider):
-    name = "weed_spider"
+    name = "analytical360_spider"
 
     def start_requests(self):
         for page_number in range(1,4303):
