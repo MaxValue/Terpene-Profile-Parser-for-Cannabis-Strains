@@ -105,7 +105,7 @@ venv.bak/
 .mypy_cache/
 
 # Hiding the dump folders
-database_dump/*
+/*/database_dump/
 
 # Hiding the test folders
 test*/*
@@ -115,3 +115,6 @@ test*/*
 
 # Hiding the virtualenv files
 venv/*
+
+# Hiding my (very unstable and varying) notes
+/links.txt
