@@ -5,7 +5,7 @@ counter = 1
 if not os.path.exists(SAVE_FOLDER):
     os.makedirs(SAVE_FOLDER)
 
-class QuotesSpider(scrapy.Spider):
+class OnlineDatabaseSpider(scrapy.Spider):
     name = "analytical360_spider"
 
     def start_requests(self):
