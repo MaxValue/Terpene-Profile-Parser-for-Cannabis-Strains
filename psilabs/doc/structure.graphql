@@ -1,23 +1,92 @@
-Sample:{
-	details:{
-		clientInformation:{
-			clientId
-		},
-		potencyResults:{
-			analystsNotes,
-			description,
-			moistureContent
-		},
-		potencyTestComplete,
-		privacy,//can be 'Anonymous'
-		residualSolventTestComplete,
-		sampleType,//can be 'edible concentrate'
-		solventResults:{
-			footnotes
-		},
-		terpeneTestComplete,
-		potencyChemicals,
-		pdfs,
-		photos
+type app {
+	login
+	publicClients {
+		show() #takes dict with arg "clientSlug" which is Sample.details.clientInformation.slug
 	}
+	samples {
+		editSample(sampleId: ) #sampleId is the same type as Sample.details._id
+		list
+	}
+	test-results {
+		list
+	}
+	users {
+		list
+	}
+}
+
+type App {
+	activeGroup(): #probably returns a link, can take 'app.clients', 'app.dashboard', 'app.login', 'app.samples', 'app.test-results', 'app.users'
+	currentUser: #probably returns string
+	isAdmin: #probably returns bool
+	isClient: #probably returns bool
+	isPsiLabs: #probably returns bool
+	local:
+	logout(): #probably logs out
+	toggleSidebar(): #probably toogles the sidebar
+}
+
+type MetaTags {
+	prerender {
+		header
+	}
+}
+
+type PDF {
+
+}
+
+type Photo {
+	metadata {
+		description: String
+		title: String
+	}
+}
+
+type Sample {
+	details {
+		_id:
+		activeCBD:
+		activeTHC:
+		clientInformation {
+			clientId:
+			slug: String
+		}
+		fromImport:
+		pdfs: [PDF]!
+		photos: [Photo]!
+		potencyChemicals: [[NAME?!,PERCENT?!,VARIANCE?!]]!
+		potencyResults {
+			GCFIDUsed:
+			GCMSUsed:
+			HPLCDADUsed:
+			HPLCMSUsed:
+			analystsNotes: String
+			description: String
+			footnotes:
+			foreignMaterialPresent: Boolean
+			moistureContent:
+			moldMildewFungusPresent: Boolean
+			pestsPresent: Boolean
+			sampleSize:
+			sampleWeight:
+		}
+		potencyTestComplete: Boolean
+		privacy: String #can be 'Anonymous'
+		residualSolventTestComplete: Boolean
+		sampleType: String #can be 'edible concentrate'
+		solventResults {
+			analystsNotes: String
+			footnotes
+		}
+		terpeneResults {
+			analystsNotes: String
+			footnotes
+		}
+		terpeneTestComplete: Boolean
+		totalCBD:
+		totalPotency:
+		totalTHC:
+	}
+	potencyChartData
 }
