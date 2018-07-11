@@ -353,6 +353,17 @@ xpath_terpenes_3 = """/html/body/div[@id='wrapper']/div[@id='mainwrapper']/div[@
 								'profil'
 						)
 					]/following-sibling::*[1]//li"""
+xpath_terpenes_4 = """/html/body/div[@id='wrapper']/div[@id='mainwrapper']/div[@class='center']/div[@class='maincontent']/h4[
+						contains(
+								translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),
+								'terpen'
+						)
+						and contains(
+								translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),
+								'profil'
+						)
+					]/following-sibling::*[1]//li"""
+
 xpath_terpenes_total = """/html/body/div/*[
 								contains(
 										translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),
@@ -395,7 +406,6 @@ xpath_cannabinoids_2 = """/html/body/div[@id='wrapper']/div[@id='mainwrapper']/d
 							]
 						]/following-sibling::*[1]//li"""
 
-
 # Finds the amount of total THC present in the sample
 xpath_thc_total = """/html/body/div[@id='wrapper']/div[@id='mainwrapper']/div[@class='center']/div[@class='maincontent']/div[
 							div/div/h4[
@@ -429,8 +439,12 @@ re_sample_time_europe = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<dat
 re_sample_time_intl = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<year>2\d{3})\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1])))\s*$", re.IGNORECASE)
 # Match a percentage value
 re_percentageValue = re.compile(r'^[0-9.,]+\s*%$')
+# Match a percentage value
+re_zeroPercentageValue = re.compile(r'^<\s*[0-9.,]+\s*%$')
 # Match a percentage value at the beginning of the string
 re_percentageValueBeginning = re.compile(r'^[0-9.,]+\s*%')
+# Match a (zero) percentage value at the beginning of the string
+re_zeroPercentageValueBeginning = re.compile(r'^<\s*[0-9.,]+\s*%')
 # Match a analytical360 test result path
 re_sampleTypeURL = re.compile(r'^/m/(?P<type>[-._~!$&\')(*+,;=:@%a-zA-Z0-9]+)/(?P<id>\d+)')
 # Match a analytical360 product page path
@@ -577,7 +591,7 @@ result_files = [
 	sample_database_CSVfile,
 	sample_database_JSONfile,
 ]
-if input('\nDo you want to delete the old result files? (y/n) ') == 'y':
+if input('\nDo you want to delete the old result files? (y/n) ').lower() == 'y':
 	for filename in result_files:
 		if os.path.exists(filename+'.html'):
 			os.remove(filename+'.html')
@@ -590,7 +604,7 @@ log_this('Before we start, a heads up:',
 		sep='\n',
 		level=1,
 		override=True)
-if input('\nDo you want to start? (y/n) ') != 'y':
+if input('\nDo you want to start? (y/n) ').lower() != 'y':
 	exit('Aborted.')
 
 if args.json:
@@ -602,13 +616,16 @@ if args.json:
 log_this('Entering main loop . . .', level=1)
 
 type_folders = sorted(os.listdir(os.path.expanduser(RAW_DATABASE_DUMP_PATH)))
+is_first_type = True
 for type_index, type_folder in enumerate(type_folders):
+	is_first_sample = True
 	file_list = sorted(os.listdir(os.path.join(os.path.expanduser(RAW_DATABASE_DUMP_PATH),type_folder)))
 	if args.json:
 		with open(sample_database_JSONfile, "a", encoding="utf-8") as databases_file:
-			if type_index > 0:
+			if not is_first_type:
 				databases_file.write(',')
 			databases_file.write('"{}":['.format(type_folder))
+			is_first_type = False
 	for file_index, file_name in enumerate(file_list):
 		raw_sample_file_name = os.path.join(type_folder, file_name)
 		log_this('#'*80, level=2)
@@ -648,14 +665,16 @@ for type_index, type_folder in enumerate(type_folders):
 		raw_terpenes_1 = tree.xpath(xpath_terpenes_1)
 		raw_terpenes_2 = tree.xpath(xpath_terpenes_2)
 		raw_terpenes_3 = tree.xpath(xpath_terpenes_3)
+		raw_terpenes_4 = tree.xpath(xpath_terpenes_4)
 		terpenes_data = {}
-		if len(raw_terpenes_1) > 0 and len(raw_terpenes_2) > 0 and len(raw_terpenes_3) > 0:
+		non_percentage_numbers = False
+		if len(raw_terpenes_1) > 0 and len(raw_terpenes_2) > 0 and len(raw_terpenes_3) > 0 and len(raw_terpenes_4) > 0:
 			log_this('{}: both terpenes queries match!', level=3)
-		if len(raw_terpenes_1) == 0 and len(raw_terpenes_2) == 0 and len(raw_terpenes_3) == 0:
+		if 0 == len(raw_terpenes_1) == len(raw_terpenes_2) == len(raw_terpenes_3) == len(raw_terpenes_4):
 			log_this('no terpenes: {}'.format(raw_sample_file_name), level=3)
 			write_to_logfile(logfile_terpenes_noneFound,['Filename'],{'Filename':raw_sample_file_name})
 		else:
-			for i, raw_terpenes in enumerate(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3, 1):
+			for i, raw_terpenes in enumerate(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4, 1):
 
 				# AMOUNT AND NAME
 				raw_terpenes_info = get_single_value(
@@ -666,7 +685,9 @@ for type_index, type_folder in enumerate(type_folders):
 
 				# AMOUNT
 				terpene_amount_match = re_percentageValueBeginning.match(raw_terpenes_info)
+				terpene_zeroamount_match = re_zeroPercentageValueBeginning.match(raw_terpenes_info)
 				if terpene_amount_match:
+					terpene_amount_match_object = terpene_amount_match
 					try:
 						terpene_amount = normalize_number(raw_terpenes_info[terpene_amount_match.start():terpene_amount_match.end()])
 					except ValueError as e:
@@ -677,7 +698,11 @@ for type_index, type_folder in enumerate(type_folders):
 							{'Filename':raw_sample_file_name, 'List Index':i, 'Amount':raw_terpenes_info}
 						)
 						continue
+				elif terpene_zeroamount_match:
+					terpene_amount_match_object = terpene_zeroamount_match
+					terpene_amount = 0.0
 				else:
+					non_percentage_numbers = True
 					log_this('non percentage terpenes', level=3)
 					write_to_logfile(
 						logfile_terpenes_notPercentage,
@@ -688,7 +713,7 @@ for type_index, type_folder in enumerate(type_folders):
 
 				# NAME
 				## TODO: we could do levenshtein- and typewriterdistance (en-US) here
-				original_terpene_name = raw_terpenes_info[terpene_amount_match.end():].strip()
+				original_terpene_name = raw_terpenes_info[terpene_amount_match_object.end():].strip()
 
 				regex_matched = False
 				for terpene_name in terpenes.keys():
@@ -737,10 +762,10 @@ for type_index, type_folder in enumerate(type_folders):
 						{'Filename':raw_sample_file_name, 'Terpene':terpene_name, 'List Index':i}
 					)
 			if terpenes_data == {}:
-				if args.force_terpenes:
-					skip_this_file = True
 				log_this('{}: no terpenes were added'.format(raw_sample_file_name), level=3)
-				write_to_logfile(logfile_terpenes_allNoMatch, ['Filename', 'Amount'], {'Filename':raw_sample_file_name, 'Amount':len(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3)})
+				write_to_logfile(logfile_terpenes_allNoMatch, ['Filename', 'Amount'], {'Filename':raw_sample_file_name, 'Amount':len(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4)})
+		if args.force_terpenes and terpenes_data == {}:
+			skip_this_file = True
 
 		# 2 Test Data Cannabinoids
 		raw_cannabinoids_1 = tree.xpath(xpath_cannabinoids_1)
@@ -835,10 +860,10 @@ for type_index, type_folder in enumerate(type_folders):
 						{'Filename':raw_sample_file_name, 'Cannabinoid':cannabinoid_name, 'List Index':i}
 					)
 			if cannabinoid_data == {}:
-				if args.force_cannabinoids:
-					skip_this_file = True
 				log_this('{}: no cannabinoids were added'.format(raw_sample_file_name), level=3)
 				write_to_logfile(logfile_cannabinoids_allNoMatch, ['Filename', 'Amount'], {'Filename':raw_sample_file_name, 'Amount':len(raw_cannabinoids_1+raw_cannabinoids_2)})
+		if args.force_cannabinoids and cannabinoid_data == {}:
+			skip_this_file = True
 
 		# 5 Sample Type
 		sample_type = PLACEHOLDER_UNDEFINED
@@ -955,9 +980,10 @@ for type_index, type_folder in enumerate(type_folders):
 				)
 			if args.json:
 				with open(sample_database_JSONfile, "a", encoding="utf-8") as databases_file:
-					if file_index != 0:
+					if not is_first_sample:
 						databases_file.write(',')
 					json.dump(sample_data, databases_file, separators=(',', ':'), sort_keys=True)
+					is_first_sample = False
 	if args.json:
 		with open(sample_database_JSONfile, "a", encoding="utf-8") as databases_file:
 			databases_file.write(']')
