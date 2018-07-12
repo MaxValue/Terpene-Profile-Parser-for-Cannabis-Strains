@@ -255,75 +255,6 @@ xpath_provider_page = """/html/body/div/div/div[@class='maincontent']/div[@id='s
 
 xpath_festival_page = """/html/body/div[@id='wrapper']/div[@id='mainwrapper']/div/div[@class='maincontent']/div[@class='rehabtabs']/*[@id]"""
 
-# Finds the text of the first header in the page content:
-xpath_sample_name = """/html/body/div[@id='wrapper']/div[@id='mainwrapper']/div[@class='center']/div[@class='maincontent']/*[
-													self::h1
-													or self::h2
-													or self::h3
-													or self::h4
-													or self::h5
-													or self::h6
-												][1]/text()"""
-
-# Finds text of all headers which text content starts with the words "available from", ignoring the case
-xpath_sample_provider = """/html/body/div[@id='wrapper']/div[@id='mainwrapper']/div[@class='center']/div[@class='maincontent']//*[
-													self::h1
-													or self::h2
-													or self::h3
-													or self::h4
-													or self::h5
-													or self::h6
-												][
-													starts-with(
-																translate(
-																			normalize-space(text()),
-																			'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-																			'abcdefghijklmnopqrstuvwxyz'
-																),
-																'available from'
-													)
-												]/following-sibling::*//a/text()"""
-
-# Finds text of all headers which text content starts with the words "test result uid", ignoring the case
-xpath_test_uid = """/html/body/div/div/div[@class='maincontent']/*[
-													self::h1
-													or self::h2
-													or self::h3
-													or self::h4
-													or self::h5
-													or self::h6
-												][
-													starts-with(
-																translate(
-																			normalize-space(text()),
-																			'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-																			'abcdefghijklmnopqrstuvwxyz'
-																),
-																'test result uid'
-													)
-												]/text()"""
-
-# Finds text of all headers which text content starts with the words "date", ignoring the case
-xpath_time_tested = """/html/body/div/div/div[@class='maincontent']/*[
-													self::h1
-													or self::h2
-													or self::h3
-													or self::h4
-													or self::h5
-													or self::h6
-												][
-													contains(
-															translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),
-															'date'
-													)
-													and contains(
-															translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),
-															'test'
-													)
-												]/text()"""
-
-xpath_canonicalURL = """/html/head/link[@rel='canonical'][@href]"""
-
 # Finds text of all list items which are preceeded by the words "terpen" and "profil", ignoring the case
 xpath_terpenes_1 = """/html/body/div[@id='wrapper']/div[@id='mainwrapper']/div[@class='center']/div[@class='maincontent']/div[
 						div/div/h4[
@@ -429,28 +360,77 @@ xpath_thc_total = """/html/body/div[@id='wrapper']/div[@id='mainwrapper']/div[@c
 							)
 						]"""
 
-# Matches strings like: "    Test   Result     UID    :    jfkgbnFGBFG34394129_fkgljh345_345dfgdg    "
-re_test_uid = re.compile(r"^\s*Test\s*Result\s*UID\s*:?\s*(?P<uid>[\S]+)\s*$", re.IGNORECASE)
-# Matches strings like: "   Date   Tested   01    /   23   .   2019     "
-re_date = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
-# Matches strings like: "   Date   Tested   23    /   01   .   2019     "
-re_sample_time_europe = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
-# Matches strings like: "   Date   Tested   2019    /   23   .    01    "
-re_sample_time_intl = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<year>2\d{3})\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1])))\s*$", re.IGNORECASE)
-# Match a percentage value
-re_percentageValue = re.compile(r'^[0-9.,]+\s*%$')
-# Match a percentage value
-re_zeroPercentageValue = re.compile(r'^<\s*[0-9.,]+\s*%$')
-# Match a percentage value at the beginning of the string
-re_percentageValueBeginning = re.compile(r'^[0-9.,]+\s*%')
-# Match a (zero) percentage value at the beginning of the string
-re_zeroPercentageValueBeginning = re.compile(r'^<\s*[0-9.,]+\s*%')
-# Match a analytical360 test result path
-re_sampleTypeURL = re.compile(r'^/m/(?P<type>[-._~!$&\')(*+,;=:@%a-zA-Z0-9]+)/(?P<id>\d+)')
+xpath_canonicalURL = """/html/head/link[@rel='canonical'][@href]"""
+
+# Finds the text of the first header in the page content:
+xpath_sample_name = """/html/body/div[@id='wrapper']/div[@id='mainwrapper']/div[@class='center']/div[@class='maincontent']/*[
+													self::h1
+													or self::h2
+													or self::h3
+													or self::h4
+													or self::h5
+													or self::h6
+												][1]/text()"""
+
+# Finds text of all headers which text content starts with the words "available from", ignoring the case
+xpath_sample_provider = """/html/body/div[@id='wrapper']/div[@id='mainwrapper']/div[@class='center']/div[@class='maincontent']//*[
+													self::h1
+													or self::h2
+													or self::h3
+													or self::h4
+													or self::h5
+													or self::h6
+												][
+													starts-with(
+																translate(
+																			normalize-space(text()),
+																			'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+																			'abcdefghijklmnopqrstuvwxyz'
+																),
+																'available from'
+													)
+												]/following-sibling::*//a/text()"""
+
+# Finds text of all headers which text content starts with the words "test result uid", ignoring the case
+xpath_test_uid = """/html/body/div/div/div[@class='maincontent']/*[
+													self::h1
+													or self::h2
+													or self::h3
+													or self::h4
+													or self::h5
+													or self::h6
+												][
+													starts-with(
+																translate(
+																			normalize-space(text()),
+																			'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+																			'abcdefghijklmnopqrstuvwxyz'
+																),
+																'test result uid'
+													)
+												]/text()"""
+
+# Finds text of all headers which text content starts with the words "date", ignoring the case
+xpath_time_tested = """/html/body/div/div/div[@class='maincontent']/*[
+													self::h1
+													or self::h2
+													or self::h3
+													or self::h4
+													or self::h5
+													or self::h6
+												][
+													contains(
+															translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),
+															'date'
+													)
+													and contains(
+															translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),
+															'test'
+													)
+												]/text()"""
+
 # Match a analytical360 product page path
 re_productPageURL = re.compile(r'^/product/(?P<type>[-._~!$&\')(*+,;=:@%a-zA-Z0-9]+)')
-# Matches the old file names
-re_oldSampleFilename = re.compile(r'^\d+\.html$')
 
 terpenes = {
 	'3-Carene':				re.compile(r'^(3|Three|Tri)[-_/\s.]*Carene$',					re.IGNORECASE),
@@ -507,6 +487,9 @@ cannabinoids['Activated TOTAL'] = re.compile(r'^Activated[-_/\s.]*TOTAL',					re
 cannabinoids['Cannabinoids TOTAL'] = re.compile(r'^TOTAL[-_/\s.]*CANNABINOIDS',				re.IGNORECASE)
 del cannabinoids['Moisture Content']
 
+# Match a analytical360 test result path
+re_sampleTypeURL = re.compile(r'^/m/(?P<type>[-._~!$&\')(*+,;=:@%a-zA-Z0-9]+)/(?P<id>\d+)')
+
 sample_types = {
 	'Flower':				re.compile(r'^Flowers?$',										re.IGNORECASE),
 	'Concentrate':			re.compile(r'^Concentrates?$',									re.IGNORECASE),
@@ -515,6 +498,29 @@ sample_types = {
 	'Topical':				re.compile(r'^Topicals?$',										re.IGNORECASE),
 }
 sample_types['Archived'] =  re.compile(r'^Archived$',										re.IGNORECASE)
+
+# Matches strings like: "    Test   Result     UID    :    jfkgbnFGBFG34394129_fkgljh345_345dfgdg    "
+re_test_uid = re.compile(r"^\s*Test\s*Result\s*UID\s*:?\s*(?P<uid>[\S]+)\s*$", re.IGNORECASE)
+
+# Matches strings like: "   Date   Tested   01    /   23   .   2019     "
+re_date = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
+
+# Matches strings like: "   Date   Tested   23    /   01   .   2019     "
+re_sample_time_europe = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
+# Matches strings like: "   Date   Tested   2019    /   23   .    01    "
+re_sample_time_intl = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<year>2\d{3})\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1])))\s*$", re.IGNORECASE)
+
+# Matches the old file names
+re_oldSampleFilename = re.compile(r'^\d+\.html$')
+
+# Match a percentage value
+re_percentageValue = re.compile(r'^[0-9.,]+\s*%$')
+# Match a percentage value
+re_zeroPercentageValue = re.compile(r'^<\s*[0-9.,]+\s*%$')
+# Match a percentage value at the beginning of the string
+re_percentageValueBeginning = re.compile(r'^[0-9.,]+\s*%')
+# Match a (zero) percentage value at the beginning of the string
+re_zeroPercentageValueBeginning = re.compile(r'^<\s*[0-9.,]+\s*%')
 
 database = {
 }
