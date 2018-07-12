@@ -118,3 +118,7 @@ venv/*
 
 # Hiding my (very unstable and varying) notes
 /links.txt
+
+# Hiding the parsing logs
+log-*
+.~lock.*
