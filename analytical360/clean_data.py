@@ -437,6 +437,7 @@ terpenes = {
 	'Camphene':				re.compile(r'^Camphene$',										re.IGNORECASE),
 	'Caryophyllene Oxide':	re.compile(r'^Caryophyllene[-_/\s.]*Oxide$',					re.IGNORECASE),
 	'Eucalyptol':			re.compile(r'^Eucalyptol$',										re.IGNORECASE),
+	'Farnesene': 			re.compile(r'^Farnesene$',										re.IGNORECASE),
 	'Geraniol':				re.compile(r'^Geraniol$',										re.IGNORECASE),
 	'Guaiol':				re.compile(r'^Guaiol$',											re.IGNORECASE),
 	'Isopulegol':			re.compile(r'^Isopulegol$',										re.IGNORECASE),
@@ -461,7 +462,6 @@ terpenes = {
 	'trans-Ocimene':		re.compile(r'^(trans)[-_/\s.]*Ocimene$',						re.IGNORECASE),
 }
 terpenes['Terpene TOTAL'] = re.compile(r'^(Terpene[-_/\s.]*TOTAL|Total[-_/\s.]*[-_/\s.]*Terpenes)',re.IGNORECASE)
-terpenes['Farnesene'] = 	re.compile(r'^Farnesene$',										re.IGNORECASE)
 
 cannabinoids = {
 	'delta-9 THC-A':		re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*THC[-_/\s.]*A$',	re.IGNORECASE),
