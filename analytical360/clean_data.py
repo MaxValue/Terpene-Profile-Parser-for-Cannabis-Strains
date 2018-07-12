@@ -680,11 +680,11 @@ for type_index, type_folder in enumerate(type_folders):
 			log_this('no terpenes: {}'.format(raw_sample_file_name), level=3)
 			write_to_logfile(logfile_terpenes_noneFound,['Filename'],{'Filename':raw_sample_file_name})
 		else:
-			for i, raw_terpenes in enumerate(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4, 1):
+			for i, raw_terpene in enumerate(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4, 1):
 
 				# AMOUNT AND NAME
 				raw_terpenes_info = get_single_value(
-					raw_terpenes,
+					raw_terpene,
 					'descendant-or-self::*/text()',
 					join_multi=True
 				)
