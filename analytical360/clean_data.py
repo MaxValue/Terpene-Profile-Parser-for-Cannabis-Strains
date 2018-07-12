@@ -558,7 +558,9 @@ logfile_terpenes_noneFound = 'log-terpenes-none_found'
 logfile_terpenes_total_nonNumber = 'log-terpenes_total-no_number'
 logfile_terpenes_total_noneFound = 'log-terpenes_total-none_found'
 logfile_terpenes_total_notPercentage = 'log-terpenes_total-not_percentage'
+logfile_thc_total_nonNumber = 'log-thc_total-no_number'
 logfile_thc_total_noneFound = 'log-thc_total-none_found'
+logfile_thc_total_notPercentage = 'log-thc_total-not_percentage'
 logfile_time_noneFound = 'log-time-none_found'
 logfile_type_noneFound = 'log-type-none_found'
 logfile_type_unknown = 'log-type-unknown'
@@ -590,7 +592,9 @@ result_files = [
 	logfile_terpenes_notPercentage,
 	logfile_provider_noneFound,
 	logfile_terpenes_total_noneFound,
+	logfile_thc_total_nonNumber,
 	logfile_thc_total_noneFound,
+	logfile_thc_total_notPercentage,
 	logfile_time_noneFound,
 	logfile_type_noneFound,
 	logfile_uid_noneFound,
