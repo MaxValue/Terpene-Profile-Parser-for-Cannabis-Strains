@@ -563,7 +563,8 @@ logfile_terpenes_total_notPercentage = 'log-terpenes_total-not_percentage'
 logfile_thc_total_nonNumber = 'log-thc_total-no_number'
 logfile_thc_total_noneFound = 'log-thc_total-none_found'
 logfile_thc_total_notPercentage = 'log-thc_total-not_percentage'
-logfile_time_noneFound = 'log-time-none_found'
+logfile_time_received_noneFound = 'log-time_received-none_found'
+logfile_time_tested_noneFound = 'log-time_tested-none_found'
 logfile_type_noneFound = 'log-type-none_found'
 logfile_type_unknown = 'log-type-unknown'
 logfile_uid_noneFound = 'log-uid-none_found'
@@ -599,7 +600,8 @@ result_files = [
 	logfile_thc_total_nonNumber,
 	logfile_thc_total_noneFound,
 	logfile_thc_total_notPercentage,
-	logfile_time_noneFound,
+	logfile_time_received_noneFound,
+	logfile_time_tested_noneFound,
 	logfile_type_noneFound,
 	logfile_uid_noneFound,
 	sample_database_CSVfile,
@@ -962,7 +964,7 @@ for type_index, type_folder in enumerate(type_folders):
 		if re_date_match:
 			test_time = date_iso8601(year=normalize_year(re_date_match.group('year')),month=re_date_match.group('month'),day=re_date_match.group('day'))
 		else:
-			write_to_logfile(logfile_time_noneFound, ['Filename'], {'Filename':raw_sample_file_name})
+			write_to_logfile(logfile_time_tested_noneFound, ['Filename'], {'Filename':raw_sample_file_name})
 
 		# 7 Receival Time
 		receival_time = PLACEHOLDER_UNDEFINED
