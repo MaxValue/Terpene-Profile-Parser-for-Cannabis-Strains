@@ -767,7 +767,7 @@ for type_index, type_folder in enumerate(type_folders):
 		if args.force_terpenes and terpenes_data == {}:
 			skip_this_file = True
 
-		# 2 Test Data Cannabinoids
+		# 1 Test Data Cannabinoids
 		raw_cannabinoids_1 = tree.xpath(xpath_cannabinoids_1)
 		raw_cannabinoids_2 = tree.xpath(xpath_cannabinoids_2)
 		cannabinoid_data = {}
@@ -865,7 +865,7 @@ for type_index, type_folder in enumerate(type_folders):
 		if args.force_cannabinoids and cannabinoid_data == {}:
 			skip_this_file = True
 
-		# 5 Sample Type
+		# 2 Sample Type
 		sample_type = PLACEHOLDER_UNDEFINED
 		sampleTypeURL_match = re_sampleTypeURL.match(parsed_canonical.path)
 		if sampleTypeURL_match:
@@ -904,7 +904,7 @@ for type_index, type_folder in enumerate(type_folders):
 				{'Filename':raw_sample_file_name, 'Sample Type':raw_sample_type, 'List Index':i, 'Xpath':xpath_canonicalURL}
 			)
 
-		# 6 Sample Name
+		# 3 Sample Name
 		sample_name = get_single_value(
 			tree,
 			xpath_sample_name,
@@ -912,7 +912,7 @@ for type_index, type_folder in enumerate(type_folders):
 			fallback_data={'Filename':raw_sample_file_name}
 		)
 
-		# 7 Sample Provider
+		# 4 Sample Provider
 		sample_provider = get_single_value(
 			tree,
 			xpath_sample_provider
@@ -926,7 +926,7 @@ for type_index, type_folder in enumerate(type_folders):
 				providers.append(sample_provider)
 			sample_provider = str(providers.index(sample_provider) + 1)
 
-		# 8 Test UID
+		# 5 Test UID
 		test_uid = PLACEHOLDER_UNDEFINED
 		raw_test_uid = get_single_value(
 			tree,
@@ -938,7 +938,7 @@ for type_index, type_folder in enumerate(type_folders):
 		if test_uid_match:
 			test_uid = test_uid_match.group('uid')
 
-		# 9 Test Time
+		# 6 Test Time
 		test_time = PLACEHOLDER_UNDEFINED
 		raw_test_time = get_single_value(
 			tree,
@@ -950,7 +950,7 @@ for type_index, type_folder in enumerate(type_folders):
 		else:
 			write_to_logfile(logfile_time_noneFound, ['Filename'], {'Filename':raw_sample_file_name})
 
-		# 10 Receival Time
+		# 7 Receival Time
 		receival_time = PLACEHOLDER_UNDEFINED
 
 		if terpenes_data == {} and cannabinoid_data == {}:
