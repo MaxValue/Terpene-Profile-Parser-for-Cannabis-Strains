@@ -544,7 +544,9 @@ logfile_cannabinoids_allNoMatch = 'log-cannabinoids_all_did_not_match'
 logfile_cannabinoids_multipleMatchSameType = 'log-cannabinoids-multiple_match_same_type'
 logfile_cannabinoids_noneFound = 'log-cannabinoids-none_found'
 logfile_cannabinoids_notPercentage = 'log-cannabinoids-non_percentage'
+logfile_cbd_total_nonNumber = 'log-cbd_total-no_number'
 logfile_cbd_total_noneFound = 'log-cbd_total-none_found'
+logfile_cbd_total_notPercentage = 'log-cbd_total-not_percentage'
 logfile_name_noneFound = 'log-name-none_found'
 logfile_provider_noneFound = 'log-provider-none_found'
 logfile_terpenes_nonNumber = 'log-terpene-no_number'
@@ -583,7 +585,9 @@ result_files = [
 	logfile_cannabinoids_notPercentage,
 	logfile_type_unknown,
 	logfile_terpenes_unknown,
+	logfile_cbd_total_nonNumber,
 	logfile_cbd_total_noneFound,
+	logfile_cbd_total_notPercentage,
 	logfile_name_noneFound,
 	logfile_cannabinoids_nonNumber,
 	logfile_terpenes_total_nonNumber,
