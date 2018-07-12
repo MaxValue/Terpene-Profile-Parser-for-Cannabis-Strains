@@ -122,3 +122,6 @@ venv/*
 # Hiding the parsing logs
 log-*
 .~lock.*
+
+# Hiding the folder containing the browser profiles
+browser_profiles/
