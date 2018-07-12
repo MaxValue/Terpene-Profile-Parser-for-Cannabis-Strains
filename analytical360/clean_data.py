@@ -779,7 +779,7 @@ for type_index, type_folder in enumerate(type_folders):
 		cannabinoid_data = {}
 		if len(raw_cannabinoids_1) > 0 and len(raw_cannabinoids_2) > 0:
 			log_this('{}: both cannabinoid queries match!', level=3)
-		if len(raw_cannabinoids_1) == 0 and len(raw_cannabinoids_2) == 0:
+		if 0 == len(raw_cannabinoids_1) == len(raw_cannabinoids_2):
 			log_this('{}: no potency'.format(raw_sample_file_name), level=3)
 			write_to_logfile(
 				logfile_cannabinoids_noneFound,
