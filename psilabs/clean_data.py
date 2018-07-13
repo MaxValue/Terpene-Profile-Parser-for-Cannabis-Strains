@@ -232,7 +232,7 @@ def write_to_html(filepath, fieldnames, data, title=False):
 			if fieldname in data_row:
 				if fieldname == 'Filename':
 					link = etree.Element('a')
-					link.attrib['href'] = 'file://{}'.format(os.path.join(os.getcwd(),RAW_DATABASE_DUMP_PATH,data_row[fieldname]))
+					link.attrib['href'] = 'file://{}'.format(os.path.join(os.getcwd(),args.database,data_row[fieldname]))
 					link.text = data_row[fieldname]
 					fieldname_element.append(link)
 				else:
@@ -260,8 +260,6 @@ def test_match(xpath_here):
 		log_this('attribs: {}'.format(i.attrib), level=3, override=True)
 
 log_this('Loading configurations . . .', level=1)
-
-RAW_DATABASE_DUMP_PATH = args.database
 
 xpath_provider_page = """"""
 
@@ -495,11 +493,11 @@ if args.json:
 
 log_this('Entering main loop . . .', level=1)
 
-type_folders = sorted(os.listdir(os.path.expanduser(RAW_DATABASE_DUMP_PATH)))
+type_folders = sorted(os.listdir(os.path.expanduser(args.database)))
 is_first_type = True
 for type_index, type_folder in enumerate(type_folders):
 	is_first_sample = True
-	file_list = sorted(os.listdir(os.path.join(os.path.expanduser(RAW_DATABASE_DUMP_PATH),type_folder)))
+	file_list = sorted(os.listdir(os.path.join(os.path.expanduser(args.database),type_folder)))
 	if args.json:
 		with open(sample_database_JSONfile, "a", encoding="utf-8") as databases_file:
 			if not is_first_type:
@@ -511,7 +509,7 @@ for type_index, type_folder in enumerate(type_folders):
 		log_this('#'*80, level=2)
 
 		log_this('Parsing sample file {} now.'.format(raw_sample_file_name), level=2)
-		with open(os.path.join(os.path.expanduser(RAW_DATABASE_DUMP_PATH),raw_sample_file_name),encoding='utf-8') as raw_sample_file:
+		with open(os.path.join(os.path.expanduser(args.database),raw_sample_file_name),encoding='utf-8') as raw_sample_file:
 			tree = html.fromstring(raw_sample_file.read())
 
 		skip_this_file = False
@@ -836,8 +834,8 @@ for type_index, type_folder in enumerate(type_folders):
 						log_this('Regex matched first time', level=3)
 						regex_matched = True
 						sample_type = sampletype_name
-		# if not os.path.exists(os.path.join(RAW_DATABASE_DUMP_PATH, sample_type)):
-		# 	os.makedirs(os.path.join(os.path.expanduser(RAW_DATABASE_DUMP_PATH),sample_type), exist_ok=True)
+		# if not os.path.exists(os.path.join(args.database, sample_type)):
+		# 	os.makedirs(os.path.join(os.path.expanduser(args.database),sample_type), exist_ok=True)
 		if not regex_matched:
 			log_this('sample type did not match anything: {}'.format(raw_sample_type), level=1)
 			# Match none?
