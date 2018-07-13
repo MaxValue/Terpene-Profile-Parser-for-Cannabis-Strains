@@ -45,7 +45,7 @@ type Photo {
 
 type Sample {
 	details {
-		_id:
+		_id: # the id of the sample, this is also used as identifier in the URL: "https://psilabs.org/results/test-results/show/"+this._id
 		activeCBD:
 		activeTHC:
 		clientInformation {
