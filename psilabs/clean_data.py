@@ -388,8 +388,7 @@ database = {
 }
 
 # database = {
-# 	"name": "Analytical360",
-# 	"terpenes": list(terpenes.keys()),
+# 	"name": "Psilabs",
 # 	"samples": []
 # }
 
@@ -487,9 +486,8 @@ if input('\nDo you want to start? (y/n) ').lower() != 'y':
 
 if args.json:
 	with open(sample_database_JSONfile, "w", encoding="utf-8") as databases_file:
-		databases_file.write('{"terpenes":')
-		json.dump(list(terpenes.keys()), databases_file, separators=(',', ':'))
-		databases_file.write(',"Psilabs":{')
+		databases_file.write('{"name":"Psilabs"')
+		databases_file.write(',"samples":{')
 
 log_this('Entering main loop . . .', level=1)
 
