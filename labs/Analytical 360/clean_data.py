@@ -204,7 +204,7 @@ def write_to_html(filepath, fieldnames, data, title=False):
 	table = tree.get_element_by_id('results')
 	if 'Filename' in fieldnames:
 		pass
-		fieldnames.insert(fieldnames.index('Filename')+1, 'Analytical360')
+		fieldnames.insert(fieldnames.index('Filename')+1, 'Analytical 360')
 	if writeheader:
 		if title:
 			table.xpath('caption')[0].text = str(title)
@@ -230,10 +230,10 @@ def write_to_html(filepath, fieldnames, data, title=False):
 				else:
 					fieldname_element.text = str(data_row[fieldname])
 			else:
-				if fieldname == 'Analytical360' and 'Filename' in data_row:
+				if fieldname == 'Analytical 360' and 'Filename' in data_row:
 					link = etree.Element('a')
 					link.attrib['href'] = online_URL
-					link.text = 'Analytical360'
+					link.text = 'Analytical 360'
 					fieldname_element.append(link)
 				else:
 					#fieldname_element.text = PLACEHOLDER_UNDEFINED
@@ -431,7 +431,7 @@ xpath_time_tested = """/html/body/div/div/div[@class='maincontent']/*[
 													)
 												]/text()"""
 
-# Match a analytical360 product page path
+# Match a Analytical 360 product page path
 re_productPageURL = re.compile(r'^/product/(?P<type>[-._~!$&\')(*+,;=:@%a-zA-Z0-9]+)')
 
 terpenes = {
@@ -489,7 +489,7 @@ cannabinoids['Activated TOTAL'] = re.compile(r'^Activated[-_/\s.]*TOTAL',					re
 cannabinoids['Cannabinoids TOTAL'] = re.compile(r'^TOTAL[-_/\s.]*CANNABINOIDS',				re.IGNORECASE)
 del cannabinoids['Moisture Content']
 
-# Match a analytical360 test result path
+# Match a Analytical 360 test result path
 re_sampleTypeURL = re.compile(r'^/m/(?P<type>[-._~!$&\')(*+,;=:@%a-zA-Z0-9]+)/(?P<id>\d+)')
 
 sample_types = {
@@ -528,7 +528,7 @@ database = {
 }
 
 # database = {
-# 	"name": "Analytical360",
+# 	"name": "Analytical 360",
 # 	"samples": []
 # }
 
@@ -626,7 +626,7 @@ if input('\nDo you want to start? (y/n) ').lower() != 'y':
 
 if args.json:
 	with open(sample_database_JSONfile, "w", encoding="utf-8") as databases_file:
-		databases_file.write('{"name":"Analytical360"')
+		databases_file.write('{"name":"Analytical 360"')
 		databases_file.write(',"samples":{')
 
 log_this('Entering main loop . . .', level=1)
