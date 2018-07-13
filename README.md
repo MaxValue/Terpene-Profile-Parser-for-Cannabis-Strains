@@ -7,7 +7,6 @@ This repository contains:
   * A web crawler to download lab test results of different cannabis strains from the database
   * A parser to extract the actual terpene profile from each of those HTML-pages as CSV-list
   * The CSV list of extracted terpene profiles
-  * If some data points could not be extracted also an assortment of files where the extraction of a specific datapoint failed
 
 ## FAQ
 ### What are Terpenes? What is a Terpene?
@@ -33,7 +32,7 @@ By building statistical models we can filter away the incorrect data from the di
 In the future a sort-of search engine is planned to search by terpene profile which gives you a sorted list of fitting strains.
 
 ## How to use
-See the regarding folders' README.md file for instructions.
+See the regarding folders' `README.md` file for instructions.
 
 ## How to contribute
 [Let me know if](https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains/issues/new):
