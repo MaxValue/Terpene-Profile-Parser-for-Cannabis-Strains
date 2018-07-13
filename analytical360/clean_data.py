@@ -74,7 +74,7 @@ PLACEHOLDER_UNDEFINED = 'NaN'
 def get_single_value(tree, xpath, fallback=PLACEHOLDER_UNDEFINED, fallback_file=False, fallback_data={}, join_multi=False):
 	raw_value = tree.xpath(xpath)
 	if len(raw_value) == 1:
-		if type(raw_value[0]) == str:
+		if type(raw_value[0]) == str or type(raw_value[0]) == etree._ElementUnicodeResult:
 			return raw_value[0].strip()
 		else:
 			return raw_value[0]
