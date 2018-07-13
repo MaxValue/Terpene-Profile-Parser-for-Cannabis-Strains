@@ -81,7 +81,11 @@ def get_single_value(tree, xpath, fallback=PLACEHOLDER_UNDEFINED, fallback_file=
 	else:
 		if join_multi == False:
 			if fallback_file:
-				write_to_logfile(fallback_file, sorted(fallback_data.keys()), fallback_data)
+				write_to_logfile(
+					fallback_file,
+					sorted(fallback_data.keys()),
+					fallback_data
+				)
 			return fallback
 		else:
 			if type(join_multi) == str:
@@ -688,7 +692,11 @@ for type_index, type_folder in enumerate(type_folders):
 			log_this('{}: both terpenes queries match!', level=3)
 		if 0 == len(raw_terpenes_1) == len(raw_terpenes_2) == len(raw_terpenes_3) == len(raw_terpenes_4):
 			log_this('no terpenes: {}'.format(raw_sample_file_name), level=3)
-			write_to_logfile(logfile_terpenes_noneFound,['Filename'],{'Filename':raw_sample_file_name})
+			write_to_logfile(
+				logfile_terpenes_noneFound,
+				['Filename'],
+				{'Filename':raw_sample_file_name}
+			)
 		else:
 			for i, raw_terpene in enumerate(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4, 1):
 
@@ -779,7 +787,11 @@ for type_index, type_folder in enumerate(type_folders):
 					)
 			if terpenes_data == {}:
 				log_this('{}: no terpenes were added'.format(raw_sample_file_name), level=3)
-				write_to_logfile(logfile_terpenes_allNoMatch, ['Filename', 'Amount'], {'Filename':raw_sample_file_name, 'Amount':len(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4)})
+				write_to_logfile(
+					logfile_terpenes_allNoMatch,
+					['Filename', 'Amount'],
+					{'Filename':raw_sample_file_name, 'Amount':len(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4)}
+				)
 		if args.force_terpenes and terpenes_data == {}:
 			skip_this_file = True
 
@@ -866,7 +878,11 @@ for type_index, type_folder in enumerate(type_folders):
 
 				if original_cannabinoid_name == PLACEHOLDER_UNDEFINED:
 					log_this('{}: cannabinoid NaN'.format(raw_sample_file_name), level=1)
-					write_to_logfile(logfile_cannabinoids_noname, ['Filename', 'List Index'], {'Filename':raw_sample_file_name, 'List Index':i})
+					write_to_logfile(
+						logfile_cannabinoids_noname,
+						['Filename', 'List Index'],
+						{'Filename':raw_sample_file_name, 'List Index':i}
+					)
 				elif not regex_matched:
 					log_this('{}: cannabinoid did not match anything: {}'.format(raw_sample_file_name, original_cannabinoid_name), level=3)
 					# Match none?
@@ -877,7 +893,11 @@ for type_index, type_folder in enumerate(type_folders):
 					)
 			if cannabinoid_data == {}:
 				log_this('{}: no cannabinoids were added'.format(raw_sample_file_name), level=3)
-				write_to_logfile(logfile_cannabinoids_allNoMatch, ['Filename', 'Amount'], {'Filename':raw_sample_file_name, 'Amount':len(raw_cannabinoids_1+raw_cannabinoids_2)})
+				write_to_logfile(
+					logfile_cannabinoids_allNoMatch,
+					['Filename', 'Amount'],
+					{'Filename':raw_sample_file_name, 'Amount':len(raw_cannabinoids_1+raw_cannabinoids_2)}
+				)
 		if args.force_cannabinoids and cannabinoid_data == {}:
 			skip_this_file = True
 
@@ -934,7 +954,11 @@ for type_index, type_folder in enumerate(type_folders):
 			xpath_sample_provider
 		)
 		if sample_provider == PLACEHOLDER_UNDEFINED:
-			write_to_logfile(logfile_provider_noneFound, ['Filename'], {'Filename':raw_sample_file_name})
+			write_to_logfile(
+				logfile_provider_noneFound,
+				['Filename'],
+				{'Filename':raw_sample_file_name}
+			)
 		elif sample_provider == 'Anonymous':
 			sample_provider = PLACEHOLDER_UNDEFINED
 		else:
@@ -964,7 +988,11 @@ for type_index, type_folder in enumerate(type_folders):
 		if re_date_match:
 			test_time = date_iso8601(year=normalize_year(re_date_match.group('year')),month=re_date_match.group('month'),day=re_date_match.group('day'))
 		else:
-			write_to_logfile(logfile_time_tested_noneFound, ['Filename'], {'Filename':raw_sample_file_name})
+			write_to_logfile(
+				logfile_time_tested_noneFound,
+				['Filename'],
+				{'Filename':raw_sample_file_name}
+			)
 
 		# 7 Receival Time
 		receival_time = PLACEHOLDER_UNDEFINED
