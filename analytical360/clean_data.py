@@ -611,7 +611,7 @@ result_files = [
 	sample_database_CSVfile,
 	sample_database_JSONfile,
 ]
-if input('\nDo you want to delete the old result files? (y/n) ').lower() == 'y':
+if input('\nDo you want to delete the old result and log files? (y/n) ').lower() == 'y':
 	for filename in result_files:
 		if os.path.exists(filename+'.html'):
 			os.remove(filename+'.html')
