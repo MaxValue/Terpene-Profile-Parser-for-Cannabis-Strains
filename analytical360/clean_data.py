@@ -898,8 +898,8 @@ for type_index, type_folder in enumerate(type_folders):
 						# Match more than one regex?
 						write_to_logfile(
 							'sample_type_one_matches_multiple_types',
-							['Filename', 'List Index', 'Sample Type'],
-							{'Filename':raw_sample_file_name,'List Index':i,'Sample Type':sampletype_name}
+							['Filename', 'Sample Type'],
+							{'Filename':raw_sample_file_name,'Sample Type':sampletype_name}
 						)
 						skip_this_file = True
 					else:
@@ -916,8 +916,8 @@ for type_index, type_folder in enumerate(type_folders):
 			# Match none?
 			write_to_logfile(
 				logfile_type_unknown,
-				['Filename', 'Sample Type', 'List Index', 'Xpath'],
-				{'Filename':raw_sample_file_name, 'Sample Type':raw_sample_type, 'List Index':i, 'Xpath':xpath_canonicalURL}
+				['Filename', 'Sample Type', 'Xpath'],
+				{'Filename':raw_sample_file_name, 'Sample Type':raw_sample_type, 'Xpath':xpath_canonicalURL}
 			)
 
 		# 3 Sample Name
