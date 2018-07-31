@@ -943,17 +943,13 @@ for type_index, type_folder in enumerate(type_folders):
 		# 4 Sample Provider
 		sample_provider = get_single_value(
 			tree,
-			xpath_sample_provider
+			xpath_sample_provider,
+			fallback_file=logfile_provider_noneFound,
+			fallback_data={'Filename':raw_sample_file_name}
 		)
-		if sample_provider is None:
-			write_to_logfile(
-				logfile_provider_noneFound,
-				['Filename'],
-				{'Filename':raw_sample_file_name}
-			)
-		elif sample_provider == 'Anonymous':
+		if sample_provider == 'Anonymous':
 			sample_provider = None
-		else:
+		elif sample_provider is not None:
 			if sample_provider not in providers:
 				providers.append(sample_provider)
 			sample_provider = str(providers.index(sample_provider) + 1)
