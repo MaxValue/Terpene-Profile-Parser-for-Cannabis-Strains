@@ -131,12 +131,6 @@
 							addSampletype(newSampleType);
 						})
 
-						// terpenes
-						newDatabasesContainer.terpenes.forEach(function(newTerpene){
-							if (terpenes.indexOf(newTerpene) == -1) {
-								terpenes.push(newTerpene);
-							}
-						})
 					}
 				}
 				reader.readAsText(file);
@@ -181,7 +175,138 @@
 		var elem_resultsTable = document.getElementById("results");
 		var elem_graph = document.getElementById("graph");
 
-		var terpenes = databasesContainer.terpenes;
+		var terpenes = [
+			{
+				name: 'delta-Limonene',
+				color: 0xFF3B30, // red
+				boilingPoint: 177.0
+			},
+			{
+				name: 'alpha-Pinene',
+				color: 0xFF9500, // orange
+				boilingPoint: 156.0
+			},
+			{
+				name: 'Terpinolene',
+				color: 0xFFCC00, // yellow
+				boilingPoint: NaN
+			},
+			{
+				name: 'Linalool',
+				color: 0x4CD964, // green
+				boilingPoint: 198.0
+			},
+			{
+				name: 'beta-Caryophyllene',
+				color: 0x5AC8FA, // light blue
+				boilingPoint: 119.0
+			},
+			{
+				name: 'alpha-Humulene',
+				color: 0x007AFF, // blue
+				boilingPoint: NaN
+			},
+			{
+				name: 'beta-Myrcene',
+				color: 0x5856D6, // purple
+				boilingPoint: 167.0
+			},
+			{
+				name: 'beta-Pinene',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'cis-Nerolidol',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'trans-Nerolidol',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'trans-Nerolidol 1',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'trans-Nerolidol 2',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'trans-Ocimene',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: '3-Carene',
+				color: 0xC7C7CC, // gray
+				boilingPoint: 168.0
+			},
+			{
+				name: 'Camphene',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'Caryophyllene Oxide',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'Eucalyptol',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'Geraniol',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'Guaiol',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'Isopulegol',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'Ocimene',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'alpha-Bisabolol',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'alpha-Terpinene',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'gamma-Terpinene',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'beta-Ocimene',
+				color: 0xC7C7CC, // gray
+				boilingPoint: NaN
+			},
+			{
+				name: 'p-Cymene',
+				color: 0xC7C7CC, // gray
+				boilingPoint: 177.0
+			}
+		]
 		var sampleTypes = [];
 		var database_imports = 0;
 
@@ -269,26 +394,26 @@
 								if (matched) {
 									resultsNum ++;
 									terpenes.forEach(function(terpene){
-										var currentTerpeneValue = parseFloat(sample[terpene]) || 0.0;
-										if (!(terpene in averages)) {
-											averages[terpene] = [currentTerpeneValue, currentTerpeneValue, currentTerpeneValue];
+										var currentTerpeneValue = parseFloat(sample[terpene.name]) || 0.0;
+										if (!(terpene.name in averages)) {
+											averages[terpene.name] = [currentTerpeneValue, currentTerpeneValue, currentTerpeneValue];
 										} else {
-											averages[terpene][0] += currentTerpeneValue;
-											if (currentTerpeneValue < averages[terpene][1]) {
-												averages[terpene][1] = currentTerpeneValue;
+											averages[terpene.name][0] += currentTerpeneValue;
+											if (currentTerpeneValue < averages[terpene.name][1]) {
+												averages[terpene.name][1] = currentTerpeneValue;
 											}
-											if (currentTerpeneValue > averages[terpene][2]) {
-												averages[terpene][2] = currentTerpeneValue;
+											if (currentTerpeneValue > averages[terpene.name][2]) {
+												averages[terpene.name][2] = currentTerpeneValue;
 											}
 										}
 										if (currentTerpeneValue > highestOverallValue) {
 											highestOverallValue = currentTerpeneValue;
 										}
 
-										if (!(terpene in searchResults)) {
-											searchResults[terpene] = [currentTerpeneValue];
+										if (!(terpene.name in searchResults)) {
+											searchResults[terpene.name] = [currentTerpeneValue];
 										} else {
-											searchResults[terpene].push(currentTerpeneValue);
+											searchResults[terpene.name].push(currentTerpeneValue);
 										}
 									});
 								}
@@ -310,17 +435,16 @@
 				elem_resultsTable.tHead.children[0].innerHTML = "<td>Terpene</td><td>Graph</td>";
 				elem_resultsTable.tBodies[0].innerText = "";
 				terpenes.forEach(function(terpene){
-					var average = averages[terpene][0]/resultsNum;
-					averages[terpene][0] = average;
+					var average = averages[terpene.name][0]/resultsNum;
+					averages[terpene.name][0] = average;
 					// if (average > highestOverallValue) {
 					// 	highestOverallValue = average;
 					// }
 				})
-				var blub = 0;
-				terpenes.forEach(function(terpene,terpeneIndex,array){
-					var average = averages[terpene][0];
-					var lowestValue = averages[terpene][1];
-					var highestValue = averages[terpene][2];
+				terpenes.forEach(function(terpene,terpeneIndex){
+					var average = averages[terpene.name][0];
+					var lowestValue = averages[terpene.name][1];
+					var highestValue = averages[terpene.name][2];
 
 					//table
 
@@ -328,7 +452,7 @@
 
 					////terpene name
 					var cell = document.createElement("td");
-					cell.innerText = terpene;
+					cell.innerText = terpene.name;
 					row.appendChild(cell);
 
 					//graph-cells
@@ -336,7 +460,8 @@
 					// for (var i=0; i<100; i++) {
 					// 	var cell = document.createElement("td");
 					// 	if (i <= mappedGraphValue) {
-					// 		cell.style["background-color"] = "hsl(275, 80%, 25%)";
+					// 		// cell.style["background-color"] = "hsl(275, 80%, 25%)";
+					// 		cell.style["background-color"] = terpene.color.toString(16).padStart(7,'#000000');
 					// 	}
 					// 	cell.className = "graphcell";
 					// 	row.appendChild(cell);
@@ -350,7 +475,7 @@
 					cell.className = "graphcell";
 					var div = document.createElement("div");
 					div.style["width"] = mappedGraphValue+"%";
-					div.style["background-color"] = "red";
+					div.style["background-color"] = terpene.color.toString(16).padStart(7,'#000000');
 					div.style["display"] = "inline-table";
 					cell.appendChild(div);
 					// row.appendChild(cell);
@@ -372,12 +497,12 @@
 					// // canvas.height = cellHeight;
 					// var ctx = canvas.getContext('2d');
 					// //optional:
-					// searchResults[terpene].sort()
-					// searchResults[terpene].reverse();
+					// searchResults[terpene.name].sort()
+					// searchResults[terpene.name].reverse();
 					// ctx.fillStyle = "rgb(255, 0, 0)";
 					// // ctx.fillStyle = "hsl(275, 80%, 25%)";
 					// ctx.globalAlpha = 1/resultsNum;
-					// searchResults[terpene].forEach(function(dataPoint){
+					// searchResults[terpene.name].forEach(function(dataPoint){
 					// 	// ctx.fillRect(0, 0, (53/highestOverallValue) * dataPoint, 23);
 					// 	ctx.fillRect(0, 0, 53, 23);
 					// });
@@ -386,7 +511,8 @@
 					////terpene amount
 					var cell = document.createElement("td");
 					// cell.style["background-color"] = "hsl("+(240-(120 * average/highestOverallValue))+",100%,50%)";
-					cell.style["background-color"] = "hsl("+(240-(60 * average/highestOverallValue))+",100%,50%)";
+					// cell.style["background-color"] = "hsl("+(240-(60 * average/highestOverallValue))+",100%,50%)";
+					cell.style["background-color"] = terpene.color.toString(16).padStart(7,'#000000');
 					var span = document.createElement("span");
 					span.className = "valuecolumn";
 					span.innerText = toFixed(average, 2)+" %";
@@ -414,7 +540,8 @@
 					var cell = document.createElement("td");
 					// cell.style["background-color"] = "hsl(275, 60%, 25%)";
 					// cell.style["background-color"] = "hsl(275, 80%, 25%)";
-					cell.style["background-color"] = "hsl(275, 100%, 25%)";
+					// cell.style["background-color"] = "hsl(275, 100%, 25%)";
+					cell.style["background-color"] = terpene.color.toString(16).padStart(7,'#000000');
 					cell.colSpan = Math.floor((100/highestOverallValue) * average).toString();
 					row.appendChild(cell);
 

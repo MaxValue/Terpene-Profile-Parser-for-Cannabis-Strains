@@ -57,37 +57,6 @@ DATA_ROW_FIELDS = [
 	'Moisture Content',
 ]
 
-terpenes = {
-	'3-Carene':				re.compile(r'^(3|Three|Tri)[-_/\s.]*Carene$',					re.IGNORECASE),
-	'Camphene':				re.compile(r'^Camphene$',										re.IGNORECASE),
-	'Caryophyllene Oxide':	re.compile(r'^Caryophyllene[-_/\s.]*Oxide$',					re.IGNORECASE),
-	'Eucalyptol':			re.compile(r'^Eucalyptol$',										re.IGNORECASE),
-	'Farnesene': 			re.compile(r'^Farnesene$',										re.IGNORECASE),
-	'Geraniol':				re.compile(r'^Geraniol$',										re.IGNORECASE),
-	'Guaiol':				re.compile(r'^Guaiol$',											re.IGNORECASE),
-	'Isopulegol':			re.compile(r'^Isopulegol$',										re.IGNORECASE),
-	'Linalool':				re.compile(r'^Linalool$',										re.IGNORECASE),
-	'Ocimene':				re.compile(r'^Ocimene$',										re.IGNORECASE),
-	'Terpinolene':			re.compile(r'^Terpinolene$',									re.IGNORECASE),
-	'alpha-Bisabolol':		re.compile(r'^(alpha|A|α)[-_/\s.]*Bisabolol$',					re.IGNORECASE),
-	'alpha-Humulene':		re.compile(r'^(alpha|A|α)?[-_/\s.]*Humulene$',					re.IGNORECASE),
-	'alpha-Pinene':			re.compile(r'^(alpha|A|α)[-_/\s.]*Pinene$',						re.IGNORECASE),
-	'beta-Pinene':			re.compile(r'^(beta|B|β)[-_/\s.]*Pinene$',						re.IGNORECASE),
-	'alpha-Terpinene':		re.compile(r'^(alpha|A|α)[-_/\s.]*Terpinene$',					re.IGNORECASE),
-	'beta-Caryophyllene':	re.compile(r'^(beta|B|β)?[-_/\s.]*Caryophyllene$',				re.IGNORECASE),
-	'beta-Myrcene':			re.compile(r'^(beta|B|β)?[-_/\s.]*Myrcene$',					re.IGNORECASE),
-	'beta-Ocimene':			re.compile(r'^(beta|B|β)[-_/\s.]*Ocimene$',						re.IGNORECASE),
-	'cis-Nerolidol':		re.compile(r'^(cis)[-_/\s.]*Nerolidol$',						re.IGNORECASE),
-	'delta-Limonene':		re.compile(r'^(delta|D|δ)?[-_/\s.]*Limonene$',					re.IGNORECASE),
-	'gamma-Terpinene':		re.compile(r'^(gamma|G|Y|γ)[-_/\s.]*Terpinene$',				re.IGNORECASE),
-	'p-Cymene':				re.compile(r'^(p)[-_/\s.]*Cymene$',								re.IGNORECASE),
-	'trans-Nerolidol':		re.compile(r'^(trans)[-_/\s.]*Nerolidol$',						re.IGNORECASE),
-	'trans-Nerolidol 1':	re.compile(r'^(trans)[-_/\s.]*Nerolidol[-_/\s.]*1$',			re.IGNORECASE),
-	'trans-Nerolidol 2':	re.compile(r'^(trans)[-_/\s.]*Nerolidol[-_/\s.]*2$',			re.IGNORECASE),
-	'trans-Ocimene':		re.compile(r'^(trans)[-_/\s.]*Ocimene$',						re.IGNORECASE),
-}
-
-
 parser = argparse.ArgumentParser(argument_default=False, description='Unite multiple databases.')
 parser.add_argument('databases', default='labs/', help='The path containing the databases to unite.')
 parser.add_argument('--verbose', '-v', action='count', default=0, help='Turn on verbose mode.')
@@ -121,7 +90,7 @@ def write_to_csv(filepath, fieldnames, data):
 			writefile_writer.writerow(data_row)
 
 databases_list = sorted(os.listdir(os.path.expanduser(args.databases)))
-main_database = {'databases':{},'terpenes':list(terpenes.keys())}
+main_database = {'databases':{}}
 
 missing_files = []
 for raw_database_folder_name in databases_list:
