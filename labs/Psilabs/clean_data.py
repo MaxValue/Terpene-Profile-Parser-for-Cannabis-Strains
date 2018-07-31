@@ -571,7 +571,7 @@ for type_index, type_folder in enumerate(type_folders):
 							terpenes_data[terpene_name] = terpene_amount
 
 				if original_terpene_name is None:
-					log_this('terpene NaN', level=1)
+					log_this('terpene name empty', level=1)
 					write_to_logfile(
 						logfile_terpenes_noname,
 						['Filename', 'List Index'],
@@ -705,7 +705,7 @@ for type_index, type_folder in enumerate(type_folders):
 							cannabinoid_data[cannabinoid_name] = cannabinoid_amount
 
 				if original_cannabinoid_name is None:
-					log_this('{}: cannabinoid NaN'.format(raw_sample_file_name), level=1)
+					log_this('{}: cannabinoid name empty'.format(raw_sample_file_name), level=1)
 					write_to_logfile(
 						logfile_cannabinoids_noname,
 						['Filename', 'List Index'],
