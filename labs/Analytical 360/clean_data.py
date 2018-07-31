@@ -50,7 +50,7 @@ DATA_ROW_FIELDS = [
 	'Moisture Content',
 ]
 
-import re, os, csv, argparse, json, urllib
+import re, os, csv, argparse, json, urllib, datetime
 from lxml import html
 from lxml import etree
 
@@ -126,6 +126,7 @@ def normalize_number(numberstring, base=10, comma=False, separator=False, compre
 	return result
 
 def normalize_year(year):
+	year = str(year)
 	if re.sub('[0-9]', '', year) != '':
 		raise ValueError
 	if len(year) == 2:
@@ -149,17 +150,14 @@ def normalize_year(year):
 			prefix = '19'
 		if year.startswith('9'):
 			prefix = '19'
-		return '{}{}'.format(prefix, year)
+		return int('{}{}'.format(prefix, year))
 	elif len(year) == 4:
-		return year
+		return int(year)
 	else:
 		raise ValueError
 
 def csv_escape(data):
 	return '"{}"'.format(data)
-
-def date_iso8601(year, month, day):
-	return '{year}-{month:0>2}-{day:0>2}'.format(year=year, month=month, day=day)
 
 def log_this(*msg, sep=' ', end='\n', level=3, override=False):
 	msg = sep.join([str(x) for x in msg])
@@ -982,7 +980,7 @@ for type_index, type_folder in enumerate(type_folders):
 		)
 		re_date_match = re_date.match(raw_test_time)
 		if re_date_match:
-			test_time = date_iso8601(year=normalize_year(re_date_match.group('year')),month=re_date_match.group('month'),day=re_date_match.group('day'))
+			test_time = datetime.date(normalize_year(re_date_match.group('year')),int(re_date_match.group('month')),int(re_date_match.group('day'))).isoformat()
 		else:
 			write_to_logfile(
 				logfile_time_tested_noneFound,
