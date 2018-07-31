@@ -389,18 +389,18 @@
 					cell.style["background-color"] = "hsl("+(240-(60 * average/highestOverallValue))+",100%,50%)";
 					var span = document.createElement("span");
 					span.className = "valuecolumn";
-					span.innerText = toFixed(average, 1)+" %";
+					span.innerText = toFixed(average, 2)+" %";
 					cell.appendChild(span);
 					row.appendChild(cell);
 
 					////terpene lower variance
 					// var cell = document.createElement("td");
-					// cell.innerText = toFixed(lowestValue - average, 1)+" %";
+					// cell.innerText = toFixed(lowestValue - average, 2)+" %";
 					// row.appendChild(cell);
 
 					// ////terpene upper variance
 					// var cell = document.createElement("td");
-					// cell.innerText = toFixed(highestValue - average, 1)+" %";
+					// cell.innerText = toFixed(highestValue - average, 2)+" %";
 					// row.appendChild(cell);
 
 
