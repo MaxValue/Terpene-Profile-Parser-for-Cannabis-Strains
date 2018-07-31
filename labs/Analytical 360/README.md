@@ -20,6 +20,7 @@ This folder contains:
 This crawler utilizes [Scrapy](https://scrapy.org/) to go through all search results of the searchstring `" "`. You will need:
 * Python3: `sudo apt-get install python3 python3-pip`
 * Scrapy:  `python3 -m pip install scrapy`
+* Dateparser:  `python3 -m pip install dateparser`
 
 The crawler can be run like this:
 `scrapy run analytical360_spider`

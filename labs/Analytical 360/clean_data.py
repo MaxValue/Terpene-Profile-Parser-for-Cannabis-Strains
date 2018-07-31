@@ -53,6 +53,7 @@ DATA_ROW_FIELDS = [
 import re, os, csv, argparse, json, urllib, datetime
 from lxml import html
 from lxml import etree
+import dateparser.search as dateparser_search
 
 parser = argparse.ArgumentParser(argument_default=False, description='Clean raw lab data.')
 parser.add_argument('database', nargs='?', default='downloader/database_dump/', help='The location of the database dump.')
@@ -124,37 +125,6 @@ def normalize_number(numberstring, base=10, comma=False, separator=False, compre
 		elif result.startswith('0.'):
 			return result[1:]
 	return result
-
-def normalize_year(year):
-	year = str(year)
-	if re.sub('[0-9]', '', year) != '':
-		raise ValueError
-	if len(year) == 2:
-		if year.startswith('0'):
-			prefix = '20'
-		if year.startswith('1'):
-			prefix = '20'
-		if year.startswith('2'):
-			prefix = '20'
-		if year.startswith('3'):
-			prefix = '19'
-		if year.startswith('4'):
-			prefix = '19'
-		if year.startswith('5'):
-			prefix = '19'
-		if year.startswith('6'):
-			prefix = '19'
-		if year.startswith('7'):
-			prefix = '19'
-		if year.startswith('8'):
-			prefix = '19'
-		if year.startswith('9'):
-			prefix = '19'
-		return int('{}{}'.format(prefix, year))
-	elif len(year) == 4:
-		return int(year)
-	else:
-		raise ValueError
 
 def csv_escape(data):
 	return '"{}"'.format(data)
@@ -564,6 +534,7 @@ logfile_thc_total_noneFound = 'log-thc_total-none_found'
 logfile_thc_total_notPercentage = 'log-thc_total-not_percentage'
 logfile_time_received_noneFound = 'log-time_received-none_found'
 logfile_time_tested_noneFound = 'log-time_tested-none_found'
+logfile_time_tested_notDate = 'log-time_tested-not_date'
 logfile_type_noneFound = 'log-type-none_found'
 logfile_type_unknown = 'log-type-unknown'
 logfile_uid_noneFound = 'log-uid-none_found'
@@ -601,6 +572,7 @@ result_files = [
 	logfile_thc_total_notPercentage,
 	logfile_time_received_noneFound,
 	logfile_time_tested_noneFound,
+	logfile_time_tested_notDate,
 	logfile_type_noneFound,
 	logfile_uid_noneFound,
 	sample_database_CSVfile,
@@ -980,7 +952,19 @@ for type_index, type_folder in enumerate(type_folders):
 		)
 		re_date_match = re_date_tested.match(raw_test_time)
 		if re_date_match:
-			test_time = datetime.date(normalize_year(re_date_match.group('year')),int(re_date_match.group('month')),int(re_date_match.group('day'))).isoformat()
+			possible_dates = dateparser_search.search_dates(
+				text=raw_test_time,
+				languages=['en'],
+				settings={'DATE_ORDER':'MDY','STRICT_PARSING':True}
+			)
+			if type(possible_dates) == list and len(possible_dates) == 1:
+				test_time = possible_dates[0][1].date().isoformat()
+			else:
+				write_to_logfile(
+					logfile_time_tested_notDate,
+					['Filename'],
+					{'Filename':raw_sample_file_name}
+				)
 		else:
 			write_to_logfile(
 				logfile_time_tested_noneFound,

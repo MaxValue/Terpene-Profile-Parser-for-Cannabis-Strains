@@ -21,6 +21,7 @@ This crawler utilizes [Selenium](https://www.seleniumhq.org/) to go through all 
 * Python3: `sudo apt-get install python3 python3-pip`
 * Selenium: `python3 -m pip install selenium`
 * [Geckodriver](https://github.com/mozilla/geckodriver/releases): Put this in your PATH so it can be called as `geckodriver`
+* Dateparser:  `python3 -m pip install dateparser`
 
 The crawler can be run like this:
 `python3 downloader.py --save-path='database_dump/'`
