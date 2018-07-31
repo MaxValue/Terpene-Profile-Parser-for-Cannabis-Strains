@@ -93,6 +93,7 @@ parser.add_argument('databases', default='labs/', help='The path containing the 
 parser.add_argument('--verbose', '-v', action='count', default=0, help='Turn on verbose mode.')
 parser.add_argument('--json', action='store_true', help='Export as JSON.')
 parser.add_argument('--csv', action='store_true', help='Export as CSV.')
+parser.add_argument('--placeholder-csv', default='', help='CSV only: The placeholder to use when no value is present.')
 args = parser.parse_args()
 
 def log_this(*msg, sep=' ', end='\n', level=3, override=False):
@@ -111,7 +112,7 @@ def write_to_csv(filepath, fieldnames, data):
 	else:
 		writeheader = True
 	with open(filepath, 'a', encoding='utf-8') as writefile:
-		writefile_writer = csv.DictWriter(writefile, fieldnames=fieldnames, restval=PLACEHOLDER_UNDEFINED, lineterminator='\n')
+		writefile_writer = csv.DictWriter(writefile, fieldnames=fieldnames, restval=args.placeholder_csv, lineterminator='\n')
 		if writeheader:
 			writefile_writer.writeheader()
 		if type(data) != list:
@@ -154,9 +155,15 @@ for raw_database_folder_name in databases_list:
 					main_database['databases'][database_name][sample_type] = []
 				for sample_data in database_file_reader_JSON['samples'][sample_type]:
 					for sample_data_field in list(sample_data.keys()):
+						remove_key = False
+						if sample_data[sample_data_field] == PLACEHOLDER_UNDEFINED:
+							remove_key = True
 						if sample_data_field not in DATA_ROW_FIELDS:
+							remove_key = True
+						if remove_key:
 							del sample_data[sample_data_field]
-					main_database['databases'][database_name][sample_type].append(sample_data)
+					if sample_data != {}:
+						main_database['databases'][database_name][sample_type].append(sample_data)
 
 	if args.csv:
 		csv_database_file_name = os.path.join(os.path.expanduser(args.databases),raw_database_folder_name,'results.csv')

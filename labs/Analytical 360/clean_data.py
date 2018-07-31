@@ -68,12 +68,10 @@ parser.add_argument('--no-cleanup', action='store_true', help='Do not delete exi
 parser.add_argument('--no-logfiles', action='store_true', help='Do not create log files for logging errors.')
 parser.add_argument('--force-terpenes', action='store_true', help='Skip all samples without a terpene profile.')
 parser.add_argument('--force-cannabinoids', action='store_true', help='Skip all samples without a cannabinoid profile.')
+parser.add_argument('--placeholder-csv', default='', help='CSV only: The placeholder to use when no value is present.')
 args = parser.parse_args()
 
-# Use this to change what should be put as value for a datapoint if it was not found or could not be parsed
-PLACEHOLDER_UNDEFINED = 'NaN'
-
-def get_single_value(tree, xpath, fallback=PLACEHOLDER_UNDEFINED, fallback_file=False, fallback_data={}, join_multi=False):
+def get_single_value(tree, xpath, fallback=None, fallback_file=False, fallback_data={}, join_multi=False):
 	raw_value = tree.xpath(xpath)
 	if len(raw_value) == 1:
 		if type(raw_value[0]) == str or type(raw_value[0]) == etree._ElementUnicodeResult:
@@ -153,7 +151,7 @@ def write_to_csv(filepath, fieldnames, data):
 	else:
 		writeheader = True
 	with open(filepath, 'a', encoding='utf-8') as writefile:
-		writefile_writer = csv.DictWriter(writefile, fieldnames=fieldnames, restval=PLACEHOLDER_UNDEFINED, lineterminator='\n')
+		writefile_writer = csv.DictWriter(writefile, fieldnames=fieldnames, restval=args.placeholder_csv, lineterminator='\n')
 		if writeheader:
 			writefile_writer.writeheader()
 		if type(data) != list:
@@ -205,7 +203,7 @@ def write_to_html(filepath, fieldnames, data, title=False):
 					link.text = 'Analytical 360'
 					fieldname_element.append(link)
 				else:
-					#fieldname_element.text = PLACEHOLDER_UNDEFINED
+					#fieldname_element.text = ''
 					pass
 			row_body.append(fieldname_element)
 		tbody.append(row_body)
@@ -692,6 +690,7 @@ for type_index, type_folder in enumerate(type_folders):
 				raw_terpenes_info = get_single_value(
 					raw_terpene,
 					'descendant-or-self::*/text()',
+					fallback='',
 					join_multi=True
 				)
 
@@ -758,8 +757,8 @@ for type_index, type_folder in enumerate(type_folders):
 						else:
 							terpenes_data[terpene_name] = terpene_amount
 
-				if original_terpene_name == PLACEHOLDER_UNDEFINED:
 					log_this('terpene NaN', level=1)
+				if original_terpene_name is None:
 					write_to_logfile(
 						logfile_terpenes_noname,
 						['Filename', 'List Index'],
@@ -803,6 +802,7 @@ for type_index, type_folder in enumerate(type_folders):
 				raw_cannabinoid_info = get_single_value(
 					raw_cannabinoid,
 					'descendant-or-self::*/text()',
+					fallback='',
 					join_multi=True
 				)
 
@@ -864,8 +864,8 @@ for type_index, type_folder in enumerate(type_folders):
 						else:
 							cannabinoid_data[cannabinoid_name] = cannabinoid_amount
 
-				if original_cannabinoid_name == PLACEHOLDER_UNDEFINED:
 					log_this('{}: cannabinoid NaN'.format(raw_sample_file_name), level=1)
+				if original_cannabinoid_name is None:
 					write_to_logfile(
 						logfile_cannabinoids_noname,
 						['Filename', 'List Index'],
@@ -890,7 +890,7 @@ for type_index, type_folder in enumerate(type_folders):
 			skip_this_file = True
 
 		# 2 Sample Type
-		sample_type = PLACEHOLDER_UNDEFINED
+		sample_type = None
 		sampleTypeURL_match = re_sampleTypeURL.match(parsed_canonical.path)
 		if sampleTypeURL_match:
 			raw_sample_type = sampleTypeURL_match.group('type')
@@ -914,11 +914,15 @@ for type_index, type_folder in enumerate(type_folders):
 						log_this('Regex matched first time', level=3)
 						regex_matched = True
 						sample_type = sampletype_name
-		# if re_oldSampleFilename.match(raw_sample_file_name) and sample_type!=PLACEHOLDER_UNDEFINED:
+		# if re_oldSampleFilename.match(raw_sample_file_name) and not (sample_type is None):
 		# 	os.rename(os.path.join(os.path.expanduser(args.database),raw_sample_file_name), os.path.join(os.path.expanduser(args.database),sample_type[0]+sampleTypeURL_match.group('id')+'.html'))
 		# 	raw_sample_file_name = sample_type[0]+sampleTypeURL_match.group('id')+'.html'
-		if not os.path.exists(os.path.join(args.database, sample_type)):
-			os.makedirs(os.path.join(os.path.expanduser(args.database),sample_type), exist_ok=True)
+		if sample_type is None:
+			sample_type_foldername = 'NaN'
+		else:
+			sample_type_foldername = sample_type
+		if not os.path.exists(os.path.join(args.database, sample_type_foldername)):
+			os.makedirs(os.path.join(os.path.expanduser(args.database),sample_type_foldername), exist_ok=True)
 		if not sampleTypeURL_match or not regex_matched:
 			log_this('sample type did not match anything: {}'.format(raw_sample_type), level=1)
 			# Match none?
@@ -941,24 +945,25 @@ for type_index, type_folder in enumerate(type_folders):
 			tree,
 			xpath_sample_provider
 		)
-		if sample_provider == PLACEHOLDER_UNDEFINED:
+		if sample_provider is None:
 			write_to_logfile(
 				logfile_provider_noneFound,
 				['Filename'],
 				{'Filename':raw_sample_file_name}
 			)
 		elif sample_provider == 'Anonymous':
-			sample_provider = PLACEHOLDER_UNDEFINED
+			sample_provider = None
 		else:
 			if sample_provider not in providers:
 				providers.append(sample_provider)
 			sample_provider = str(providers.index(sample_provider) + 1)
 
 		# 5 Test UID
-		test_uid = PLACEHOLDER_UNDEFINED
+		test_uid = None
 		raw_test_uid = get_single_value(
 			tree,
 			xpath_test_uid,
+			fallback='',
 			fallback_file=logfile_uid_noneFound,
 			fallback_data={'Filename':raw_sample_file_name}
 		)
@@ -967,10 +972,11 @@ for type_index, type_folder in enumerate(type_folders):
 			test_uid = test_uid_match.group('uid')
 
 		# 6 Test Time
-		test_time = PLACEHOLDER_UNDEFINED
+		test_time = None
 		raw_test_time = get_single_value(
 			tree,
-			xpath_time_tested
+			xpath_time_tested,
+			fallback=''
 		)
 		re_date_match = re_date_tested.match(raw_test_time)
 		if re_date_match:
@@ -995,13 +1001,14 @@ for type_index, type_folder in enumerate(type_folders):
 			)
 
 		# 7 Receipt Time
-		receipt_time = PLACEHOLDER_UNDEFINED
+		receipt_time = None
 
 		# 8 Post Time
-		post_time = PLACEHOLDER_UNDEFINED
+		post_time = None
 		raw_post_time = get_single_value(
 			tree,
-			xpath_time_posted
+			xpath_time_posted,
+			fallback=''
 		)
 		re_date_match = re_date_posted.match(raw_post_time)
 		if re_date_match:
@@ -1041,8 +1048,15 @@ for type_index, type_folder in enumerate(type_folders):
 		sample_data.update(cannabinoid_data)
 
 		for sample_data_field in list(sample_data.keys()):
+			remove_key = False
+			if sample_data[sample_data_field] is None:
+				remove_key = True
 			if sample_data_field not in DATA_ROW_FIELDS:
+				remove_key = True
+			if remove_key:
 				del sample_data[sample_data_field]
+		if sample_data == {}:
+			skip_this_file = True
 
 		if not skip_this_file:
 			if args.csv:
