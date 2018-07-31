@@ -82,9 +82,9 @@ def get_single_value(tree, xpath, fallback=None, fallback_file=False, fallback_d
 		if join_multi == False:
 			if fallback_file:
 				write_to_logfile(
-					fallback_file,
-					sorted(fallback_data.keys()),
-					fallback_data
+					filepath=fallback_file,
+					fieldnames=sorted(fallback_data.keys()),
+					data=fallback_data
 				)
 			return fallback
 		else:
@@ -141,9 +141,18 @@ def log_this(*msg, sep=' ', end='\n', level=3, override=False):
 def write_to_logfile(filepath, fieldnames, data, title=False, override=False):
 	if (not args.no_logfiles) or override:
 		if args.log_csv:
-			write_to_csv(filepath=filepath+'.csv', fieldnames=fieldnames, data=data)
+			write_to_csv(
+				filepath=filepath+'.csv',
+				fieldnames=fieldnames,
+				data=data
+			)
 		elif args.log_html:
-			write_to_html(filepath=filepath+'.html', fieldnames=fieldnames, data=data, title=title)
+			write_to_html(
+				filepath=filepath+'.html',
+				fieldnames=fieldnames,
+				data=data,
+				title=title
+			)
 
 def write_to_csv(filepath, fieldnames, data):
 	if os.path.exists(filepath):
@@ -643,8 +652,8 @@ for type_index, type_folder in enumerate(type_folders):
 		skip_this_file = False
 
 		elem_canonicalUrl = get_single_value(
-			tree,
-			xpath_canonicalURL
+			tree=tree,
+			xpath=xpath_canonicalURL
 		)
 		online_URL = elem_canonicalUrl.attrib['href']
 		parsed_canonical = urllib.parse.urlparse(online_URL)
@@ -653,9 +662,9 @@ for type_index, type_folder in enumerate(type_folders):
 		provider_page_test = tree.xpath(xpath_provider_page)
 		if len(provider_page_test) != 0:
 			write_to_logfile(
-				'provider_page',
-				['Filename'],
-				{'Filename':raw_sample_file_name}
+				filepath='provider_page',
+				fieldnames=['Filename'],
+				data={'Filename':raw_sample_file_name}
 			)
 			log_this('{}: Is provider'.format(raw_sample_file_name), level=3)
 			continue
@@ -679,17 +688,17 @@ for type_index, type_folder in enumerate(type_folders):
 		if 0 == len(raw_terpenes_1) == len(raw_terpenes_2) == len(raw_terpenes_3) == len(raw_terpenes_4):
 			log_this('no terpenes: {}'.format(raw_sample_file_name), level=3)
 			write_to_logfile(
-				logfile_terpenes_noneFound,
-				['Filename'],
-				{'Filename':raw_sample_file_name}
+				filepath=logfile_terpenes_noneFound,
+				fieldnames=['Filename'],
+				data={'Filename':raw_sample_file_name}
 			)
 		else:
 			for i, raw_terpene in enumerate(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4, 1):
 
 				# AMOUNT AND NAME
 				raw_terpenes_info = get_single_value(
-					raw_terpene,
-					'descendant-or-self::*/text()',
+					tree=raw_terpene,
+					xpath='descendant-or-self::*/text()',
 					fallback='',
 					join_multi=True
 				)
@@ -700,13 +709,15 @@ for type_index, type_folder in enumerate(type_folders):
 				if terpene_amount_match:
 					terpene_amount_match_object = terpene_amount_match
 					try:
-						terpene_amount = normalize_number(raw_terpenes_info[terpene_amount_match.start():terpene_amount_match.end()])
+						terpene_amount = normalize_number(
+							numberstring=raw_terpenes_info[terpene_amount_match.start():terpene_amount_match.end()]
+						)
 					except ValueError as e:
 						log_this('terpenes number error', level=1)
 						write_to_logfile(
-							logfile_terpenes_nonNumber,
-							['Filename','List Index', 'Amount'],
-							{'Filename':raw_sample_file_name, 'List Index':i, 'Amount':raw_terpenes_info}
+							filepath=logfile_terpenes_nonNumber,
+							fieldnames=['Filename','List Index', 'Amount'],
+							data={'Filename':raw_sample_file_name, 'List Index':i, 'Amount':raw_terpenes_info}
 						)
 						continue
 				elif terpene_zeroamount_match:
@@ -716,9 +727,9 @@ for type_index, type_folder in enumerate(type_folders):
 					non_percentage_numbers = True
 					log_this('non percentage terpenes', level=3)
 					write_to_logfile(
-						logfile_terpenes_notPercentage,
-						['Filename','List Index'],
-						{'Filename':raw_sample_file_name, 'List Index':i}
+						filepath=logfile_terpenes_notPercentage,
+						fieldnames=['Filename','List Index'],
+						data={'Filename':raw_sample_file_name, 'List Index':i}
 					)
 					continue
 
@@ -737,9 +748,9 @@ for type_index, type_folder in enumerate(type_folders):
 							log_this('terpene matches multiple patterns', level=1)
 							# Match more than one regex?
 							write_to_logfile(
-								logfile_terpenes_oneMatchMultipleTypes,
-								['Filename', 'List Index', 'Terpene'],
-								{'Filename':raw_sample_file_name,'List Index':i,'Terpene':terpene_name}
+								filepath=logfile_terpenes_oneMatchMultipleTypes,
+								fieldnames=['Filename', 'List Index', 'Terpene'],
+								data={'Filename':raw_sample_file_name,'List Index':i,'Terpene':terpene_name}
 							)
 							skip_this_file = True
 						else:
@@ -749,9 +760,9 @@ for type_index, type_folder in enumerate(type_folders):
 							log_this('{}: Terpene already recorded: {}'.format(raw_sample_file_name, terpene_name), level=1)
 							# Multiple match same regex?
 							write_to_logfile(
-								logfile_terpenes_multipleMatchSameType,
-								['Filename', 'List Index', 'Terpene'],
-								{'Filename':raw_sample_file_name,'List Index':i,'Terpene':terpene_name}
+								filepath=logfile_terpenes_multipleMatchSameType,
+								fieldnames=['Filename', 'List Index', 'Terpene'],
+								data={'Filename':raw_sample_file_name,'List Index':i,'Terpene':terpene_name}
 							)
 							skip_this_file = True
 						else:
@@ -760,24 +771,24 @@ for type_index, type_folder in enumerate(type_folders):
 				if original_terpene_name is None:
 					log_this('terpene name empty', level=1)
 					write_to_logfile(
-						logfile_terpenes_noname,
-						['Filename', 'List Index'],
-						{'Filename':raw_sample_file_name, 'List Index':i}
+						filepath=logfile_terpenes_noname,
+						fieldnames=['Filename', 'List Index'],
+						data={'Filename':raw_sample_file_name, 'List Index':i}
 					)
 				elif not regex_matched:
 					log_this('{}: terpene did not match anything: {}'.format(raw_sample_file_name, original_terpene_name), level=1)
 					# Match none?
 					write_to_logfile(
-						logfile_terpenes_unknown,
-						['Filename', 'Terpene', 'List Index'],
-						{'Filename':raw_sample_file_name, 'Terpene':terpene_name, 'List Index':i}
+						filepath=logfile_terpenes_unknown,
+						fieldnames=['Filename', 'Terpene', 'List Index'],
+						data={'Filename':raw_sample_file_name, 'Terpene':terpene_name, 'List Index':i}
 					)
 			if terpenes_data == {}:
 				log_this('{}: no terpenes were added'.format(raw_sample_file_name), level=3)
 				write_to_logfile(
-					logfile_terpenes_allNoMatch,
-					['Filename', 'Amount'],
-					{'Filename':raw_sample_file_name, 'Amount':len(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4)}
+					filepath=logfile_terpenes_allNoMatch,
+					fieldnames=['Filename', 'Amount'],
+					data={'Filename':raw_sample_file_name, 'Amount':len(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4)}
 				)
 		if args.force_terpenes and terpenes_data == {}:
 			skip_this_file = True
@@ -791,17 +802,17 @@ for type_index, type_folder in enumerate(type_folders):
 		if 0 == len(raw_cannabinoids_1) == len(raw_cannabinoids_2):
 			log_this('{}: no potency'.format(raw_sample_file_name), level=3)
 			write_to_logfile(
-				logfile_cannabinoids_noneFound,
-				['Filename'],
-				{'Filename':raw_sample_file_name}
+				filepath=logfile_cannabinoids_noneFound,
+				fieldnames=['Filename'],
+				data={'Filename':raw_sample_file_name}
 			)
 		else:
 			for i, raw_cannabinoid in enumerate(raw_cannabinoids_1+raw_cannabinoids_2, 1):
 
 				# AMOUNT AND NAME
 				raw_cannabinoid_info = get_single_value(
-					raw_cannabinoid,
-					'descendant-or-self::*/text()',
+					tree=raw_cannabinoid,
+					xpath='descendant-or-self::*/text()',
 					fallback='',
 					join_multi=True
 				)
@@ -810,21 +821,23 @@ for type_index, type_folder in enumerate(type_folders):
 				cannabinoid_amount_match = re_percentageValueBeginning.match(raw_cannabinoid_info)
 				if cannabinoid_amount_match:
 					try:
-						cannabinoid_amount = normalize_number(raw_cannabinoid_info[cannabinoid_amount_match.start():cannabinoid_amount_match.end()])
+						cannabinoid_amount = normalize_number(
+							numberstring=raw_cannabinoid_info[cannabinoid_amount_match.start():cannabinoid_amount_match.end()]
+						)
 					except ValueError as e:
 						log_this('{}: cannabinoid number error'.format(raw_sample_file_name), level=1)
 						write_to_logfile(
-							logfile_cannabinoids_nonNumber,
-							['Filename','List Index', 'Amount'],
-							{'Filename':raw_sample_file_name, 'List Index':i, 'Amount':raw_cannabinoid_info}
+							filepath=logfile_cannabinoids_nonNumber,
+							fieldnames=['Filename','List Index', 'Amount'],
+							data={'Filename':raw_sample_file_name, 'List Index':i, 'Amount':raw_cannabinoid_info}
 						)
 						continue
 				else:
 					log_this('{}: non percentage cannabinoid'.format(raw_sample_file_name), level=3)
 					write_to_logfile(
-						logfile_cannabinoids_notPercentage,
-						['Filename','List Index'],
-						{'Filename':raw_sample_file_name, 'List Index':i}
+						filepath=logfile_cannabinoids_notPercentage,
+						fieldnames=['Filename','List Index'],
+						data={'Filename':raw_sample_file_name, 'List Index':i}
 					)
 					continue
 
@@ -844,9 +857,9 @@ for type_index, type_folder in enumerate(type_folders):
 							log_this('{}: Cannabinoid matches multiple patterns'.format(raw_sample_file_name), level=1)
 							# Match more than one regex?
 							write_to_logfile(
-								logfile_cannabinoids_oneMatchMultipleTypes,
-								['Filename', 'List Index', 'Cannabinoid'],
-								{'Filename':raw_sample_file_name,'List Index':i,'Cannabinoid':cannabinoid_name}
+								filepath=logfile_cannabinoids_oneMatchMultipleTypes,
+								fieldnames=['Filename', 'List Index', 'Cannabinoid'],
+								data={'Filename':raw_sample_file_name,'List Index':i,'Cannabinoid':cannabinoid_name}
 							)
 							skip_this_file = True
 						else:
@@ -856,9 +869,9 @@ for type_index, type_folder in enumerate(type_folders):
 							log_this('{}: Cannabinoid already recorded: {}'.format(raw_sample_file_name, cannabinoid_name), level=1)
 							# Multiple items match same regex
 							write_to_logfile(
-								logfile_cannabinoids_multipleMatchSameType,
-								['Filename', 'List Index', 'Cannabinoid'],
-								{'Filename':raw_sample_file_name,'List Index':i,'Cannabinoid':cannabinoid_name}
+								filepath=logfile_cannabinoids_multipleMatchSameType,
+								fieldnames=['Filename', 'List Index', 'Cannabinoid'],
+								data={'Filename':raw_sample_file_name,'List Index':i,'Cannabinoid':cannabinoid_name}
 							)
 							skip_this_file = True
 						else:
@@ -867,24 +880,24 @@ for type_index, type_folder in enumerate(type_folders):
 				if original_cannabinoid_name is None:
 					log_this('{}: cannabinoid name empty'.format(raw_sample_file_name), level=1)
 					write_to_logfile(
-						logfile_cannabinoids_noname,
-						['Filename', 'List Index'],
-						{'Filename':raw_sample_file_name, 'List Index':i}
+						filepath=logfile_cannabinoids_noname,
+						fieldnames=['Filename', 'List Index'],
+						data={'Filename':raw_sample_file_name, 'List Index':i}
 					)
 				elif not regex_matched:
 					log_this('{}: cannabinoid did not match anything: {}'.format(raw_sample_file_name, original_cannabinoid_name), level=3)
 					# Match none?
 					write_to_logfile(
-						logfile_cannabinoids_unknown,
-						['Filename', 'Cannabinoid', 'List Index'],
-						{'Filename':raw_sample_file_name, 'Cannabinoid':cannabinoid_name, 'List Index':i}
+						filepath=logfile_cannabinoids_unknown,
+						fieldnames=['Filename', 'Cannabinoid', 'List Index'],
+						data={'Filename':raw_sample_file_name, 'Cannabinoid':cannabinoid_name, 'List Index':i}
 					)
 			if cannabinoid_data == {}:
 				log_this('{}: no cannabinoids were added'.format(raw_sample_file_name), level=3)
 				write_to_logfile(
-					logfile_cannabinoids_allNoMatch,
-					['Filename', 'Amount'],
-					{'Filename':raw_sample_file_name, 'Amount':len(raw_cannabinoids_1+raw_cannabinoids_2)}
+					filepath=logfile_cannabinoids_allNoMatch,
+					fieldnames=['Filename', 'Amount'],
+					data={'Filename':raw_sample_file_name, 'Amount':len(raw_cannabinoids_1+raw_cannabinoids_2)}
 				)
 		if args.force_cannabinoids and cannabinoid_data == {}:
 			skip_this_file = True
@@ -905,9 +918,9 @@ for type_index, type_folder in enumerate(type_folders):
 						log_this('Regex matched before', level=1)
 						# Match more than one regex?
 						write_to_logfile(
-							'sample_type_one_matches_multiple_types',
-							['Filename', 'Sample Type'],
-							{'Filename':raw_sample_file_name,'Sample Type':sampletype_name}
+							filepath='sample_type_one_matches_multiple_types',
+							fieldnames=['Filename', 'Sample Type'],
+							data={'Filename':raw_sample_file_name,'Sample Type':sampletype_name}
 						)
 						skip_this_file = True
 					else:
@@ -927,23 +940,23 @@ for type_index, type_folder in enumerate(type_folders):
 			log_this('sample type did not match anything: {}'.format(raw_sample_type), level=1)
 			# Match none?
 			write_to_logfile(
-				logfile_type_unknown,
-				['Filename', 'Sample Type', 'Xpath'],
-				{'Filename':raw_sample_file_name, 'Sample Type':raw_sample_type, 'Xpath':xpath_canonicalURL}
+				filepath=logfile_type_unknown,
+				fieldnames=['Filename', 'Sample Type', 'Xpath'],
+				data={'Filename':raw_sample_file_name, 'Sample Type':raw_sample_type, 'Xpath':xpath_canonicalURL}
 			)
 
 		# 3 Sample Name
 		sample_name = get_single_value(
-			tree,
-			xpath_sample_name,
+			tree=tree,
+			xpath=xpath_sample_name,
 			fallback_file=logfile_name_noneFound,
 			fallback_data={'Filename':raw_sample_file_name}
 		)
 
 		# 4 Sample Provider
 		sample_provider = get_single_value(
-			tree,
-			xpath_sample_provider,
+			tree=tree,
+			xpath=xpath_sample_provider,
 			fallback_file=logfile_provider_noneFound,
 			fallback_data={'Filename':raw_sample_file_name}
 		)
@@ -957,8 +970,8 @@ for type_index, type_folder in enumerate(type_folders):
 		# 5 Test UID
 		test_uid = None
 		raw_test_uid = get_single_value(
-			tree,
-			xpath_test_uid,
+			tree=tree,
+			xpath=xpath_test_uid,
 			fallback='',
 			fallback_file=logfile_uid_noneFound,
 			fallback_data={'Filename':raw_sample_file_name}
@@ -970,8 +983,8 @@ for type_index, type_folder in enumerate(type_folders):
 		# 6 Test Time
 		test_time = None
 		raw_test_time = get_single_value(
-			tree,
-			xpath_time_tested,
+			tree=tree,
+			xpath=xpath_time_tested,
 			fallback=''
 		)
 		re_date_match = re_date_tested.match(raw_test_time)
@@ -985,15 +998,15 @@ for type_index, type_folder in enumerate(type_folders):
 				test_time = possible_dates[0][1].date().isoformat()
 			else:
 				write_to_logfile(
-					logfile_time_tested_notDate,
-					['Filename'],
-					{'Filename':raw_sample_file_name}
+					filepath=logfile_time_tested_notDate,
+					fieldnames=['Filename'],
+					data={'Filename':raw_sample_file_name}
 				)
 		else:
 			write_to_logfile(
-				logfile_time_tested_noneFound,
-				['Filename'],
-				{'Filename':raw_sample_file_name}
+				filepath=logfile_time_tested_noneFound,
+				fieldnames=['Filename'],
+				data={'Filename':raw_sample_file_name}
 			)
 
 		# 7 Receipt Time
@@ -1002,8 +1015,8 @@ for type_index, type_folder in enumerate(type_folders):
 		# 8 Post Time
 		post_time = None
 		raw_post_time = get_single_value(
-			tree,
-			xpath_time_posted,
+			tree=tree,
+			xpath=xpath_time_posted,
 			fallback=''
 		)
 		re_date_match = re_date_posted.match(raw_post_time)
@@ -1017,15 +1030,15 @@ for type_index, type_folder in enumerate(type_folders):
 				post_time = possible_dates[0][1].date().isoformat()
 			else:
 				write_to_logfile(
-					logfile_time_posted_notDate,
-					['Filename'],
-					{'Filename':raw_sample_file_name}
+					filepath=logfile_time_posted_notDate,
+					fieldnames=['Filename'],
+					data={'Filename':raw_sample_file_name}
 				)
 		else:
 			write_to_logfile(
-				logfile_time_posted_noneFound,
-				['Filename'],
-				{'Filename':raw_sample_file_name}
+				filepath=logfile_time_posted_noneFound,
+				fieldnames=['Filename'],
+				data={'Filename':raw_sample_file_name}
 			)
 
 		if terpenes_data == {} and cannabinoid_data == {}:
@@ -1057,9 +1070,9 @@ for type_index, type_folder in enumerate(type_folders):
 		if not skip_this_file:
 			if args.csv:
 				write_to_csv(
-					sample_database_CSVfile,
-					DATA_ROW_FIELDS,
-					sample_data
+					filepath=sample_database_CSVfile,
+					fieldnames=DATA_ROW_FIELDS,
+					data=sample_data
 				)
 			if args.json:
 				with open(sample_database_JSONfile, "a", encoding="utf-8") as databases_file:
