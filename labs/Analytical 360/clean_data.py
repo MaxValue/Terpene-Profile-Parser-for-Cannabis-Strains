@@ -503,7 +503,7 @@ sample_types['Archived'] =  re.compile(r'^Archived$',										re.IGNORECASE)
 re_test_uid = re.compile(r"^\s*Test\s*Result\s*UID\s*:?\s*(?P<uid>[\S]+)\s*$", re.IGNORECASE)
 
 # Matches strings like: "   Date   Tested   01    /   23   .   2019     "
-re_date = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
+re_date_tested = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-,\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-,\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
 
 # Matches strings like: "   Date   Tested   23    /   01   .   2019     "
 re_sample_time_europe = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
@@ -978,7 +978,7 @@ for type_index, type_folder in enumerate(type_folders):
 			tree,
 			xpath_time_tested
 		)
-		re_date_match = re_date.match(raw_test_time)
+		re_date_match = re_date_tested.match(raw_test_time)
 		if re_date_match:
 			test_time = datetime.date(normalize_year(re_date_match.group('year')),int(re_date_match.group('month')),int(re_date_match.group('day'))).isoformat()
 		else:
