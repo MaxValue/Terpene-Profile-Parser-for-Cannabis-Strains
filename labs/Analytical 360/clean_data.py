@@ -7,6 +7,7 @@ DATA_ROW_FIELDS = [
 	'Sample Type',
 	'Receipt Time',
 	'Test Time',
+	'Post Time',
 	'Provider',
 	'cis-Nerolidol',
 	'trans-Nerolidol',
@@ -399,6 +400,17 @@ xpath_time_tested = """/html/body/div/div/div[@class='maincontent']/*[
 													)
 												]/text()"""
 
+xpath_time_posted = """/html/body/div[@id="wrapper"]/div[@id="mainwrapper"]/div[@class="center"]/div[@class="maincontent"]/div[@class="metapost"]/span[
+								contains(
+										translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),
+										'posted'
+								)
+								and contains(
+										translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),
+										'on'
+								)
+							]/text()"""
+
 # Match a Analytical 360 product page path
 re_productPageURL = re.compile(r'^/product/(?P<type>[-._~!$&\')(*+,;=:@%a-zA-Z0-9]+)')
 
@@ -475,6 +487,12 @@ re_test_uid = re.compile(r"^\s*Test\s*Result\s*UID\s*:?\s*(?P<uid>[\S]+)\s*$", r
 # Matches strings like: "   Date   Tested   01    /   23   .   2019     "
 re_date_tested = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-,\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-,\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
 
+# Matches strings like: "   Posted   On   September    /   23   .   2019     "
+re_date_posted = re.compile(r"^\s*Post[a-zA-Z_]*\s*(on\s*)?:?\s*(?P<date>\s*(?P<month>(0?[0-9]|1[0-2]|\w+))\s*[-,\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-,\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
+# Matches strings like: "   Posted   On   "
+re_date_posted_Beginning = re.compile(r"^\s*Post[a-zA-Z_]*\s*(on\s*)?:?\s*$", re.IGNORECASE)
+re_date_posted_End = re.compile(r"^(?P<date>\s*(?P<month>(0?[0-9]|1[0-2]|\w+))\s*[-,\./:]?\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-,\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
+
 # Matches strings like: "   Date   Tested   23    /   01   .   2019     "
 re_sample_time_europe = re.compile(r"^\s*Date\s*(Test[a-zA-Z_]*\s*)?:?\s*(?P<date>\s*(?P<day>(0?[0-9]|1[0-9]|2[0-9]|3[0-1]))\s*[-\./:]?\s*(?P<month>(0?[0-9]|1[0-2]))\s*[-\./:]?\s*(?P<year>2\d{3}))\s*$", re.IGNORECASE)
 # Matches strings like: "   Date   Tested   2019    /   23   .    01    "
@@ -535,6 +553,8 @@ logfile_thc_total_notPercentage = 'log-thc_total-not_percentage'
 logfile_time_received_noneFound = 'log-time_received-none_found'
 logfile_time_tested_noneFound = 'log-time_tested-none_found'
 logfile_time_tested_notDate = 'log-time_tested-not_date'
+logfile_time_posted_noneFound = 'log-time_posted-none_found'
+logfile_time_posted_notDate = 'log-time_posted-not_date'
 logfile_type_noneFound = 'log-type-none_found'
 logfile_type_unknown = 'log-type-unknown'
 logfile_uid_noneFound = 'log-uid-none_found'
@@ -573,6 +593,8 @@ result_files = [
 	logfile_time_received_noneFound,
 	logfile_time_tested_noneFound,
 	logfile_time_tested_notDate,
+	logfile_time_posted_noneFound,
+	logfile_time_posted_notDate,
 	logfile_type_noneFound,
 	logfile_uid_noneFound,
 	sample_database_CSVfile,
@@ -975,6 +997,34 @@ for type_index, type_folder in enumerate(type_folders):
 		# 7 Receipt Time
 		receipt_time = PLACEHOLDER_UNDEFINED
 
+		# 8 Post Time
+		post_time = PLACEHOLDER_UNDEFINED
+		raw_post_time = get_single_value(
+			tree,
+			xpath_time_posted
+		)
+		re_date_match = re_date_posted.match(raw_post_time)
+		if re_date_match:
+			possible_dates = dateparser_search.search_dates(
+				text=raw_post_time,
+				languages=['en'],
+				settings={'DATE_ORDER':'MDY','STRICT_PARSING':True}
+			)
+			if type(possible_dates) == list and len(possible_dates) == 1:
+				post_time = possible_dates[0][1].date().isoformat()
+			else:
+				write_to_logfile(
+					logfile_time_posted_notDate,
+					['Filename'],
+					{'Filename':raw_sample_file_name}
+				)
+		else:
+			write_to_logfile(
+				logfile_time_posted_noneFound,
+				['Filename'],
+				{'Filename':raw_sample_file_name}
+			)
+
 		if terpenes_data == {} and cannabinoid_data == {}:
 			skip_this_file = True
 
@@ -983,6 +1033,7 @@ for type_index, type_folder in enumerate(type_folders):
 			'Sample Name':sample_name,
 			'Test Time':test_time,
 			'Receipt Time':receipt_time,
+			'Post Time':post_time,
 			'Provider':sample_provider,
 			'Sample Type':sample_type
 		}

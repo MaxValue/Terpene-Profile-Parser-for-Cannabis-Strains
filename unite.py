@@ -13,6 +13,7 @@ DATA_ROW_FIELDS = [
 	'Sample Type',
 	'Test Time',
 	'Receipt Time',
+	'Post Time',
 	'Provider',
 	'cis-Nerolidol',
 	'trans-Nerolidol',
