@@ -39,8 +39,8 @@ The database contains the following fields/columns/datapoints:
 * Test Result UID: The UID provided by Analytical360 labs. If it couldn't be extracted an artificial one is generated to provide reliable distinction between samples.
 * Sample Name: The name of the sample. Most often this is the name of the provided strain with some additional words.
 * Sample Type: The type of the sample. Can any of 'Flower', 'Concentrate', 'Edible', 'Liquid', 'Topical', 'Archived' or 'NaN' (if it couldn't be parsed). 'Archived' and 'NaN' will be removed in the future.
-* Test Time: The date when this test was run. We expect this to be always in american format in the source files. Gets converted to ISO-8601.
 * Receipt Time: The date when this sample was received by the lab. We expect this to be always in american format in the source files. Gets converted to ISO-8601. Analytical360 does not record this though, so this is always 'NaN' here.
+* Test Time: The date when this test was run. We expect this to be always in american format in the source files. Gets converted to ISO-8601.
 * Post Time: The date when this sample was published by the lab. We expect this to be always in american format in the source files. Gets converted to ISO-8601.
 * Provider: The name of the company which provided this sample. These are always numerical IDs, because they get anonymized for now to not discredit vendors if the test results are corrupted.
 * cis-Nerolidol: The percentage amount of cis-Nerolidol present in this sample.
