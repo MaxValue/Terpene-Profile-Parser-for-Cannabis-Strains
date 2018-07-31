@@ -15,8 +15,8 @@ DATA_ROW_FIELDS = [
 	'Test Result UID',
 	'Sample Name',
 	'Sample Type',
+	'Receipt Time',
 	'Test Time',
-	'Receival Time',
 	'Provider',
 	'cis-Nerolidol',
 	'trans-Nerolidol',
@@ -303,7 +303,7 @@ xpath_test_uid = """/html/body/ui-view/div/md-content/ui-view/div/md-content/div
 
 # Finds the timestamp of the test of the sample
 xpath_time_tested =				'/html/body/ui-view/div/md-content/ui-view/div/md-content/div[2]/md-card[1]/md-card-content/md-list/md-list-item/span/h3[following-sibling::p[text()="Date Tested"]]/text()'
-# Finds the timestamp of the receival of the sample
+# Finds the timestamp of receipt of the sample
 xpath_time_received =			'/html/body/ui-view/div/md-content/ui-view/div/md-content/div[2]/md-card[1]/md-card-content/md-list/md-list-item/span/h3[following-sibling::p[text()="Date Received"]]/text()'
 
 terpenes = {
@@ -901,13 +901,13 @@ for type_index, type_folder in enumerate(type_folders):
 				{'Filename':raw_sample_file_name}
 			)
 
-		# 7 Receival Time
-		receival_time = PLACEHOLDER_UNDEFINED
-		raw_receival_time = get_single_value(
+		# 7 Receipt Time
+		receipt_time = PLACEHOLDER_UNDEFINED
+		raw_receipt_time = get_single_value(
 			tree,
 			xpath_time_received
 		)
-		re_date_match = re_date.match(raw_receival_time)
+		re_date_match = re_date.match(raw_receipt_time)
 		if re_date_match:
 			receival_time = date_iso8601(year=normalize_year(re_date_match.group('year')),month=re_date_match.group('month'),day=re_date_match.group('day'))
 		else:
@@ -924,7 +924,7 @@ for type_index, type_folder in enumerate(type_folders):
 			'Test Result UID':test_uid,
 			'Sample Name':sample_name,
 			'Test Time':test_time,
-			'Receival Time':receival_time,
+			'Receipt Time':receipt_time,
 			'Provider':sample_provider,
 			'Terpene TOTAL':terpene_total,
 			'THC TOTAL':thc_total,

@@ -5,8 +5,8 @@ DATA_ROW_FIELDS = [
 	'Test Result UID',
 	'Sample Name',
 	'Sample Type',
+	'Receipt Time',
 	'Test Time',
-	'Receival Time',
 	'Provider',
 	'cis-Nerolidol',
 	'trans-Nerolidol',
@@ -990,8 +990,8 @@ for type_index, type_folder in enumerate(type_folders):
 				{'Filename':raw_sample_file_name}
 			)
 
-		# 7 Receival Time
-		receival_time = PLACEHOLDER_UNDEFINED
+		# 7 Receipt Time
+		receipt_time = PLACEHOLDER_UNDEFINED
 
 		if terpenes_data == {} and cannabinoid_data == {}:
 			skip_this_file = True
@@ -1000,7 +1000,7 @@ for type_index, type_folder in enumerate(type_folders):
 			'Test Result UID':test_uid,
 			'Sample Name':sample_name,
 			'Test Time':test_time,
-			'Receival Time':receival_time,
+			'Receipt Time':receipt_time,
 			'Provider':sample_provider,
 			'Sample Type':sample_type
 		}
