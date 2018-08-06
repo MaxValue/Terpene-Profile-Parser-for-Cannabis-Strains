@@ -125,3 +125,6 @@ log-*
 
 # Hiding the folder containing the browser profiles
 browser_profiles/
+
+# Do track the appcache file
+!/webapp/cache.manifest
