@@ -1,9 +1,9 @@
 CACHE MANIFEST
 
-# Cache Manifest Version 2
+# Cache Manifest Version 3
 
-index.html
-results.json
+/index.html
+/results.json
 /img/opengraph-icon-1200x1200.png
 /img/apple-touch-icon-120x120.png
 /img/apple-touch-icon-152x152.png
