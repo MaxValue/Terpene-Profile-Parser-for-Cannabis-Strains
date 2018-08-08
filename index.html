@@ -182,6 +182,9 @@
 				elem_sampleTypes.appendChild(li);
 			}
 		}
+		function hexColor(hexNumber) {
+			return hexNumber.toString(16).padStart(7,'#000000');
+		}
 
 		var elem_form = document.getElementById("searchform");
 		var elem_databaseList = document.getElementById("databases");
@@ -493,7 +496,7 @@
 					var cell = document.createElement("td");
 					var spanColored = document.createElement("span");
 					spanColored.className = "graphcell";
-					spanColored.style["color"] = terpene.color.toString(16).padStart(7,'#000000');
+					spanColored.style["color"] = hexColor(terpene.color);
 					spanColored.innerText = "\u258F".repeat(mappedGraphValue);
 					var spanInvisible = document.createElement("span");
 					spanInvisible.className = "graphcell";
