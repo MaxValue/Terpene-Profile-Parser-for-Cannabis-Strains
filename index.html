@@ -40,7 +40,7 @@
 				display: inline-block;
 				padding-left: 42px;
 			}
-			#results,#results td:nth-of-type(1),#results td:nth-of-type(3),#results td:nth-of-type(4),#results td:nth-of-type(5),#results tr {
+			#results,#results td,#results tr {
 				border: 1px solid black;
 				border-collapse: collapse;
 			}
@@ -59,7 +59,7 @@
 				display: inline-block;
 			}
 			.graphcell {
-				border: none !important;
+				letter-spacing: -0.650em;
 			}
 		</style>
 	</head>
@@ -467,7 +467,7 @@
 				elem_resultsTable.caption.innerText = "No results found";
 			} else {
 				elem_resultsTable.caption.innerText = "Search Results for '"+searchstring+"' ("+resultsNum+" Sample"+(resultsNum==1?"":"s")+")";
-				elem_resultsTable.tHead.children[0].innerHTML = "<td>Terpene</td><td>Graph</td>";
+				elem_resultsTable.tHead.children[0].innerHTML = "<td>Terpene</td><td>Graph</td><td>Value</td>";
 				elem_resultsTable.tBodies[0].innerText = "";
 				terpenes.forEach(function(terpene){
 					var average = averages[terpene.name][0]/resultsNum;
@@ -477,6 +477,7 @@
 					var average = averages[terpene.name][0];
 					var lowestValue = averages[terpene.name][1];
 					var highestValue = averages[terpene.name][2];
+					var mappedGraphValue = (50/2) * average;
 
 					//table
 
@@ -489,25 +490,23 @@
 
 					// graph
 					// (overlay all datapoints of this terpene onto each other with a transparency set to 100%/resultsNum)
-					var mappedGraphValue = (100/highestOverallValue) * average;
-					// mappedGraphValue = "100%";
 					var cell = document.createElement("td");
-					cell.className = "graphcell";
-					var div = document.createElement("div");
-					div.style["width"] = mappedGraphValue+"%";
-					div.style["background-color"] = terpene.color.toString(16).padStart(7,'#000000');
-					div.style["display"] = "inline-table";
-					cell.appendChild(div);
-					// row.appendChild(cell);
+					var spanColored = document.createElement("span");
+					spanColored.className = "graphcell";
+					spanColored.style["color"] = terpene.color.toString(16).padStart(7,'#000000');
+					spanColored.innerText = "\u258F".repeat(mappedGraphValue);
+					var spanInvisible = document.createElement("span");
+					spanInvisible.className = "graphcell";
+					spanInvisible.style["color"] = "#FFF";
+					spanInvisible.innerText = "\u258F".repeat(50-parseInt(mappedGraphValue));
+					cell.appendChild(spanColored);
+					cell.appendChild(spanInvisible);
+					row.appendChild(cell);
 
 
 					// terpene amount
 					var cell = document.createElement("td");
-					// cell.style["background-color"] = "hsl("+(240-(120 * average/highestOverallValue))+",100%,50%)";
-					// cell.style["background-color"] = "hsl("+(240-(60 * average/highestOverallValue))+",100%,50%)";
-					cell.style["background-color"] = terpene.color.toString(16).padStart(7,'#000000');
 					var span = document.createElement("span");
-					span.className = "valuecolumn";
 					span.innerText = toFixed(average, 2)+" %";
 					cell.appendChild(span);
 					row.appendChild(cell);
