@@ -103,9 +103,6 @@
 					</tbody>
 				</table>
 			</div>
-			<svg id="graph" xmlns="http://www.w3.org/2000/svg"
-				width="800" height="300">
-			</svg>
 		</div>
 	</body>
 	<script type="text/javascript">
@@ -201,7 +198,6 @@
 		var elem_databaseList = document.getElementById("databases");
 		var elem_sampleTypes = document.getElementById("sampleTypes");
 		var elem_resultsTable = document.getElementById("results");
-		var elem_graph = document.getElementById("graph");
 
 		var terpenes = [
 			{
@@ -427,7 +423,6 @@
 			var searchstring = elem_form.search.value.toLowerCase();
 			elem_resultsTable.tBodies[0].innerHTML = "";
 			elem_resultsTable.tHead.children[0].innerHTML = "";
-			elem_graph.innerHTML = "";
 
 			Object.keys(databasesContainer.databases).forEach(function(databaseName){
 				if (elem_form["database_"+databaseName].checked) {
