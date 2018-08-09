@@ -59,7 +59,7 @@
 				display: inline-block;
 			}
 			.graphcell {
-				letter-spacing: -0.650em;
+				color: rgba(0,0,0,0);
 			}
 		</style>
 	</head>
@@ -184,6 +184,17 @@
 		}
 		function hexColor(hexNumber) {
 			return hexNumber.toString(16).padStart(7,'#000000');
+		}
+		function rgbaColor(hexNumber, alpha=1) {
+			var hex = hexNumber.toString(16).padStart(6,'000000');
+			var red = parseInt(hex.slice(0,2), 16);
+			var green = parseInt(hex.slice(2,4), 16);
+			var blue = parseInt(hex.slice(4,6), 16);
+			return "rgba("+red+", "+green+", "+blue+", "+alpha+")";
+		}
+		function linearGradient(rawcolor, percentage, transparency) {
+			var endColor = rgbaColor(rawcolor, transparency);
+			return "linear-gradient(to right, "+endColor+", "+endColor+" "+percentage+"%, rgba(0,0,0,0) "+percentage+"%)";
 		}
 
 		var elem_form = document.getElementById("searchform");
@@ -480,7 +491,6 @@
 					var average = averages[terpene.name][0];
 					var lowestValue = averages[terpene.name][1];
 					var highestValue = averages[terpene.name][2];
-					var mappedGraphValue = (50/2) * average;
 
 					//table
 
@@ -494,16 +504,25 @@
 					// graph
 					// (overlay all datapoints of this terpene onto each other with a transparency set to 100%/resultsNum)
 					var cell = document.createElement("td");
-					var spanColored = document.createElement("span");
-					spanColored.className = "graphcell";
-					spanColored.style["color"] = hexColor(terpene.color);
-					spanColored.innerText = "\u258F".repeat(mappedGraphValue);
-					var spanInvisible = document.createElement("span");
-					spanInvisible.className = "graphcell";
-					spanInvisible.style["color"] = "#FFF";
-					spanInvisible.innerText = "\u258F".repeat(50-parseInt(mappedGraphValue));
-					cell.appendChild(spanColored);
-					cell.appendChild(spanInvisible);
+					cell.innerText = "\u2588".repeat(10);
+					cell.className = "graphcell";
+
+					/*
+					the algorithm:
+					sort largest to smallest
+					loop goes in reverse (starts with smallest):
+						linear color gradient is appended
+						white gradient is appended
+					*/
+					searchResults[terpene.name].sort((a,b)=>a-b);
+					console.log(searchResults[terpene.name]);
+					cell.style.backgroundImage = linearGradient(terpene.color, searchResults[terpene.name][0]*50, 1);
+					for (var i=1, currentTerpeneValue=searchResults[terpene.name][i]; i<resultsNum; i++, currentTerpeneValue=searchResults[terpene.name][i]) {
+						if (currentTerpeneValue!=0.0) {
+							cell.style.backgroundImage += ","+linearGradient(terpene.color, currentTerpeneValue*50, (1/resultsNum)*(resultsNum-i));
+							cell.style.backgroundImage += ","+linearGradient(0xFFFFFF, currentTerpeneValue*50, (1/resultsNum)*(resultsNum-i));
+						}
+					}
 					row.appendChild(cell);
 
 
