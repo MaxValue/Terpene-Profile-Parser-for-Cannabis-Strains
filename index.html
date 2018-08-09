@@ -510,7 +510,6 @@
 						white gradient is appended
 					*/
 					searchResults[terpene.name].sort((a,b)=>a-b);
-					console.log(searchResults[terpene.name]);
 					cell.style.backgroundImage = linearGradient(terpene.color, searchResults[terpene.name][0]*50, 1);
 					for (var i=1, currentTerpeneValue=searchResults[terpene.name][i]; i<resultsNum; i++, currentTerpeneValue=searchResults[terpene.name][i]) {
 						if (currentTerpeneValue!=0.0) {
