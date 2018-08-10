@@ -120,85 +120,6 @@
 					edible
 					concentrate
 		*/
-		function changeHandler(files) {
-			for (var i = 0, file; file = files[i]; i++) {
-				if (file.type!="application/json") {
-					continue;
-				}
-				var reader = new FileReader();
-				reader.onload = function(event) {
-					var newDatabaseString = event.target.result;
-					if (newDatabaseString.startsWith("databasesContainer=")) {
-						newDatabaseString = newDatabaseString.substr(19);
-					}
-					var newDatabasesContainer = JSON.parse(newDatabaseString);
-					database_imports++;
-					for (const databaseName of Object.keys(newDatabasesContainer.databases)) {
-						addDatabaseItem("import"+database_imports.toString()+"_"+databaseName, "Imported: "+databaseName);
-						databasesContainer.databases["import"+database_imports.toString()+"_"+databaseName] = newDatabasesContainer.databases[databaseName];
-
-						// sample type list
-						Object.keys(newDatabasesContainer.databases[databaseName]).forEach(function(newSampleType){
-							addSampletype(newSampleType);
-						})
-
-					}
-				}
-				reader.readAsText(file);
-			}
-			return false;
-		}
-		function addDatabaseItem(identifier, label) {
-			var databaseListItem = document.createElement("li");
-			var databaseInput = document.createElement("input");
-			databaseInput.type = "checkbox";
-			databaseInput.name = "database_" + identifier;
-			databaseInput.id = "database_" + identifier;
-			databaseInput.addEventListener("click", updateDatabaseCheckboxes);
-			databaseListItem.appendChild(databaseInput);
-			var databaseLabel = document.createElement("label");
-			databaseLabel.htmlFor = "database_" + identifier;
-			databaseLabel.innerText = label;
-			databaseListItem.appendChild(databaseLabel);
-			elem_databaseList.appendChild(databaseListItem);
-		}
-		function addSampletype(sampleType) {
-			if (!sampleTypes.includes(sampleType)) {
-				sampleTypes.push(sampleType);
-				var li = document.createElement("li");
-				var input = document.createElement("input");
-				input.type = "checkbox";
-				input.name = "type_"+sampleType;
-				input.id = "type_"+sampleType;
-				input.addEventListener("click", updateTypeCheckboxes);
-				li.appendChild(input);
-				var label = document.createElement("label");
-				label.htmlFor = "type_"+sampleType;
-				label.innerText = sampleType;
-				li.appendChild(label);
-				elem_sampleTypes.appendChild(li);
-			}
-		}
-		function hexColor(hexNumber) {
-			return hexNumber.toString(16).padStart(7,'#000000');
-		}
-		function rgbaColor(hexNumber, alpha=1) {
-			var hex = hexNumber.toString(16).padStart(6,'000000');
-			var red = parseInt(hex.slice(0,2), 16);
-			var green = parseInt(hex.slice(2,4), 16);
-			var blue = parseInt(hex.slice(4,6), 16);
-			return "rgba("+red+", "+green+", "+blue+", "+alpha+")";
-		}
-		function linearGradient(rawcolor, percentage, transparency) {
-			var endColor = rgbaColor(rawcolor, transparency);
-			return "linear-gradient(to right, "+endColor+", "+endColor+" "+percentage+"%, rgba(0,0,0,0) "+percentage+"%)";
-		}
-
-		var elem_form = document.getElementById("searchform");
-		var elem_databaseList = document.getElementById("databases");
-		var elem_sampleTypes = document.getElementById("sampleTypes");
-		var elem_resultsTable = document.getElementById("results");
-
 		var terpenes = [
 			{
 				name: 'delta-Limonene',
@@ -357,6 +278,86 @@
 				onsetTime: 0
 			}
 		]
+
+		function changeHandler(files) {
+			for (var i = 0, file; file = files[i]; i++) {
+				if (file.type!="application/json") {
+					continue;
+				}
+				var reader = new FileReader();
+				reader.onload = function(event) {
+					var newDatabaseString = event.target.result;
+					if (newDatabaseString.startsWith("databasesContainer=")) {
+						newDatabaseString = newDatabaseString.substr(19);
+					}
+					var newDatabasesContainer = JSON.parse(newDatabaseString);
+					database_imports++;
+					for (const databaseName of Object.keys(newDatabasesContainer.databases)) {
+						addDatabaseItem("import"+database_imports.toString()+"_"+databaseName, "Imported: "+databaseName);
+						databasesContainer.databases["import"+database_imports.toString()+"_"+databaseName] = newDatabasesContainer.databases[databaseName];
+
+						// sample type list
+						Object.keys(newDatabasesContainer.databases[databaseName]).forEach(function(newSampleType){
+							addSampletype(newSampleType);
+						})
+
+					}
+				}
+				reader.readAsText(file);
+			}
+			return false;
+		}
+		function addDatabaseItem(identifier, label) {
+			var databaseListItem = document.createElement("li");
+			var databaseInput = document.createElement("input");
+			databaseInput.type = "checkbox";
+			databaseInput.name = "database_" + identifier;
+			databaseInput.id = "database_" + identifier;
+			databaseInput.addEventListener("click", updateDatabaseCheckboxes);
+			databaseListItem.appendChild(databaseInput);
+			var databaseLabel = document.createElement("label");
+			databaseLabel.htmlFor = "database_" + identifier;
+			databaseLabel.innerText = label;
+			databaseListItem.appendChild(databaseLabel);
+			elem_databaseList.appendChild(databaseListItem);
+		}
+		function addSampletype(sampleType) {
+			if (!sampleTypes.includes(sampleType)) {
+				sampleTypes.push(sampleType);
+				var li = document.createElement("li");
+				var input = document.createElement("input");
+				input.type = "checkbox";
+				input.name = "type_"+sampleType;
+				input.id = "type_"+sampleType;
+				input.addEventListener("click", updateTypeCheckboxes);
+				li.appendChild(input);
+				var label = document.createElement("label");
+				label.htmlFor = "type_"+sampleType;
+				label.innerText = sampleType;
+				li.appendChild(label);
+				elem_sampleTypes.appendChild(li);
+			}
+		}
+		function hexColor(hexNumber) {
+			return hexNumber.toString(16).padStart(7,'#000000');
+		}
+		function rgbaColor(hexNumber, alpha=1) {
+			var hex = hexNumber.toString(16).padStart(6,'000000');
+			var red = parseInt(hex.slice(0,2), 16);
+			var green = parseInt(hex.slice(2,4), 16);
+			var blue = parseInt(hex.slice(4,6), 16);
+			return "rgba("+red+", "+green+", "+blue+", "+alpha+")";
+		}
+		function linearGradient(rawcolor, percentage, transparency) {
+			var endColor = rgbaColor(rawcolor, transparency);
+			return "linear-gradient(to right, "+endColor+", "+endColor+" "+percentage+"%, rgba(0,0,0,0) "+percentage+"%)";
+		}
+
+		var elem_form = document.getElementById("searchform");
+		var elem_databaseList = document.getElementById("databases");
+		var elem_sampleTypes = document.getElementById("sampleTypes");
+		var elem_resultsTable = document.getElementById("results");
+
 		var sampleTypes = [];
 		var database_imports = 0;
 
