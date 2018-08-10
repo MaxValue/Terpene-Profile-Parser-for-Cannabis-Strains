@@ -1,0 +1,43 @@
+{
+  "name": "StrainFinder",
+  "short_name": "StrainFinder",
+  "lang": "en-US",
+  "start_url": "index.html",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#fff",
+  "description": "Check chemical properties of Cannabis strains.",
+  "icons": [{
+    "src": "img/favicon.ico",
+    "sizes": "16x16 24x24 32x32 40x40 48x48 64x64 96x96 128x128 192x192 256x256",
+    "type": "image/x-icon"
+    }, {
+    "src": "img/icon.svg",
+    "type": "image/svg+xml"
+    }, {
+    "src": "img/opengraph-icon-1200x1200.png",
+    "sizes": "1200x1200",
+    "type": "image/png"
+    }, {
+    "src": "img/apple-touch-icon.png",
+    "sizes": "1024x1024",
+    "type": "image/png"
+    }, {
+    "src": "img/apple-touch-icon-180x180.png",
+    "sizes": "180x180",
+    "type": "image/png"
+    }, {
+    "src": "img/apple-touch-icon-167x167.png",
+    "sizes": "167x167",
+    "type": "image/png"
+    }, {
+    "src": "img/apple-touch-icon-152x152.png",
+    "sizes": "152x152",
+    "type": "image/png"
+    }, {
+    "src": "img/apple-touch-icon-120x120.png",
+    "sizes": "120x120",
+    "type": "image/png"
+  }]
+}
