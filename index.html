@@ -476,7 +476,7 @@
 				elem_resultsTable.caption.innerText = "No results found";
 			} else {
 				elem_resultsTable.caption.innerText = "Search Results for '"+searchstring+"' ("+resultsNum+" Sample"+(resultsNum==1?"":"s")+")";
-				elem_resultsTable.tHead.children[0].innerHTML = "<td>Terpene</td><td>Graph</td><td>Value</td>";
+				elem_resultsTable.tHead.children[0].innerHTML = "<td>Terpene</td><td>Graph</td><td>Average</td>";
 				elem_resultsTable.tBodies[0].innerText = "";
 				terpenes.forEach(function(terpene){
 					var average = averages[terpene.name][0]/resultsNum;
