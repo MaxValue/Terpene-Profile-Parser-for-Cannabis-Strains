@@ -38,6 +38,7 @@
     "type": "image/x-icon"
     }, {
     "src": "img/icon.svg",
+    "sizes": "16x16 24x24 32x32 40x40 48x48 64x64 96x96 120x120 128x128 152x152 167x167 180x180 192x192 256x256 512x512 1024x1024 1200x1200",
     "type": "image/svg+xml"
   }]
 }
