@@ -2,6 +2,7 @@ CACHE MANIFEST
 
 # Cache Manifest Version 6, 2018-08-11T13:20:00+02:00
 
+/manifest.webmanifest
 /index.html
 /results.json
 /img/opengraph-icon-1200x1200.png
