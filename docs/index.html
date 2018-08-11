@@ -514,12 +514,28 @@
 						white gradient is appended
 					*/
 					searchResults[terpene.name].sort((a,b)=>a-b);
-					cell.style.backgroundImage = linearGradient(terpene.color, searchResults[terpene.name][0]*50, 1);
-					for (var i=1, currentTerpeneValue=searchResults[terpene.name][i]; i<resultsNum; i++, currentTerpeneValue=searchResults[terpene.name][i]) {
-						if (currentTerpeneValue!=0.0) {
-							cell.style.backgroundImage += ","+linearGradient(terpene.color, currentTerpeneValue*50, (1/resultsNum)*(resultsNum-i));
-							cell.style.backgroundImage += ","+linearGradient(0xFFFFFF, currentTerpeneValue*50, (1/resultsNum)*(resultsNum-i));
+					if (searchResults[terpene.name].length!=0) {
+						var lastColor = rgbaColor(terpene.color,1);
+						var backgroundImage = "linear-gradient(to right,"+lastColor;
+						var currentTerpeneValue = searchResults[terpene.name][0];
+						var lastValue = 0.0;
+						var searchResultsLength = searchResults[terpene.name].length;
+						for (var i=0; i<searchResultsLength; i++) {
+							currentTerpeneValue=searchResults[terpene.name][i];
+							if (currentTerpeneValue!=lastValue) {
+								backgroundImage += ","+lastColor+" "+currentTerpeneValue*50+"%";
+								lastColor = rgbaColor(terpene.color, (1/searchResultsLength)*(searchResultsLength-i));
+								backgroundImage += ","+lastColor+" "+currentTerpeneValue*50+"%";
+								lastValue = currentTerpeneValue;
+							}
 						}
+						backgroundImage += ",rgba(0,0,0,0) "+currentTerpeneValue*50+"%)";
+						if (terpene.name == "Terpinolene") {
+							console.log(terpene.name);
+							console.log(backgroundImage);
+							console.log(searchResults[terpene.name]);
+						}
+						cell.style.backgroundImage = backgroundImage;
 					}
 					row.appendChild(cell);
 
