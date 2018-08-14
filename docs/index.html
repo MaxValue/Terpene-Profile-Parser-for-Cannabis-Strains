@@ -314,6 +314,7 @@
 			databaseInput.type = "checkbox";
 			databaseInput.name = "database_" + identifier;
 			databaseInput.id = "database_" + identifier;
+			databaseInput.value = identifier;
 			databaseInput.addEventListener("click", updateDatabaseCheckboxes);
 			databaseListItem.appendChild(databaseInput);
 			var databaseLabel = document.createElement("label");
@@ -330,6 +331,7 @@
 				input.type = "checkbox";
 				input.name = "type_"+sampleType;
 				input.id = "type_"+sampleType;
+				input.value = sampleType;
 				input.addEventListener("click", updateTypeCheckboxes);
 				li.appendChild(input);
 				var label = document.createElement("label");
