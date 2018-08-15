@@ -73,7 +73,7 @@
 					<label for="search">Strain Name:</label>
 					<input type="search" name="q" id="search" inputmode="search" placeholder="Chocolope" autofocus="">
 					<label for="exactmatch">Exact Match?</label>
-					<input type="checkbox" name="exactmatch" value="1">
+					<input type="checkbox" name="exact" id="exactmatch" value="1">
 
 					<div>
 						<fieldset>
@@ -435,7 +435,7 @@
 						if (elem_form["type_"+sampleType].checked) {
 							database[sampleType].forEach(function(sample){
 								var matched = false;
-								if (elem_form.exactmatch.checked) {
+								if (elem_form.exact.checked) {
 									if (sample["Sample Name"].toLowerCase() == searchstring) {
 										matched = true
 									}
