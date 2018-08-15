@@ -355,26 +355,6 @@
 			var endColor = rgbaColor(rawcolor, transparency);
 			return "linear-gradient(to right, "+endColor+", "+endColor+" "+percentage+"%, rgba(0,0,0,0) "+percentage+"%)";
 		}
-
-		var elem_form = document.getElementById("searchform");
-		var elem_databaseList = document.getElementById("databases");
-		var elem_sampleTypes = document.getElementById("sampleTypes");
-		var elem_resultsTable = document.getElementById("results");
-
-		var sampleTypes = [];
-		var database_imports = 0;
-
-		// available databases list
-		for (const databaseName of Object.keys(databasesContainer.databases)) {
-			addDatabaseItem(databaseName, databaseName);
-			// sample type list
-			Object.keys(databasesContainer.databases[databaseName]).forEach(function(newSampleType){
-				addSampletype(newSampleType);
-			})
-		}
-		updateDatabaseCheckboxes();
-		updateTypeCheckboxes();
-
 		function updateTypeCheckboxes() {
 			var anyChecked = false;
 			document.querySelectorAll("#sampleTypes>li>input[type='checkbox']")
@@ -399,7 +379,6 @@
 				elem_form.database_Psilabs.checked = true;
 			};
 		}
-
 		function toFixed(stringNumber, decimalPlaces) {
 			var result = stringNumber.toFixed(decimalPlaces);
 			var zeroMask = (0.0).toFixed(decimalPlaces);
@@ -409,16 +388,6 @@
 				return result
 			}
 		}
-
-        // "Terpene TOTAL": "1.0",
-
-		//search by:
-		//test uid
-		//databases
-
-		//sort by:
-		// asc/desc
-		//specific terpene
 		function load_sample_data(elem_form) {
 			var searchResults = [];
 			var averages = {};
@@ -550,6 +519,31 @@
 			var elem_pagetitle = document.getElementById("title");
 			elem_pagetitle.text = "StrainFinder - '" + searchstring + "'";
 			return false;
+		}
+
+		var elem_form = document.getElementById("searchform");
+		var elem_databaseList = document.getElementById("databases");
+		var elem_sampleTypes = document.getElementById("sampleTypes");
+		var elem_resultsTable = document.getElementById("results");
+
+		var sampleTypes = [];
+		var database_imports = 0;
+
+		// available databases list
+		for (const databaseName of Object.keys(databasesContainer.databases)) {
+			addDatabaseItem(databaseName, databaseName);
+			// sample type list
+			Object.keys(databasesContainer.databases[databaseName]).forEach(function(newSampleType){
+				addSampletype(newSampleType);
+			})
+		}
+		updateDatabaseCheckboxes();
+		updateTypeCheckboxes();
+
+		var searchParams = (new URL(location)).searchParams;
+		console.log(searchParams.entries());
+		for (var p of searchParams.keys()) {
+			console.log(searchParams.getAll(p));
 		}
 	</script>
 </html>
