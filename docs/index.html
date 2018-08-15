@@ -312,7 +312,7 @@
 			var databaseListItem = document.createElement("li");
 			var databaseInput = document.createElement("input");
 			databaseInput.type = "checkbox";
-			databaseInput.name = "database_" + identifier;
+			databaseInput.name = "database";
 			databaseInput.id = "database_" + identifier;
 			databaseInput.value = identifier;
 			databaseInput.addEventListener("click", updateDatabaseCheckboxes);
@@ -329,7 +329,7 @@
 				var li = document.createElement("li");
 				var input = document.createElement("input");
 				input.type = "checkbox";
-				input.name = "type_"+sampleType;
+				input.name = "type";
 				input.id = "type_"+sampleType;
 				input.value = sampleType;
 				input.addEventListener("click", updateTypeCheckboxes);
@@ -357,26 +357,32 @@
 		}
 		function updateTypeCheckboxes() {
 			var anyChecked = false;
-			document.querySelectorAll("#sampleTypes>li>input[type='checkbox']")
-			.forEach(function(typeElem){
+			var flowerIndex = -1;
+			elem_form.type.forEach(function(typeElem,typeIndex){
 				if (typeElem.checked) {
 					anyChecked = true;
 				}
+				if (typeElem.value == "Flower") {
+					flowerIndex = typeIndex;
+				}
 			})
-			if (!anyChecked && elem_form.type_Flower!=undefined) {
-				elem_form.type_Flower.checked = true;
+			if (!anyChecked && flowerIndex!=-1) {
+				elem_form.type[flowerIndex].checked = true;
 			};
 		}
 		function updateDatabaseCheckboxes() {
 			var anyChecked = false;
-			document.querySelectorAll("#databases>li>input[type='checkbox']")
-			.forEach(function(typeElem){
-				if (typeElem.checked) {
+			var psilabsIndex = -1;
+			elem_form.database.forEach(function(databaseElem,databaseIndex){
+				if (databaseElem.checked) {
 					anyChecked = true;
 				}
+				if (databaseElem.value == "Psilabs") {
+					psilabsIndex = databaseIndex;
+				}
 			})
-			if (!anyChecked && elem_form.database_Psilabs!=undefined) {
-				elem_form.database_Psilabs.checked = true;
+			if (!anyChecked && psilabsIndex!=-1) {
+				elem_form.database[psilabsIndex].checked = true;
 			};
 		}
 		function toFixed(stringNumber, decimalPlaces) {
@@ -397,12 +403,12 @@
 			elem_resultsTable.tBodies[0].innerHTML = "";
 			elem_resultsTable.tHead.children[0].innerHTML = "";
 
-			Object.keys(databasesContainer.databases).forEach(function(databaseName){
-				if (elem_form["database_"+databaseName].checked) {
-					var database = databasesContainer.databases[databaseName];
-					for (const sampleType of Object.keys(database)) {
-						if (elem_form["type_"+sampleType].checked) {
-							database[sampleType].forEach(function(sample){
+			elem_form.database.forEach(function(databaseCheckbox){
+				if (databaseCheckbox.checked) {
+					var database = databasesContainer.databases[databaseCheckbox.value];
+					elem_form.type.forEach(function(typeCheckbox){
+						if (typeCheckbox.checked && (typeCheckbox.value in database)) {
+							database[typeCheckbox.value].forEach(function(sample){
 								var matched = false;
 								if (elem_form.exact.checked) {
 									if (sample["Sample Name"].toLowerCase() == searchstring) {
@@ -441,7 +447,7 @@
 								}
 							})
 						}
-					}
+					})
 				}
 			})
 
@@ -539,11 +545,5 @@
 		}
 		updateDatabaseCheckboxes();
 		updateTypeCheckboxes();
-
-		var searchParams = (new URL(location)).searchParams;
-		console.log(searchParams.entries());
-		for (var p of searchParams.keys()) {
-			console.log(searchParams.getAll(p));
-		}
 	</script>
 </html>
