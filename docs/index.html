@@ -78,14 +78,14 @@
 					<div>
 						<fieldset>
 							<legend>Sample Types:</legend>
-							<ul id="sampleTypes">
+							<ul id="sampleTypes" onchange="updateTypeCheckboxes()">
 							</ul>
 						</fieldset>
 					</div>
 					<div>
 						<fieldset>
 							<legend>Databases:</legend>
-							<ul id="databases">
+							<ul id="databases" onchange="updateDatabaseCheckboxes()">
 							</ul>
 							<input type="file" name="fileUploader" accept="application/json, .json, .JSON" onchange="return changeHandler(this.files);">
 						</fieldset>
@@ -315,7 +315,6 @@
 			databaseInput.name = "database";
 			databaseInput.id = "database_" + identifier;
 			databaseInput.value = identifier;
-			databaseInput.addEventListener("click", updateDatabaseCheckboxes);
 			databaseListItem.appendChild(databaseInput);
 			var databaseLabel = document.createElement("label");
 			databaseLabel.htmlFor = "database_" + identifier;
@@ -332,7 +331,6 @@
 				input.name = "type";
 				input.id = "type_"+sampleType;
 				input.value = sampleType;
-				input.addEventListener("click", updateTypeCheckboxes);
 				li.appendChild(input);
 				var label = document.createElement("label");
 				label.htmlFor = "type_"+sampleType;
