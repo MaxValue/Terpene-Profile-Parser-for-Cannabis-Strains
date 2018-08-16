@@ -395,6 +395,26 @@
 			}
 		}
 		function load_sample_data(elem_form) {
+			var newURL = new URL(window.location);
+			newURL.search = "";
+			if (elem_form.q.value != "") {
+				newURL.searchParams.append(elem_form.q.name, elem_form.q.value);
+			}
+			if (elem_form.exact.checked) {
+				newURL.searchParams.append(elem_form.exact.name, elem_form.exact.value);
+			}
+			elem_form.type.forEach(function(typeCheckbox){
+				if (typeCheckbox.checked) {
+					newURL.searchParams.append(typeCheckbox.name, typeCheckbox.value);
+				}
+			})
+			elem_form.database.forEach(function(databaseCheckbox){
+				if (databaseCheckbox.checked) {
+					newURL.searchParams.append(databaseCheckbox.name, databaseCheckbox.value);
+				}
+			})
+			window.history.pushState({},"",newURL);
+
 			var searchResults = [];
 			var averages = {};
 			var resultsNum = 0;
@@ -543,7 +563,35 @@
 				addSampletype(newSampleType);
 			})
 		}
+		var parsedURL = new URL(window.location);
+		var doSearch = false;
+		for (var p of parsedURL.searchParams) {
+			switch (p[0]) {
+				case "q":
+					elem_form[p[0]].value = p[1];
+					doSearch = true;
+					break;
+				case "exact":
+					if (p[1]=="1") {
+						elem_form[p[0]].checked = true;
+						doSearch = true;
+					}
+					break;
+				case "type":
+				case "database":
+					elem_form[p[0]].forEach(function(checkbox){
+						if (checkbox.value == p[1]) {
+							checkbox.checked = true;
+							doSearch = true;
+						}
+					})
+					break;
+			}
+		}
 		updateDatabaseCheckboxes();
 		updateTypeCheckboxes();
+		if (doSearch) {
+			load_sample_data(elem_form);
+		}
 	</script>
 </html>
