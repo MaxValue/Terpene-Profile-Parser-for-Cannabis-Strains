@@ -30,7 +30,7 @@ It will produce a folder called `database_dump` containing all sample pages.
 
 ### The parser
 This parser runs multiple XPath queries and RegEx expressions to find the wanted data in those HTML-files. You can run it like this:
-`python3 clean_data.py --csv database_dump/`
+`python3 parser.py --csv database_dump/`
 
 If you add `-v` (up to 3 times) you will be informed of more and more information about the extraction process.
 After this is done you will have `results.csv` file and (if some extractions failed) a number of other files containing filenames where some datapoints couldn't be extracted (beginning with `log-`).
