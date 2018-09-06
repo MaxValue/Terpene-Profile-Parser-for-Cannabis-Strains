@@ -2,8 +2,8 @@ Terpene Profile Parser for Cannabis Strains
 ===========================================
 _Parser and Database to index the Terpene Profile of different Strains Of Cannabis from Online-Databases_
 
-[![Say Thanks!](https://img.shields.io/badge/Drop%20a%20thank%20you-%3A%29-1EAEDB.svg)](https://saythanks.io/to/MaxValue)
-[![Patreon Link](https://img.shields.io/badge/Patreon-Support-F96854.svg?longCache=true&style=social&logo=patreon)](https://www.patreon.com/publicbetamax)
+[![Say Thanks! Link](https://img.shields.io/badge/Click%20here%20to%20thank%20us-%3A%29-1EAEDB.svg)](https://saythanks.io/to/MaxValue)
+[![Patreon Link](https://img.shields.io/badge/Patreon-Vote%20with%20your%20money%20%3AP-F96854.svg?longCache=true&style=social&logo=patreon)](https://www.patreon.com/publicbetamax)
 
 ## Description
 This repository contains:
