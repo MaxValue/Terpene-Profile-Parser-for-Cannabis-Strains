@@ -498,7 +498,6 @@
 					////terpene name
 					var cell = document.createElement("td");
 					cell.innerText = terpene.name;
-					cell.style.backgroundColor = hexColor(terpene.color);
 					row.appendChild(cell);
 
 					// graph
@@ -507,32 +506,11 @@
 					cell.innerText = "\u2588".repeat(10);
 					cell.className = "graphcell";
 
-					/*
-					the algorithm:
-					sort largest to smallest
-					loop goes in reverse (starts with smallest):
-						linear color gradient is appended
-						white gradient is appended
-					*/
-					searchResults[terpene.name].sort((a,b)=>a-b);
 					if (searchResults[terpene.name].length!=0) {
-						var lastColor = rgbaColor(terpene.color,1);
-						var backgroundImage = "linear-gradient(to right,"+lastColor;
-						var currentTerpeneValue = searchResults[terpene.name][0];
-						var lastValue = 0.0;
-						var searchResultsLength = searchResults[terpene.name].length;
-						for (var i=0; i<searchResultsLength; i++) {
-							currentTerpeneValue=searchResults[terpene.name][i];
-							if (currentTerpeneValue!=lastValue) {
-								backgroundImage += ","+lastColor+" "+currentTerpeneValue*50+"%";
-								lastColor = rgbaColor(terpene.color, (1/searchResultsLength)*(searchResultsLength-i));
-								backgroundImage += ","+lastColor+" "+currentTerpeneValue*50+"%";
-								lastValue = currentTerpeneValue;
-							}
-						}
-						backgroundImage += ",rgba(0,0,0,0) "+currentTerpeneValue*50+"%)";
+						var backgroundImage = "linear-gradient(to right,#0000,#0000 "+(50-(25*average))+"%,"+hexColor(terpene.color)+" "+(50-(25*average))+"%,"+hexColor(terpene.color)+" "+(50+(25*average))+"%,#0000 "+(50+(25*average))+"%)";
 						cell.style.backgroundImage = backgroundImage;
 					}
+
 					row.appendChild(cell);
 
 
