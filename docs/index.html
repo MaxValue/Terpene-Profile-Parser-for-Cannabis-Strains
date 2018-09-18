@@ -449,15 +449,9 @@
 									terpenes.forEach(function(terpene){
 										var currentTerpeneValue = parseFloat(sample[terpene.name]) || 0.0;
 										if (!(terpene.name in averages)) {
-											averages[terpene.name] = [currentTerpeneValue, currentTerpeneValue, currentTerpeneValue];
+											averages[terpene.name] = currentTerpeneValue;
 										} else {
-											averages[terpene.name][0] += currentTerpeneValue;
-											if (currentTerpeneValue < averages[terpene.name][1]) {
-												averages[terpene.name][1] = currentTerpeneValue;
-											}
-											if (currentTerpeneValue > averages[terpene.name][2]) {
-												averages[terpene.name][2] = currentTerpeneValue;
-											}
+											averages[terpene.name] += currentTerpeneValue;
 										}
 										if (currentTerpeneValue > highestOverallValue) {
 											highestOverallValue = currentTerpeneValue;
@@ -483,13 +477,11 @@
 				elem_resultsTable.tHead.children[0].innerHTML = "<td>Terpene</td><td>Graph</td><td>Average</td>";
 				elem_resultsTable.tBodies[0].innerText = "";
 				terpenes.forEach(function(terpene){
-					var average = averages[terpene.name][0]/resultsNum;
-					averages[terpene.name][0] = average;
+					var average = averages[terpene.name]/resultsNum;
+					averages[terpene.name] = average;
 				})
 				terpenes.forEach(function(terpene,terpeneIndex){
-					var average = averages[terpene.name][0];
-					var lowestValue = averages[terpene.name][1];
-					var highestValue = averages[terpene.name][2];
+					var average = averages[terpene.name];
 
 					//table
 
