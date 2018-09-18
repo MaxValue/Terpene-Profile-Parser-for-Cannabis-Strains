@@ -421,7 +421,6 @@
 			})
 			window.history.pushState({},"",newURL);
 
-			var searchResults = [];
 			var averages = {};
 			var resultsNum = 0;
 			var searchstring = elem_form.q.value.toLowerCase();
@@ -451,12 +450,6 @@
 											averages[terpene.name] = currentTerpeneValue;
 										} else {
 											averages[terpene.name] += currentTerpeneValue;
-										}
-
-										if (!(terpene.name in searchResults)) {
-											searchResults[terpene.name] = [currentTerpeneValue];
-										} else {
-											searchResults[terpene.name].push(currentTerpeneValue);
 										}
 									});
 								}
@@ -494,10 +487,8 @@
 					cell.innerText = "\u2588".repeat(10);
 					cell.className = "graphcell";
 
-					if (searchResults[terpene.name].length!=0) {
-						var backgroundImage = "linear-gradient(to right,#0000,#0000 "+(50-(25*average))+"%,"+hexColor(terpene.color)+" "+(50-(25*average))+"%,"+hexColor(terpene.color)+" "+(50+(25*average))+"%,#0000 "+(50+(25*average))+"%)";
-						cell.style.backgroundImage = backgroundImage;
-					}
+					var backgroundImage = "linear-gradient(to right,#0000,#0000 "+(50-(25*average))+"%,"+hexColor(terpene.color)+" "+(50-(25*average))+"%,"+hexColor(terpene.color)+" "+(50+(25*average))+"%,#0000 "+(50+(25*average))+"%)";
+					cell.style.backgroundImage = backgroundImage;
 
 					row.appendChild(cell);
 
