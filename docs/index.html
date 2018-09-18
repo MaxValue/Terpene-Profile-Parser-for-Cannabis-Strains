@@ -424,7 +424,6 @@
 			var searchResults = [];
 			var averages = {};
 			var resultsNum = 0;
-			var highestOverallValue = 0.0;
 			var searchstring = elem_form.q.value.toLowerCase();
 			resetResults();
 
@@ -452,9 +451,6 @@
 											averages[terpene.name] = currentTerpeneValue;
 										} else {
 											averages[terpene.name] += currentTerpeneValue;
-										}
-										if (currentTerpeneValue > highestOverallValue) {
-											highestOverallValue = currentTerpeneValue;
 										}
 
 										if (!(terpene.name in searchResults)) {
