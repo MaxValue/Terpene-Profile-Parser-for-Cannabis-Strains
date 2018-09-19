@@ -466,6 +466,7 @@
 				elem_resultsTable.caption.innerText = "Search Results for '"+searchstring+"' ("+resultsNum+" Sample"+(resultsNum==1?"":"s")+")";
 				elem_resultsTable.tHead.children[0].innerHTML = "<td>Terpene</td><td>Graph</td><td>Average</td>";
 				elem_resultsTable.tBodies[0].innerText = "";
+				var rowCandidates = [];
 				terpenes.forEach(function(terpene){
 					var average = averages[terpene.name]/resultsNum;
 					averages[terpene.name] = average;
@@ -476,6 +477,7 @@
 					//table
 
 					var row = document.createElement("tr");
+					row.setAttribute("data-average", average);
 
 					////terpene name
 					var cell = document.createElement("td");
@@ -512,9 +514,13 @@
 					cell.appendChild(span);
 					row.appendChild(cell);
 
-					elem_resultsTable.tBodies[0].appendChild(row);
+					rowCandidates.push(row);
 
 				})
+				rowCandidates.sort((a,b)=>parseFloat(a.getAttribute("data-average")) < parseFloat(b.getAttribute("data-average")));
+				rowCandidates.forEach(function(row){
+					elem_resultsTable.tBodies[0].appendChild(row);
+				});
 			}
 			elem_pagetitle.text = "StrainFinder - '" + searchstring + "'";
 			return false;
