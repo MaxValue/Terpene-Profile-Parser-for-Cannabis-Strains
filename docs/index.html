@@ -446,10 +446,10 @@
 									resultsNum ++;
 									terpenes.forEach(function(terpene){
 										var currentTerpeneValue = parseFloat(sample[terpene.name]) || 0.0;
-										if (!(terpene.name in averages)) {
-											averages[terpene.name] = currentTerpeneValue;
-										} else {
+										if (terpene.name in averages) {
 											averages[terpene.name] += currentTerpeneValue;
+										} else {
+											averages[terpene.name] = currentTerpeneValue;
 										}
 									});
 								}
