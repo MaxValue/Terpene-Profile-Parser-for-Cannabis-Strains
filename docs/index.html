@@ -517,7 +517,7 @@
 					rowCandidates.push(row);
 
 				})
-				rowCandidates.sort((a,b)=>parseFloat(a.getAttribute("data-average")) < parseFloat(b.getAttribute("data-average")));
+				rowCandidates.sort((a,b)=>parseFloat(b.getAttribute("data-average")) - parseFloat(a.getAttribute("data-average")));
 				rowCandidates.forEach(function(row){
 					elem_resultsTable.tBodies[0].appendChild(row);
 				});
