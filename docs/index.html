@@ -423,6 +423,7 @@
 
 			var averages = {};
 			var resultsNum = 0;
+			var greyedOutColor = "#d9d9d9";
 			var searchstring = elem_form.q.value.toLowerCase();
 			resetResults();
 
@@ -479,6 +480,9 @@
 					////terpene name
 					var cell = document.createElement("td");
 					cell.innerText = terpene.name;
+					if (average <= 0.01) {
+						cell.style.color = greyedOutColor;
+					}
 					row.appendChild(cell);
 
 					// graph
@@ -487,7 +491,12 @@
 					cell.innerText = "\u2588".repeat(10);
 					cell.className = "graphcell";
 
-					var backgroundImage = "linear-gradient(to right,#0000,#0000 "+(50-(25*average))+"%,"+hexColor(terpene.color)+" "+(50-(25*average))+"%,"+hexColor(terpene.color)+" "+(50+(25*average))+"%,#0000 "+(50+(25*average))+"%)";
+					if (average > 0.01) {
+						var graphColor = hexColor(terpene.color);
+					} else {
+						var graphColor = greyedOutColor;
+					}
+					var backgroundImage = "linear-gradient(to right,#0000,#0000 "+(50-(25*average))+"%,"+graphColor+" "+(50-(25*average))+"%,"+graphColor+" "+(50+(25*average))+"%,#0000 "+(50+(25*average))+"%)";
 					cell.style.backgroundImage = backgroundImage;
 
 					row.appendChild(cell);
@@ -497,6 +506,9 @@
 					var cell = document.createElement("td");
 					var span = document.createElement("span");
 					span.innerText = toFixed(average, 2)+" %";
+					if (average <= 0.01) {
+						cell.style.color = greyedOutColor;
+					}
 					cell.appendChild(span);
 					row.appendChild(cell);
 
