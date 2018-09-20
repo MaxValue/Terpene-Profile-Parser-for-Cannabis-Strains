@@ -11,7 +11,7 @@
 		<link rel="manifest" href="manifest.webmanifest" />
 		<link rel="canonical" href="https://maxvalue.github.io/Terpene-Profile-Parser-for-Cannabis-Strains/" />
 		<meta property="og:url" content="https://maxvalue.github.io/Terpene-Profile-Parser-for-Cannabis-Strains/" />
-		<meta property="og:title" content="StrainFinder" />
+		<meta property="og:title" id="ogtitle" content="StrainFinder" />
 		<meta property="og:description" content="Compare terpene profiles of cannabis strains using lab test data. Find out which compounds of your favourite strain affect your body." />
 		<meta property="og:image" content="https://maxvalue.github.io/Terpene-Profile-Parser-for-Cannabis-Strains/img/opengraph-icon-1200x1200.png" />
 		<link rel="apple-touch-icon" sizes="120x120" href="img/apple-touch-icon-120x120.png" />
@@ -289,6 +289,7 @@
 		// That's it!
 
 		var elem_pagetitle = document.getElementById("title");
+		var elem_pageogtitle = document.getElementById("ogtitle");
 		var elem_form = document.getElementById("searchform");
 		var elem_databaseList = document.getElementById("databases");
 		var elem_sampleTypes = document.getElementById("sampleTypes");
@@ -413,6 +414,7 @@
 		}
 		function resetResults() {
 			elem_pagetitle.text = "StrainFinder";
+			elem_pageogtitle.content = "StrainFinder";
 			elem_resultsTable.caption.innerText = "";
 			elem_resultsTable.tBodies[0].innerHTML = "";
 			elem_resultsTable.tHead.children[0].innerHTML = "";
@@ -539,6 +541,7 @@
 				});
 			}
 			elem_pagetitle.text = "StrainFinder - '" + searchstring + "'";
+			elem_pageogtitle.content = "StrainFinder: '" + searchstring + "'";
 			return false;
 		}
 
