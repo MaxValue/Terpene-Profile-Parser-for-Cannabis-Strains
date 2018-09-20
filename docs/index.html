@@ -278,7 +278,8 @@
 				boilingPoint: 177.0,
 				onsetTime: 0
 			}
-		]
+		];
+		var greyedOutColor = "#d9d9d9";
 
 		function changeHandler(files) {
 			for (var i = 0, file; file = files[i]; i++) {
@@ -423,7 +424,6 @@
 
 			var averages = {};
 			var resultsNum = 0;
-			var greyedOutColor = "#d9d9d9";
 			var searchstring = elem_form.q.value.toLowerCase();
 			resetResults();
 
