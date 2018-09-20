@@ -283,7 +283,19 @@
 				onsetTime: 0
 			}
 		];
+		// Hi there fellow code enthusiast!
+		// You can change those values directly below, but please don't touch the others.
 		var greyedOutColor = "#d9d9d9";
+		// That's it!
+
+		var elem_pagetitle = document.getElementById("title");
+		var elem_form = document.getElementById("searchform");
+		var elem_databaseList = document.getElementById("databases");
+		var elem_sampleTypes = document.getElementById("sampleTypes");
+		var elem_resultsTable = document.getElementById("results");
+
+		var sampleTypes = [];
+		var database_imports = 0;
 
 		function changeHandler(files) {
 			for (var i = 0, file; file = files[i]; i++) {
@@ -529,15 +541,6 @@
 			elem_pagetitle.text = "StrainFinder - '" + searchstring + "'";
 			return false;
 		}
-
-		var elem_pagetitle = document.getElementById("title");
-		var elem_form = document.getElementById("searchform");
-		var elem_databaseList = document.getElementById("databases");
-		var elem_sampleTypes = document.getElementById("sampleTypes");
-		var elem_resultsTable = document.getElementById("results");
-
-		var sampleTypes = [];
-		var database_imports = 0;
 
 		// available databases list
 		for (const databaseName of Object.keys(databasesContainer.databases)) {
