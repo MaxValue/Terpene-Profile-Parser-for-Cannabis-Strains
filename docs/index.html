@@ -26,9 +26,6 @@
 			html {
 				font-family: 'Roboto', sans-serif;
 			}
-			.floatleft {
-				float: left;
-			}
 
 			#searchwrapper {
 				display: inline-block;
@@ -70,16 +67,19 @@
 				float: right;
 				color: #C7C7CC;
 			}
+			#about {
+				float: left;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="GUI">
-			<div id="searchwrapper" class="floatleft">
+			<div id="searchwrapper">
 				<form id="searchform" action="." onsubmit="return load_sample_data(this);">
 					<input type="submit" value="Search"><br>
 
 					<label for="search">Strain Name:</label>
-					<input type="search" name="q" id="search" inputmode="search" placeholder="Chocolope" autofocus="" oninput="resetResults()">
+					<input type="search" name="q" id="search" inputmode="search" placeholder="Chocolope" autofocus="" oninput="resetResults()"><br>
 					<label for="exactmatch">Exact Match?</label>
 					<input type="checkbox" name="exact" id="exactmatch" value="1" onchange="resetResults()">
 
@@ -112,8 +112,9 @@
 					</tbody>
 				</table>
 			</div>
-		</div>
-		<div id="appversion">v2018-09-21T16:14:00+02:00.003</div>
+		</div><br>
+		<span id="about"><a href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
+		<span id="appversion">v2018-09-21T16:35:00+02:00.004</span>
 	</body>
 	<script type="text/javascript">
 		/*
