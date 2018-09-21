@@ -113,7 +113,7 @@
 				</table>
 			</div>
 		</div>
-		<div id="appversion">v2018-09-19T17:03:00+02:00.007</div>
+		<div id="appversion">v2018-09-21T16:14:00+02:00.003</div>
 	</body>
 	<script type="text/javascript">
 		/*
@@ -305,17 +305,17 @@
 		var database_imports = 0;
 
 		function changeHandler(files) {
-			for (var i = 0, file; file = files[i]; i++) {
+			for (let i = 0, file; file = files[i]; i++) {
 				if (file.type!="application/json") {
 					continue;
 				}
-				var reader = new FileReader();
+				let reader = new FileReader();
 				reader.onload = function(event) {
-					var newDatabaseString = event.target.result;
+					let newDatabaseString = event.target.result;
 					if (newDatabaseString.startsWith("databasesContainer=")) {
 						newDatabaseString = newDatabaseString.substr(19);
 					}
-					var newDatabasesContainer = JSON.parse(newDatabaseString);
+					let newDatabasesContainer = JSON.parse(newDatabaseString);
 					database_imports++;
 					for (const databaseName of Object.keys(newDatabasesContainer.databases)) {
 						addDatabaseItem("import"+database_imports.toString()+"_"+databaseName, "Imported: "+databaseName);
@@ -333,14 +333,14 @@
 			return false;
 		}
 		function addDatabaseItem(identifier, label) {
-			var databaseListItem = document.createElement("li");
-			var databaseInput = document.createElement("input");
+			let databaseListItem = document.createElement("li");
+			let databaseInput = document.createElement("input");
+			let databaseLabel = document.createElement("label");
 			databaseInput.type = "checkbox";
 			databaseInput.name = "database";
 			databaseInput.id = "database_" + identifier;
 			databaseInput.value = identifier;
 			databaseListItem.appendChild(databaseInput);
-			var databaseLabel = document.createElement("label");
 			databaseLabel.htmlFor = "database_" + identifier;
 			databaseLabel.innerText = label;
 			databaseListItem.appendChild(databaseLabel);
@@ -348,15 +348,15 @@
 		}
 		function addSampletype(sampleType) {
 			if (!sampleTypes.includes(sampleType)) {
+				let li = document.createElement("li");
+				let input = document.createElement("input");
+				let label = document.createElement("label");
 				sampleTypes.push(sampleType);
-				var li = document.createElement("li");
-				var input = document.createElement("input");
 				input.type = "checkbox";
 				input.name = "type";
 				input.id = "type_"+sampleType;
 				input.value = sampleType;
 				li.appendChild(input);
-				var label = document.createElement("label");
 				label.htmlFor = "type_"+sampleType;
 				label.innerText = sampleType;
 				li.appendChild(label);
@@ -367,19 +367,19 @@
 			return hexNumber.toString(16).padStart(7,'#000000');
 		}
 		function rgbaColor(hexNumber, alpha=1) {
-			var hex = hexNumber.toString(16).padStart(6,'000000');
-			var red = parseInt(hex.slice(0,2), 16);
-			var green = parseInt(hex.slice(2,4), 16);
-			var blue = parseInt(hex.slice(4,6), 16);
+			let hex = hexNumber.toString(16).padStart(6,'000000');
+			let red = parseInt(hex.slice(0,2), 16);
+			let green = parseInt(hex.slice(2,4), 16);
+			let blue = parseInt(hex.slice(4,6), 16);
 			return "rgba("+red+", "+green+", "+blue+", "+alpha+")";
 		}
 		function linearGradient(rawcolor, percentage, transparency) {
-			var endColor = rgbaColor(rawcolor, transparency);
+			let endColor = rgbaColor(rawcolor, transparency);
 			return "linear-gradient(to right, "+endColor+", "+endColor+" "+percentage+"%, rgba(0,0,0,0) "+percentage+"%)";
 		}
 		function updateTypeCheckboxes() {
-			var anyChecked = false;
-			var flowerIndex = -1;
+			let anyChecked = false;
+			let flowerIndex = -1;
 			elem_form.type.forEach(function(typeElem,typeIndex){
 				if (typeElem.checked) {
 					anyChecked = true;
@@ -394,8 +394,8 @@
 			resetResults();
 		}
 		function updateDatabaseCheckboxes() {
-			var anyChecked = false;
-			var psilabsIndex = -1;
+			let anyChecked = false;
+			let psilabsIndex = -1;
 			elem_form.database.forEach(function(databaseElem,databaseIndex){
 				if (databaseElem.checked) {
 					anyChecked = true;
@@ -410,8 +410,8 @@
 			resetResults();
 		}
 		function toFixed(stringNumber, decimalPlaces) {
-			var result = stringNumber.toFixed(decimalPlaces);
-			var zeroMask = (0.0).toFixed(decimalPlaces);
+			let result = stringNumber.toFixed(decimalPlaces);
+			let zeroMask = (0.0).toFixed(decimalPlaces);
 			if (result == "-"+zeroMask) {
 				return zeroMask
 			} else {
@@ -426,7 +426,10 @@
 			elem_resultsTable.tHead.children[0].innerHTML = "";
 		}
 		function load_sample_data(elem_form) {
-			var newURL = new URL(window.location);
+			let averages = {};
+			let resultsNum = 0;
+			let searchstring = elem_form.q.value.toLowerCase();
+			let newURL = new URL(window.location);
 			newURL.search = "";
 			if (elem_form.q.value != "") {
 				newURL.searchParams.append(elem_form.q.name, elem_form.q.value);
@@ -446,18 +449,15 @@
 			})
 			window.history.pushState({},"",newURL);
 
-			var averages = {};
-			var resultsNum = 0;
-			var searchstring = elem_form.q.value.toLowerCase();
 			resetResults();
 
 			elem_form.database.forEach(function(databaseCheckbox){
 				if (databaseCheckbox.checked) {
-					var database = databasesContainer.databases[databaseCheckbox.value];
+					let database = databasesContainer.databases[databaseCheckbox.value];
 					elem_form.type.forEach(function(typeCheckbox){
 						if (typeCheckbox.checked && (typeCheckbox.value in database)) {
 							database[typeCheckbox.value].forEach(function(sample){
-								var matched = false;
+								let matched = false;
 								if (elem_form.exact.checked) {
 									if (sample["Sample Name"].toLowerCase() == searchstring) {
 										matched = true
@@ -470,7 +470,7 @@
 								if (matched) {
 									resultsNum ++;
 									terpenes.forEach(function(terpene){
-										var currentTerpeneValue = parseFloat(sample[terpene.name]) || 0.0;
+										let currentTerpeneValue = parseFloat(sample[terpene.name]) || 0.0;
 										if (terpene.name in averages) {
 											averages[terpene.name] += currentTerpeneValue;
 										} else {
@@ -488,19 +488,30 @@
 				elem_resultsTable.caption.innerText = "No results found";
 			} else {
 				elem_resultsTable.caption.innerText = "Search Results for '"+searchstring+"' ("+resultsNum+" Sample"+(resultsNum==1?"":"s")+")";
-				elem_resultsTable.tHead.children[0].innerHTML = "<td>Terpene</td><td>Graph</td><td>Average</td>";
-				elem_resultsTable.tBodies[0].innerText = "";
-				var rowCandidates = [];
+
+				let row = elem_resultsTable.tHead.children[0];
+				var cell = document.createElement("td");
+				cell.innerText = "Terpene";
+				row.appendChild(cell);
+				var cell = document.createElement("td");
+				cell.innerText = "Graph";
+				// cell.addEventListener("click", sortTable);
+				row.appendChild(cell);
+				var cell = document.createElement("td");
+				cell.innerText = "Average";
+				row.appendChild(cell);
+
+				let rowCandidates = [];
 				terpenes.forEach(function(terpene){
-					var average = averages[terpene.name]/resultsNum;
+					let average = averages[terpene.name]/resultsNum;
 					averages[terpene.name] = average;
 				})
 				terpenes.forEach(function(terpene,terpeneIndex){
-					var average = averages[terpene.name];
+					let average = averages[terpene.name];
 
 					//table
 
-					var row = document.createElement("tr");
+					let row = document.createElement("tr");
 					row.setAttribute("data-average", average);
 
 					////terpene name
@@ -524,7 +535,7 @@
 					}
 					let graphStartPoint = (50-((50*average)/maxGraphPercentage));
 					let graphEndPoint = (50+((50*average)/maxGraphPercentage));
-					var backgroundImage = "linear-gradient(to right,#0000,#0000 "
+					let backgroundImage = "linear-gradient(to right,#0000,#0000 "
 											+graphStartPoint+"%,"
 											+graphColor+" "+graphStartPoint+"%,"
 											+graphColor+" "+graphEndPoint+"%,#0000 "
@@ -565,9 +576,9 @@
 				addSampletype(newSampleType);
 			})
 		}
-		var parsedURL = new URL(window.location);
-		var doSearch = false;
-		for (var p of parsedURL.searchParams) {
+		let parsedURL = new URL(window.location);
+		let doSearch = false;
+		for (let p of parsedURL.searchParams) {
 			switch (p[0]) {
 				case "q":
 					elem_form[p[0]].value = p[1];
