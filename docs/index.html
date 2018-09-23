@@ -26,49 +26,31 @@
 			html {
 				font-family: 'Roboto', sans-serif;
 			}
-
 			#searchwrapper {
-				display: inline-block;
-			}
-			#searchform fieldset {
-				display: inline-block;
+				float: left;
+				margin-right: 5.6px;
 			}
 			#sampleTypes, #databases {
 				list-style-type: none;
 				padding-left: 0;
 			}
-
-			#resultswrapper {
-				display: inline-block;
-				padding-left: 42px;
-			}
 			#results,#results td,#results tr {
 				border: 1px solid black;
 				border-collapse: collapse;
 			}
-			#results td:nth-of-type(1) {
-				border: none;
-			}
 			#results thead {
 				background-color: rgb(222,222,222);
-			}
-			#results .valuecolumn {
-				/*text-shadow: 1px 1px 2px black, 0 0 1em white, 0 0 0.2em white;*/
-				/*text-shadow: 0 0 1em white, 0 0 1em white, 0 0 1em white, 0 0 0.2em white, 0 0 0.2em white;*/
-				background-color: rgba(255,255,255,0.75);
-			}
-			#graph {
-				display: inline-block;
 			}
 			.graphcell {
 				color: rgba(0,0,0,0);
 			}
+			#about {
+				display: inline-block;
+			}
 			#appversion {
+				margin-left: 20px;
 				float: right;
 				color: #C7C7CC;
-			}
-			#about {
-				float: left;
 			}
 		</style>
 	</head>
@@ -112,9 +94,11 @@
 					</tbody>
 				</table>
 			</div>
-		</div><br>
-		<span id="about"><a href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-		<span id="appversion">v2018-09-21T16:35:00+02:00.004</span>
+			<div id="about">
+				<a id="infolink" href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
+				<span id="appversion">v2018-09-23T13:05:00+02:00.001</span>
+			</div>
+		</div>
 	</body>
 	<script type="text/javascript">
 		/*
