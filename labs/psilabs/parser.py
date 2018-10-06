@@ -23,7 +23,7 @@ DATA_ROW_FIELDS = [
 	'trans-Nerolidol 1',
 	'trans-Nerolidol 2',
 	'trans-Ocimene',
-	'3-Carene',
+	'delta-3-Carene',
 	'Camphene',
 	'Caryophyllene Oxide',
 	'Eucalyptol',
@@ -72,7 +72,6 @@ parser.add_argument('--csv', action='store_true', help='Export as CSV.')
 group_logType = parser.add_mutually_exclusive_group()
 group_logType.add_argument('--log-csv', default=True, action='store_true', help='Write logs to CSV.')
 group_logType.add_argument('--log-html', default=False, action='store_true', help='Write logs to HTML.')
-parser.add_argument('--no-cleanup', action='store_true', help='Do not delete existing result files (logs included).')
 parser.add_argument('--no-logfiles', action='store_true', help='Do not create log files for logging errors.')
 parser.add_argument('--force-terpenes', action='store_true', help='Skip all samples without a terpene profile.')
 parser.add_argument('--force-cannabinoids', action='store_true', help='Skip all samples without a cannabinoid profile.')
@@ -282,14 +281,14 @@ xpath_time_tested =				'/html/body/ui-view/div/md-content/ui-view/div/md-content
 xpath_time_received =			'/html/body/ui-view/div/md-content/ui-view/div/md-content/div[2]/md-card[1]/md-card-content/md-list/md-list-item/span/h3[following-sibling::p[text()="Date Received"]]/text()'
 
 terpenes = {
-	'3-Carene':				re.compile(r'^(3|Three|Tri)[-_/\s.]*Carene$',					re.IGNORECASE),
+	'delta-3-Carene':		re.compile(r'^(delta)?[-_/\s.]*(3|Three|Tri)[-_/\s.]*Carene$',	re.IGNORECASE),
 	'Camphene':				re.compile(r'^Camphene$',										re.IGNORECASE),
 	'Caryophyllene Oxide':	re.compile(r'^Caryophyllene[-_/\s.]*Oxide$',					re.IGNORECASE),
 	'Eucalyptol':			re.compile(r'^Eucalyptol$',										re.IGNORECASE),
 	'Farnesene': 			re.compile(r'^Farnesene$',										re.IGNORECASE),
 	'Geraniol':				re.compile(r'^Geraniol$',										re.IGNORECASE),
 	'Guaiol':				re.compile(r'^Guaiol$',											re.IGNORECASE),
-	'Isopulegol':			re.compile(r'^Isopulegol$',										re.IGNORECASE),
+	'Isopulegol':			re.compile(r'^(\(-\)[-_/\s.]+)?Isopulegol$',					re.IGNORECASE),
 	'Linalool':				re.compile(r'^Linalool$',										re.IGNORECASE),
 	'Ocimene':				re.compile(r'^Ocimene$',										re.IGNORECASE),
 	'Terpinolene':			re.compile(r'^Terpinolene$',									re.IGNORECASE),
