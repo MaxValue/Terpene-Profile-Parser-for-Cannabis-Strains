@@ -72,7 +72,6 @@ parser.add_argument('--csv', action='store_true', help='Export as CSV.')
 group_logType = parser.add_mutually_exclusive_group()
 group_logType.add_argument('--log-csv', default=True, action='store_true', help='Write logs to CSV.')
 group_logType.add_argument('--log-html', default=False, action='store_true', help='Write logs to HTML.')
-parser.add_argument('--no-logfiles', action='store_true', help='Do not create log files for logging errors.')
 parser.add_argument('--force-terpenes', action='store_true', help='Skip all samples without a terpene profile.')
 parser.add_argument('--force-cannabinoids', action='store_true', help='Skip all samples without a cannabinoid profile.')
 parser.add_argument('--placeholder-csv', default='', help='CSV only: The placeholder to use when no value is present.')
@@ -145,7 +144,7 @@ def log_this(*msg, sep=' ', end='\n', level=3, override=False):
 			print('DEBUG {}'.format(msg), end=end)
 
 def write_to_logfile(filepath, fieldnames, data, title=False, override=False):
-	if (not args.no_logfiles) or override:
+	if override:
 		if args.log_csv:
 			write_to_csv(
 				filepath=filepath+'.csv',
