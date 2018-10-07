@@ -51,7 +51,7 @@ DATA_ROW_FIELDS = [
 	'Moisture Content',
 ]
 
-import re, os, csv, argparse, json, urllib, datetime
+import re, os, csv, argparse, json, urllib, datetime, logging
 from lxml import html
 from lxml import etree
 import dateparser.search as dateparser_search
@@ -61,15 +61,26 @@ parser.add_argument('database', nargs='?', default='downloader/database_dump/', 
 parser.add_argument('--verbose', '-v', action='count', default=0, help='Turn on verbose mode.')
 parser.add_argument('--json', action='store_true', help='Export as JSON.')
 parser.add_argument('--csv', action='store_true', help='Export as CSV.')
-group_logType = parser.add_mutually_exclusive_group()
-group_logType.add_argument('--log-csv', default=True, action='store_true', help='Write logs to CSV.')
-group_logType.add_argument('--log-html', default=False, action='store_true', help='Write logs to HTML.')
+parser.add_argument('--log', help='Logfile path. If omitted, stdout is used.')
+parser.add_argument('--debug', '-d', action='store_true', help='Log all messages including debug.')
 parser.add_argument('--force-terpenes', action='store_true', help='Skip all samples without a terpene profile.')
 parser.add_argument('--force-cannabinoids', action='store_true', help='Skip all samples without a cannabinoid profile.')
 parser.add_argument('--placeholder-csv', default='', help='CSV only: The placeholder to use when no value is present.')
 args = parser.parse_args()
 
-def get_single_value(tree, xpath, fallback=None, fallback_file=False, fallback_data={}, join_multi=False):
+if args.debug:
+	loglevel = logging.DEBUG
+elif args.verbose:
+	loglevel = logging.INFO
+else:
+	loglevel = logging.WARNING
+
+if args.log:
+	logging.basicConfig(filename=args.log, filemode='a', level=loglevel)
+else:
+	logging.basicConfig(level=loglevel)
+
+def get_single_value(tree, xpath, fallback=None, errlevel=logging.CRITICAL, errmsg=None, errparams=[], join_multi=False):
 	raw_value = tree.xpath(xpath)
 	if len(raw_value) == 1:
 		if type(raw_value[0]) == str or type(raw_value[0]) == etree._ElementUnicodeResult:
@@ -78,12 +89,8 @@ def get_single_value(tree, xpath, fallback=None, fallback_file=False, fallback_d
 			return raw_value[0]
 	else:
 		if join_multi == False:
-			if fallback_file:
-				write_to_logfile(
-					filepath=fallback_file,
-					fieldnames=sorted(fallback_data.keys()),
-					data=fallback_data
-				)
+			if errmsg:
+				logging.log(errlevel, errmsg, *errparams)
 			return fallback
 		else:
 			if type(join_multi) == str:
@@ -126,32 +133,6 @@ def normalize_number(numberstring, base=10, comma=False, separator=False, compre
 def csv_escape(data):
 	return '"{}"'.format(data)
 
-def log_this(*msg, sep=' ', end='\n', level=3, override=False):
-	msg = sep.join([str(x) for x in msg])
-	if level <= args.verbose or override:
-		if level == 1:
-			print('INFO {}'.format(msg), end=end)
-		elif level == 2:
-			print('DETAIL {}'.format(msg), end=end)
-		elif level == 3:
-			print('DEBUG {}'.format(msg), end=end)
-
-def write_to_logfile(filepath, fieldnames, data, title=False, override=False):
-	if override:
-		if args.log_csv:
-			write_to_csv(
-				filepath=filepath+'.csv',
-				fieldnames=fieldnames,
-				data=data
-			)
-		elif args.log_html:
-			write_to_html(
-				filepath=filepath+'.html',
-				fieldnames=fieldnames,
-				data=data,
-				title=title
-			)
-
 def write_to_csv(filepath, fieldnames, data):
 	if os.path.exists(filepath):
 		writeheader = False
@@ -166,66 +147,15 @@ def write_to_csv(filepath, fieldnames, data):
 		for data_row in data:
 			writefile_writer.writerow(data_row)
 
-def write_to_html(filepath, fieldnames, data, title=False):
-	if os.path.exists(filepath):
-		template_filepath = filepath
-		writeheader = False
-	else:
-		template_filepath = 'template.html'
-		writeheader = True
-	with open(template_filepath, 'r', encoding='utf-8') as template_file:
-		tree = html.fromstring(template_file.read())
-	table = tree.get_element_by_id('results')
-	if 'Filename' in fieldnames:
-		pass
-		fieldnames.insert(fieldnames.index('Filename')+1, 'Analytical 360')
-	if writeheader:
-		if title:
-			table.xpath('caption')[0].text = str(title)
-			tree.get_element_by_id('title').text = str(title)
-		row_header = table.xpath('thead/tr')[0]
-		for fieldname in fieldnames:
-			fieldname_element = etree.Element('th')
-			fieldname_element.text = str(fieldname)
-			row_header.append(fieldname_element)
-	tbody = table.xpath('tbody')[0]
-	if type(data) != list:
-		data = [data]
-	for data_row in data:
-		row_body = etree.Element('tr')
-		for fieldname in fieldnames:
-			fieldname_element = etree.Element('td')
-			if fieldname in data_row:
-				if fieldname == 'Filename':
-					link = etree.Element('a')
-					link.attrib['href'] = 'file://{}'.format(os.path.join(os.getcwd(),args.database,data_row[fieldname]))
-					link.text = data_row[fieldname]
-					fieldname_element.append(link)
-				else:
-					fieldname_element.text = str(data_row[fieldname])
-			else:
-				if fieldname == 'Analytical 360' and 'Filename' in data_row:
-					link = etree.Element('a')
-					link.attrib['href'] = online_URL
-					link.text = 'Analytical 360'
-					fieldname_element.append(link)
-				else:
-					#fieldname_element.text = ''
-					pass
-			row_body.append(fieldname_element)
-		tbody.append(row_body)
-	with open(filepath, 'wb') as writefile:
-		writefile.write(html.tostring(tree))
-
 def test_match(xpath_here):
 	matches = tree.xpath(xpath_here)
 	if len(matches) > 0:
-		log_this('match!', level=3, override=True)
+		logging.debug('Match!')
 	for i in matches:
-		log_this('tag: {}'.format(i.tag), level=3, override=True)
-		log_this('attribs: {}'.format(i.attrib), level=3, override=True)
+		logging.debug('Tag: %s', i.tag)
+		logging.debug('Attribs: %s', i.attrib)
 
-log_this('Loading configurations . . .', level=1)
+logging.debug('Loading configurations . . .')
 
 xpath_provider_page = """/html/body/div/div/div[@class='maincontent']/div[@id='sabai-content']/div[@id='sabai-body']//div[@class='sabai-row-fluid']"""
 
@@ -528,96 +458,22 @@ sample_types_all = []
 empty_terpenes_counter = 0
 empty_cannabinoid_counter = 0
 
-logfile_cannabinoids_nonNumber = 'log-cannabinoid-no_number'
-logfile_cannabinoids_noname = 'log-cannabinoid-noname'
-logfile_cannabinoids_oneMatchMultipleTypes = 'log-cannabinoid-one_match_multiple_types'
-logfile_cannabinoids_unknown = 'log-cannabinoid_unknown'
-logfile_cannabinoids_allNoMatch = 'log-cannabinoids_all_did_not_match'
-logfile_cannabinoids_multipleMatchSameType = 'log-cannabinoids-multiple_match_same_type'
-logfile_cannabinoids_noneFound = 'log-cannabinoids-none_found'
-logfile_cannabinoids_notPercentage = 'log-cannabinoids-non_percentage'
-logfile_cbd_total_nonNumber = 'log-cbd_total-no_number'
-logfile_cbd_total_noneFound = 'log-cbd_total-none_found'
-logfile_cbd_total_notPercentage = 'log-cbd_total-not_percentage'
-logfile_name_noneFound = 'log-name-none_found'
-logfile_provider_noneFound = 'log-provider-none_found'
-logfile_terpenes_nonNumber = 'log-terpene-no_number'
-logfile_terpenes_noname = 'log-terpene-noname'
-logfile_terpenes_notPercentage = 'log-terpene-non_percentage'
-logfile_terpenes_oneMatchMultipleTypes = 'log-terpene-one_match_multiple_types'
-logfile_terpenes_unknown = 'log-terpene-unknown'
-logfile_terpenes_allNoMatch = 'log-terpenes-all_did_not_match'
-logfile_terpenes_multipleMatchSameType = 'log-terpenes-multiple_match_same_type'
-logfile_terpenes_noneFound = 'log-terpenes-none_found'
-logfile_terpenes_total_nonNumber = 'log-terpenes_total-no_number'
-logfile_terpenes_total_noneFound = 'log-terpenes_total-none_found'
-logfile_terpenes_total_notPercentage = 'log-terpenes_total-not_percentage'
-logfile_thc_total_nonNumber = 'log-thc_total-no_number'
-logfile_thc_total_noneFound = 'log-thc_total-none_found'
-logfile_thc_total_notPercentage = 'log-thc_total-not_percentage'
-logfile_time_received_noneFound = 'log-time_received-none_found'
-logfile_time_tested_noneFound = 'log-time_tested-none_found'
-logfile_time_tested_notDate = 'log-time_tested-not_date'
-logfile_time_posted_noneFound = 'log-time_posted-none_found'
-logfile_time_posted_notDate = 'log-time_posted-not_date'
-logfile_type_noneFound = 'log-type-none_found'
-logfile_type_unknown = 'log-type-unknown'
-logfile_uid_noneFound = 'log-uid-none_found'
 sample_database_CSVfile = 'results.csv'
 sample_database_JSONfile = 'results.json'
 
-result_files = [
-	logfile_cannabinoids_noname,
-	logfile_terpenes_noname,
-	logfile_cannabinoids_multipleMatchSameType,
-	logfile_cannabinoids_oneMatchMultipleTypes,
-	logfile_terpenes_multipleMatchSameType,
-	logfile_cannabinoids_oneMatchMultipleTypes,
-	logfile_cannabinoids_unknown,
-	logfile_cannabinoids_allNoMatch,
-	logfile_terpenes_allNoMatch,
-	logfile_cannabinoids_noneFound,
-	logfile_terpenes_noneFound,
-	logfile_cannabinoids_notPercentage,
-	logfile_type_unknown,
-	logfile_terpenes_unknown,
-	logfile_cbd_total_nonNumber,
-	logfile_cbd_total_noneFound,
-	logfile_cbd_total_notPercentage,
-	logfile_name_noneFound,
-	logfile_cannabinoids_nonNumber,
-	logfile_terpenes_total_nonNumber,
-	logfile_terpenes_nonNumber,
-	logfile_terpenes_total_notPercentage,
-	logfile_terpenes_notPercentage,
-	logfile_provider_noneFound,
-	logfile_terpenes_total_noneFound,
-	logfile_thc_total_nonNumber,
-	logfile_thc_total_noneFound,
-	logfile_thc_total_notPercentage,
-	logfile_time_received_noneFound,
-	logfile_time_tested_noneFound,
-	logfile_time_tested_notDate,
-	logfile_time_posted_noneFound,
-	logfile_time_posted_notDate,
-	logfile_type_noneFound,
-	logfile_uid_noneFound,
-	sample_database_CSVfile,
-	sample_database_JSONfile,
-]
-if input('\nDo you want to delete the old result and log files? (y/n) ').lower() == 'y':
-	for filename in result_files:
-		if os.path.exists(filename+'.html'):
-			os.remove(filename+'.html')
-		elif os.path.exists(filename+'.csv'):
-			os.remove(filename+'.csv')
+if input('\nDo you want to delete the old result files? (y/n) ').lower() == 'y':
+	if os.path.exists(filename+'.csv'):
+		os.remove(filename+'.csv')
+	if os.path.exists(sample_database_CSVfile):
+		os.remove(sample_database_CSVfile)
+	if os.path.exists(sample_database_JSONfile):
+		os.remove(sample_database_JSONfile)
 
-log_this('Before we start, a heads up:',
+print('Before we start, a heads up:',
 		'I will try to extract any terpene and cannabinoid profiles present as exact as possible. Samples which have values in ppm or mg units are skipped.',
 		'If a specific terpene is not present, I will ignore it for that page',
-		sep='\n',
-		level=1,
-		override=True)
+		sep='\n'
+		)
 if input('\nDo you want to start? (y/n) ').lower() != 'y':
 	exit('Aborted.')
 
@@ -626,7 +482,7 @@ if args.json:
 		databases_file.write('{"name":"Analytical 360"')
 		databases_file.write(',"samples":{')
 
-log_this('Entering main loop . . .', level=1)
+logging.debug('Entering main loop . . .')
 
 type_folders = sorted(os.listdir(os.path.expanduser(args.database)))
 is_first_type = True
@@ -641,9 +497,9 @@ for type_index, type_folder in enumerate(type_folders):
 			is_first_type = False
 	for file_index, file_name in enumerate(file_list):
 		raw_sample_file_name = os.path.join(type_folder, file_name)
-		log_this('#'*80, level=2)
+		logging.debug('#'*80)
 
-		log_this('Parsing sample file {} now.'.format(raw_sample_file_name), level=2)
+		logging.info('%s: Started parsing.', raw_sample_file_name)
 		with open(os.path.join(os.path.expanduser(args.database),raw_sample_file_name),encoding='utf-8') as raw_sample_file:
 			tree = html.fromstring(raw_sample_file.read())
 
@@ -659,18 +515,13 @@ for type_index, type_folder in enumerate(type_folders):
 		# Test if this is a provider page
 		provider_page_test = tree.xpath(xpath_provider_page)
 		if len(provider_page_test) != 0:
-			write_to_logfile(
-				filepath='provider_page',
-				fieldnames=['Filename'],
-				data={'Filename':raw_sample_file_name}
-			)
-			log_this('{}: Is provider'.format(raw_sample_file_name), level=3)
+			logging.debug('%s: Is provider.', raw_sample_file_name)
 			continue
 
 		# Test if this is a product page
 		productPageURL_match = re_productPageURL.match(parsed_canonical.path)
 		if productPageURL_match:
-			log_this('{}: Is product page'.format(raw_sample_file_name), level=3)
+			logging.debug('%s: Is product page.', raw_sample_file_name)
 			skip_this_file = True
 			continue
 
@@ -682,14 +533,9 @@ for type_index, type_folder in enumerate(type_folders):
 		terpenes_data = {}
 		non_percentage_numbers = False
 		if len(raw_terpenes_1) > 0 and len(raw_terpenes_2) > 0 and len(raw_terpenes_3) > 0 and len(raw_terpenes_4) > 0:
-			log_this('{}: both terpenes queries match!', level=3)
+			logging.warning('%s: Both terpene queries match!')
 		if 0 == len(raw_terpenes_1) == len(raw_terpenes_2) == len(raw_terpenes_3) == len(raw_terpenes_4):
-			log_this('no terpenes: {}'.format(raw_sample_file_name), level=3)
-			write_to_logfile(
-				filepath=logfile_terpenes_noneFound,
-				fieldnames=['Filename'],
-				data={'Filename':raw_sample_file_name}
-			)
+			logging.warning('%s: No terpenes.', raw_sample_file_name)
 		else:
 			for i, raw_terpene in enumerate(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4, 1):
 
@@ -711,24 +557,14 @@ for type_index, type_folder in enumerate(type_folders):
 							numberstring=raw_terpenes_info[terpene_amount_match.start():terpene_amount_match.end()]
 						)
 					except ValueError as e:
-						log_this('terpenes number error', level=1)
-						write_to_logfile(
-							filepath=logfile_terpenes_nonNumber,
-							fieldnames=['Filename','List Index', 'Amount'],
-							data={'Filename':raw_sample_file_name, 'List Index':i, 'Amount':raw_terpenes_info}
-						)
+						logging.warning('%s: Terpene number error: %s (at list index %d).', raw_sample_file_name, raw_terpenes_info, i)
 						continue
 				elif terpene_zeroamount_match:
 					terpene_amount_match_object = terpene_zeroamount_match
 					terpene_amount = 0.0
 				else:
 					non_percentage_numbers = True
-					log_this('non percentage terpenes', level=3)
-					write_to_logfile(
-						filepath=logfile_terpenes_notPercentage,
-						fieldnames=['Filename','List Index'],
-						data={'Filename':raw_sample_file_name, 'List Index':i}
-					)
+					logging.info('%s: Non-percentage terpene (at list index %d).', raw_sample_file_name, i)
 					continue
 
 				# NAME
@@ -738,56 +574,31 @@ for type_index, type_folder in enumerate(type_folders):
 				regex_matched = False
 				for terpene_name in terpenes.keys():
 					terpene_regex = terpenes[terpene_name]
-					log_this('trying regex {}'.format(terpene_regex.pattern), level=3)
+					logging.debug('%s: Trying Regex "%s".', raw_sample_file_name, terpene_regex.pattern)
 					terpene_match = terpene_regex.match(original_terpene_name)
 					if terpene_match:
-						log_this('{} terp matched {} regex'.format(original_terpene_name, terpene_regex), level=3)
+						logging.debug('%s: Terpene matched Regex "%s".', original_terpene_name, terpene_regex)
 						if regex_matched:
-							log_this('terpene matches multiple patterns', level=1)
 							# Match more than one regex?
-							write_to_logfile(
-								filepath=logfile_terpenes_oneMatchMultipleTypes,
-								fieldnames=['Filename', 'List Index', 'Terpene'],
-								data={'Filename':raw_sample_file_name,'List Index':i,'Terpene':terpene_name}
-							)
+							logging.error('%s: Terpene %s matches multiple patterns (at list index %d).', raw_sample_file_name, terpene_name, i)
 							skip_this_file = True
 						else:
-							log_this('Regex matched first time', level=3)
+							logging.debug('%s: Regex matched first time: "%s".', raw_sample_file_name, terpene_regex.pattern)
 							regex_matched = True
 						if terpene_name in terpenes_data:
-							log_this('{}: Terpene already recorded: {}'.format(raw_sample_file_name, terpene_name), level=1)
 							# Multiple match same regex?
-							write_to_logfile(
-								filepath=logfile_terpenes_multipleMatchSameType,
-								fieldnames=['Filename', 'List Index', 'Terpene'],
-								data={'Filename':raw_sample_file_name,'List Index':i,'Terpene':terpene_name}
-							)
+							logging.error('%s: Terpene %s already recorded (at list index %d).', raw_sample_file_name, terpene_name, i)
 							skip_this_file = True
 						else:
 							terpenes_data[terpene_name] = terpene_amount
 
 				if original_terpene_name is None:
-					log_this('terpene name empty', level=1)
-					write_to_logfile(
-						filepath=logfile_terpenes_noname,
-						fieldnames=['Filename', 'List Index'],
-						data={'Filename':raw_sample_file_name, 'List Index':i}
-					)
+					logging.warning('%s: Terpene empty at index %d.', raw_sample_file_name, i)
 				elif not regex_matched:
-					log_this('{}: terpene did not match anything: {}'.format(raw_sample_file_name, original_terpene_name), level=1)
 					# Match none?
-					write_to_logfile(
-						filepath=logfile_terpenes_unknown,
-						fieldnames=['Filename', 'Terpene', 'List Index'],
-						data={'Filename':raw_sample_file_name, 'Terpene':terpene_name, 'List Index':i}
-					)
+					logging.error('%s: Terpene did not match anything: %s (list index %d).', raw_sample_file_name, original_terpene_name, i)
 			if terpenes_data == {}:
-				log_this('{}: no terpenes were added'.format(raw_sample_file_name), level=3)
-				write_to_logfile(
-					filepath=logfile_terpenes_allNoMatch,
-					fieldnames=['Filename', 'Amount'],
-					data={'Filename':raw_sample_file_name, 'Amount':len(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4)}
-				)
+				logging.debug('%s: No terpenes were added (%d were found).', raw_sample_file_name, len(raw_terpenes_1+raw_terpenes_2+raw_terpenes_3+raw_terpenes_4))
 		if args.force_terpenes and terpenes_data == {}:
 			skip_this_file = True
 
@@ -796,14 +607,9 @@ for type_index, type_folder in enumerate(type_folders):
 		raw_cannabinoids_2 = tree.xpath(xpath_cannabinoids_2)
 		cannabinoid_data = {}
 		if len(raw_cannabinoids_1) > 0 and len(raw_cannabinoids_2) > 0:
-			log_this('{}: both cannabinoid queries match!', level=3)
+			logging.warning('%s: Both cannabinoid queries match!', raw_sample_file_name)
 		if 0 == len(raw_cannabinoids_1) == len(raw_cannabinoids_2):
-			log_this('{}: no potency'.format(raw_sample_file_name), level=3)
-			write_to_logfile(
-				filepath=logfile_cannabinoids_noneFound,
-				fieldnames=['Filename'],
-				data={'Filename':raw_sample_file_name}
-			)
+			logging.debug('%s: No potency.', raw_sample_file_name)
 		else:
 			for i, raw_cannabinoid in enumerate(raw_cannabinoids_1+raw_cannabinoids_2, 1):
 
@@ -823,80 +629,45 @@ for type_index, type_folder in enumerate(type_folders):
 							numberstring=raw_cannabinoid_info[cannabinoid_amount_match.start():cannabinoid_amount_match.end()]
 						)
 					except ValueError as e:
-						log_this('{}: cannabinoid number error'.format(raw_sample_file_name), level=1)
-						write_to_logfile(
-							filepath=logfile_cannabinoids_nonNumber,
-							fieldnames=['Filename','List Index', 'Amount'],
-							data={'Filename':raw_sample_file_name, 'List Index':i, 'Amount':raw_cannabinoid_info}
-						)
+						logging.warning('%s: Cannabinoid number error: %s (at list index %d).', raw_sample_file_name, raw_cannabinoid_info, i)
 						continue
 				else:
-					log_this('{}: non percentage cannabinoid'.format(raw_sample_file_name), level=3)
-					write_to_logfile(
-						filepath=logfile_cannabinoids_notPercentage,
-						fieldnames=['Filename','List Index'],
-						data={'Filename':raw_sample_file_name, 'List Index':i}
-					)
+					logging.info('%s: Non-percentage cannabinoid (at list index %d).', raw_sample_file_name, i)
 					continue
 
 				# NAME
 				## TODO: we could do levenshtein- and typewriterdistance (en-US) here
 				original_cannabinoid_name = raw_cannabinoid_info[cannabinoid_amount_match.end():].strip()
 
-				log_this('####################NEW CANNABINOID: {} #####################'.format(original_cannabinoid_name), level=3)
+				logging.debug('####################NEW CANNABINOID: %s #####################', original_cannabinoid_name)
 				regex_matched = False
 				for cannabinoid_name in cannabinoids.keys():
 					cannabinoid_regex = cannabinoids[cannabinoid_name]
-					log_this('trying regex {}'.format(cannabinoid_regex.pattern), level=3)
+					logging.debug('%s: Trying Regex "%s".', raw_sample_file_name, cannabinoid_regex.pattern)
 					cannabinoid_match = cannabinoid_regex.match(original_cannabinoid_name)
 					if cannabinoid_match:
-						log_this('{} cnbnd matched {} regex'.format(original_cannabinoid_name, cannabinoid_regex.pattern), level=3)
+						logging.debug('%s: Cannabinoid matched Regex "%s".', original_cannabinoid_name, cannabinoid_regex.pattern)
 						if regex_matched:
-							log_this('{}: Cannabinoid matches multiple patterns'.format(raw_sample_file_name), level=1)
 							# Match more than one regex?
-							write_to_logfile(
-								filepath=logfile_cannabinoids_oneMatchMultipleTypes,
-								fieldnames=['Filename', 'List Index', 'Cannabinoid'],
-								data={'Filename':raw_sample_file_name,'List Index':i,'Cannabinoid':cannabinoid_name}
-							)
+							logging.error('%s: Cannabinoid matches multiple patterns: %s (at list index %d).', raw_sample_file_name, cannabinoid_name, i)
 							skip_this_file = True
 						else:
-							log_this('Regex matched first time', level=3)
+							logging.debug('%s: Regex matched first time: "%s".', raw_sample_file_name, cannabinoid_regex.pattern)
 							regex_matched = True
 						if cannabinoid_name in cannabinoid_data:
-							log_this('{}: Cannabinoid already recorded: {}'.format(raw_sample_file_name, cannabinoid_name), level=1)
 							# Multiple items match same regex
-							write_to_logfile(
-								filepath=logfile_cannabinoids_multipleMatchSameType,
-								fieldnames=['Filename', 'List Index', 'Cannabinoid'],
-								data={'Filename':raw_sample_file_name,'List Index':i,'Cannabinoid':cannabinoid_name}
-							)
+							logging.error('%s: Cannabinoid already recorded: %s (at list index %d).', raw_sample_file_name, cannabinoid_name, i)
 							skip_this_file = True
 						else:
 							cannabinoid_data[cannabinoid_name] = cannabinoid_amount
 
 				if original_cannabinoid_name is None:
-					log_this('{}: cannabinoid name empty'.format(raw_sample_file_name), level=1)
-					write_to_logfile(
-						filepath=logfile_cannabinoids_noname,
-						fieldnames=['Filename', 'List Index'],
-						data={'Filename':raw_sample_file_name, 'List Index':i}
-					)
+					logging.warning('%s: Cannabinoid name empty (at list index %d).', raw_sample_file_name, i)
 				elif not regex_matched:
-					log_this('{}: cannabinoid did not match anything: {}'.format(raw_sample_file_name, original_cannabinoid_name), level=3)
 					# Match none?
-					write_to_logfile(
-						filepath=logfile_cannabinoids_unknown,
-						fieldnames=['Filename', 'Cannabinoid', 'List Index'],
-						data={'Filename':raw_sample_file_name, 'Cannabinoid':cannabinoid_name, 'List Index':i}
-					)
+					logging.error('%s: Cannabinoid did not match anything: %s (at list index %d).', raw_sample_file_name, original_cannabinoid_name, i)
 			if cannabinoid_data == {}:
-				log_this('{}: no cannabinoids were added'.format(raw_sample_file_name), level=3)
-				write_to_logfile(
-					filepath=logfile_cannabinoids_allNoMatch,
-					fieldnames=['Filename', 'Amount'],
-					data={'Filename':raw_sample_file_name, 'Amount':len(raw_cannabinoids_1+raw_cannabinoids_2)}
-				)
+				logging.debug('%s: No cannabinoids were added (%d were found).', raw_sample_file_name, len(raw_cannabinoids_1+raw_cannabinoids_2))
 		if args.force_cannabinoids and cannabinoid_data == {}:
 			skip_this_file = True
 
@@ -908,21 +679,16 @@ for type_index, type_folder in enumerate(type_folders):
 			regex_matched = False
 			for sampletype_name in sample_types.keys():
 				sampletype_regex = sample_types[sampletype_name]
-				log_this('trying regex {}'.format(sampletype_regex), level=3)
+				logging.debug('%s: Trying Regex "%s".', raw_sample_file_name, sampletype_regex)
 				sampletype_match = sampletype_regex.match(raw_sample_type)
 				if sampletype_match:
-					log_this('{} sample type matched {} regex'.format(raw_sample_type, sampletype_regex), level=3)
+					logging.debug('%s: Sample type matched Regex "%s".', raw_sample_type, sampletype_regex.pattern)
 					if regex_matched:
-						log_this('Regex matched before', level=1)
 						# Match more than one regex?
-						write_to_logfile(
-							filepath='sample_type_one_matches_multiple_types',
-							fieldnames=['Filename', 'Sample Type'],
-							data={'Filename':raw_sample_file_name,'Sample Type':sampletype_name}
-						)
+						logging.error('%s: Sample type Regex "%s" matched before (sample type is now %s).', raw_sample_file_name, sampletype_regex.pattern, sampletype_name)
 						skip_this_file = True
 					else:
-						log_this('Regex matched first time', level=3)
+						logging.debug('%s: Regex matched first time: "%s".', raw_sample_file_name, sampletype_regex.pattern)
 						regex_matched = True
 						sample_type = sampletype_name
 		# if re_oldSampleFilename.match(raw_sample_file_name) and not (sample_type is None):
@@ -935,28 +701,25 @@ for type_index, type_folder in enumerate(type_folders):
 		if not os.path.exists(os.path.join(args.database, sample_type_foldername)):
 			os.makedirs(os.path.join(os.path.expanduser(args.database),sample_type_foldername), exist_ok=True)
 		if not sampleTypeURL_match or not regex_matched:
-			log_this('sample type did not match anything: {}'.format(raw_sample_type), level=1)
 			# Match none?
-			write_to_logfile(
-				filepath=logfile_type_unknown,
-				fieldnames=['Filename', 'Sample Type', 'Xpath'],
-				data={'Filename':raw_sample_file_name, 'Sample Type':raw_sample_type, 'Xpath':xpath_canonicalURL}
-			)
+			logging.error('%s: Sample type "%s" did not match anything (Xpath was %s).', raw_sample_file_name, raw_sample_type, xpath_canonicalURL)
 
 		# 3 Sample Name
 		sample_name = get_single_value(
 			tree=tree,
 			xpath=xpath_sample_name,
-			fallback_file=logfile_name_noneFound,
-			fallback_data={'Filename':raw_sample_file_name}
+			errlevel=logging.ERROR,
+			errmsg='%s: Sample name was not found',
+			errparams=[raw_sample_file_name]
 		)
 
 		# 4 Sample Provider
 		sample_provider = get_single_value(
 			tree=tree,
 			xpath=xpath_sample_provider,
-			fallback_file=logfile_provider_noneFound,
-			fallback_data={'Filename':raw_sample_file_name}
+			errlevel=logging.ERROR,
+			errmsg='%s: Provider was not found',
+			errparams=[raw_sample_file_name]
 		)
 		if sample_provider == 'Anonymous':
 			sample_provider = None
@@ -971,8 +734,9 @@ for type_index, type_folder in enumerate(type_folders):
 			tree=tree,
 			xpath=xpath_test_uid,
 			fallback='',
-			fallback_file=logfile_uid_noneFound,
-			fallback_data={'Filename':raw_sample_file_name}
+			errlevel=logging.ERROR,
+			errmsg='%s: Test UID was not found',
+			errparams=[raw_sample_file_name]
 		)
 		test_uid_match = re_test_uid.match(raw_test_uid)
 		if test_uid_match:
@@ -995,17 +759,9 @@ for type_index, type_folder in enumerate(type_folders):
 			if type(possible_dates) == list and len(possible_dates) == 1:
 				test_time = possible_dates[0][1].date().isoformat()
 			else:
-				write_to_logfile(
-					filepath=logfile_time_tested_notDate,
-					fieldnames=['Filename'],
-					data={'Filename':raw_sample_file_name}
-				)
+				logging.warning('%s: Test date (%s) was not understood.', raw_sample_file_name, raw_test_time)
 		else:
-			write_to_logfile(
-				filepath=logfile_time_tested_noneFound,
-				fieldnames=['Filename'],
-				data={'Filename':raw_sample_file_name}
-			)
+			logging.error('%s: No test date was found (%s).', raw_sample_file_name, raw_test_time)
 
 		# 7 Receipt Time
 		receipt_time = None
@@ -1027,17 +783,9 @@ for type_index, type_folder in enumerate(type_folders):
 			if type(possible_dates) == list and len(possible_dates) == 1:
 				post_time = possible_dates[0][1].date().isoformat()
 			else:
-				write_to_logfile(
-					filepath=logfile_time_posted_notDate,
-					fieldnames=['Filename'],
-					data={'Filename':raw_sample_file_name}
-				)
+				logging.warning('%s: Post date (%s) was not understood.', raw_sample_file_name, raw_post_time)
 		else:
-			write_to_logfile(
-				filepath=logfile_time_posted_noneFound,
-				fieldnames=['Filename'],
-				data={'Filename':raw_sample_file_name}
-			)
+			logging.error('%s: No post date was found (%s).', raw_sample_file_name, raw_post_time)
 
 		if terpenes_data == {} and cannabinoid_data == {}:
 			skip_this_file = True
@@ -1082,11 +830,10 @@ for type_index, type_folder in enumerate(type_folders):
 		with open(sample_database_JSONfile, "a", encoding="utf-8") as databases_file:
 			databases_file.write(']')
 
-log_this('Finished main loop.', level=3)
+logging.debug('Finished main loop.')
 
 if args.json:
 	with open(sample_database_JSONfile, "a", encoding="utf-8") as databases_file:
 		databases_file.write('}}')
 
-log_this('All files have been processed. Please check the contents of the log-files (starting with "log-"). Those list pages regarding different errors.', level=1, override=True)
-log_this('Also, note the lines starting with "INFO: " or "DETAIL: ".', level=1, override=True)
+print('All files have been processed. Please check the contents of the log file {}. It lists pages regarding different errors.', args.log)
