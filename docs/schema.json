@@ -1,0 +1,41 @@
+{
+	databases: {
+		LABIDENTIFIER: {
+			Flower: [
+				{
+					"Sample Name": "SAMPLENAME",
+					"Sample Type": "SAMPLETYPE",
+					"delta-Limonene": 99.99
+				}
+			],
+			Concentrate: [
+				{
+					"Sample Name": "SAMPLENAME",
+					"Sample Type": "SAMPLETYPE",
+					"delta-Limonene": 99.99
+				}
+			],
+			Edible: [
+				{
+					"Sample Name": "SAMPLENAME",
+					"Sample Type": "SAMPLETYPE",
+					"delta-Limonene": 99.99
+				}
+			],
+			Liquid: [
+				{
+					"Sample Name": "SAMPLENAME",
+					"Sample Type": "SAMPLETYPE",
+					"delta-Limonene": 99.99
+				}
+			],
+			Topical: [
+				{
+					"Sample Name": "SAMPLENAME",
+					"Sample Type": "SAMPLETYPE",
+					"delta-Limonene": 99.99
+				}
+			]
+		}
+	}
+}
