@@ -34,6 +34,9 @@
 				list-style-type: none;
 				padding-left: 0;
 			}
+			#results {
+				white-space: nowrap;
+			}
 			#results,#results td,#results tr {
 				border: 1px solid black;
 				border-collapse: collapse;
@@ -42,7 +45,7 @@
 				background-color: rgb(222,222,222);
 			}
 			.graphcell {
-				color: rgba(0,0,0,0);
+				width: 99%;
 			}
 			#about {
 				clear: left;
@@ -96,7 +99,7 @@
 			</div>
 			<div id="about">
 				<a id="infolink" href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2018-09-23T13:27:00+02:00.002</span>
+				<span id="appversion">v2018-10-19T22:21:00+02:00/002</span>
 			</div>
 		</div>
 	</body>
@@ -480,6 +483,7 @@
 				row.appendChild(cell);
 				var cell = document.createElement("td");
 				cell.innerText = "Graph";
+				cell.className = "graphcell";
 				// cell.addEventListener("click", sortTable);
 				row.appendChild(cell);
 				var cell = document.createElement("td");
@@ -510,7 +514,6 @@
 					// graph
 					// (overlay all datapoints of this terpene onto each other with a transparency set to 100%/resultsNum)
 					var cell = document.createElement("td");
-					cell.innerText = "\u2588".repeat(10);
 					cell.className = "graphcell";
 
 					if (average > 0.01) {
