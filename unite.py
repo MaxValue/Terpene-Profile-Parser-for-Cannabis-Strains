@@ -103,7 +103,7 @@ for raw_database_folder_name in databases_list:
 	log_this('Getting database {} now.'.format(raw_database_folder_name), level=2)
 
 	#get database label
-	label = raw_database_folder_name.title()
+	label = raw_database_folder_name
 
 	csv_database_file_name = os.path.join(os.path.expanduser(args.databases),raw_database_folder_name,'results.csv')
 	with open(csv_database_file_name, 'r', encoding='utf-8') as database_file_CSV:
