@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # coding: utf-8
-import argparse, os, csv, json, re
+import argparse, os, csv, re
 
 PLACEHOLDER_UNDEFINED = 'NaN'
 resulting_database_filename_CSV = 'results.csv'
-resulting_database_filename_JSON = 'results.json'
 
 DATA_ROW_FIELDS = [
 	'Database',
@@ -58,10 +57,8 @@ DATA_ROW_FIELDS = [
 ]
 
 parser = argparse.ArgumentParser(argument_default=False, description='Unite multiple databases.')
-parser.add_argument('databases', default='labs/', help='The path containing the databases to unite.')
+parser.add_argument('databases', nargs='?', default='labs/', help='The path containing the databases to unite.')
 parser.add_argument('--verbose', '-v', action='count', default=0, help='Turn on verbose mode.')
-parser.add_argument('--json', action='store_true', help='Export as JSON.')
-parser.add_argument('--csv', action='store_true', help='Export as CSV.')
 parser.add_argument('--placeholder-csv', default='', help='CSV only: The placeholder to use when no value is present.')
 args = parser.parse_args()
 
@@ -90,15 +87,11 @@ def write_to_csv(filepath, fieldnames, data):
 			writefile_writer.writerow(data_row)
 
 databases_list = sorted(os.listdir(os.path.expanduser(args.databases)))
-main_database = {'databases':{}}
 
 missing_files = []
 for raw_database_folder_name in databases_list:
-	json_database = os.path.join(os.path.expanduser(args.databases),raw_database_folder_name,'results.json')
 	csv_database = os.path.join(os.path.expanduser(args.databases),raw_database_folder_name,'results.csv')
-	if args.json and not os.path.exists(json_database):
-		missing_files.append(json_database)
-	if args.csv and not os.path.exists(csv_database):
+	if not os.path.exists(csv_database):
 		missing_files.append(csv_database)
 if len(missing_files) != 0:
 	log_this('Some required files are missing:', level=1, override=True)
@@ -112,41 +105,13 @@ for raw_database_folder_name in databases_list:
 	#get database label
 	label = raw_database_folder_name.title()
 
-	if args.json:
-		json_database_file_name = os.path.join(os.path.expanduser(args.databases),raw_database_folder_name,'results.json')
-		with open(json_database_file_name, 'r', encoding='utf-8') as database_file_JSON:
-			database_file_reader_JSON =json.load(database_file_JSON)
-			database_name = database_file_reader_JSON['name']
-			if database_name not in main_database['databases']:
-				main_database['databases'][database_name] = {}
-			for sample_type in database_file_reader_JSON['samples'].keys():
-				if sample_type not in main_database['databases'][database_name]:
-					main_database['databases'][database_name][sample_type] = []
-				for sample_data in database_file_reader_JSON['samples'][sample_type]:
-					for sample_data_field in list(sample_data.keys()):
-						remove_key = False
-						if sample_data[sample_data_field] == PLACEHOLDER_UNDEFINED:
-							remove_key = True
-						if sample_data_field not in DATA_ROW_FIELDS:
-							remove_key = True
-						if remove_key:
-							del sample_data[sample_data_field]
-					if sample_data != {}:
-						main_database['databases'][database_name][sample_type].append(sample_data)
-
-	if args.csv:
-		csv_database_file_name = os.path.join(os.path.expanduser(args.databases),raw_database_folder_name,'results.csv')
-		with open(csv_database_file_name, 'r', encoding='utf-8') as database_file_CSV:
-			database_file_reader_CSV = csv.DictReader(database_file_CSV)
-			for sample_data in database_file_reader_CSV:
-				sample_data["Database"] = label
-				write_to_csv(
-					resulting_database_filename_CSV,
-					DATA_ROW_FIELDS,
-					sample_data
-				)
-
-if args.json:
-	with open(resulting_database_filename_JSON, 'w', encoding='utf-8') as resulting_database_file_JSON:
-		resulting_database_file_JSON.write('databasesContainer=')
-		json.dump(main_database, resulting_database_file_JSON, separators=(',', ':'), sort_keys=True)
+	csv_database_file_name = os.path.join(os.path.expanduser(args.databases),raw_database_folder_name,'results.csv')
+	with open(csv_database_file_name, 'r', encoding='utf-8') as database_file_CSV:
+		database_file_reader_CSV = csv.DictReader(database_file_CSV)
+		for sample_data in database_file_reader_CSV:
+			sample_data["Database"] = label
+			write_to_csv(
+				resulting_database_filename_CSV,
+				DATA_ROW_FIELDS,
+				sample_data
+			)

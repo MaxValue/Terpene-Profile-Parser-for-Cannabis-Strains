@@ -99,7 +99,7 @@
 			</div>
 			<div id="about">
 				<a id="infolink" href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2018-10-19T22:21:00+02:00/002</span>
+				<span id="appversion">v2018-10-22T13:20:00+02:00/002</span>
 			</div>
 		</div>
 	</body>
@@ -112,11 +112,6 @@
 
 			big search field
 			terpenes sort by most important ones
-			sample type: group by processed/unprocessed
-				flower
-				processed
-					edible
-					concentrate
 		*/
 		var terpenes = [
 			{
@@ -367,17 +362,17 @@
 		}
 		function updateTypeCheckboxes() {
 			let anyChecked = false;
-			let flowerIndex = -1;
+			let unprocessedIndex = -1;
 			elem_form.type.forEach(function(typeElem,typeIndex){
 				if (typeElem.checked) {
 					anyChecked = true;
 				}
-				if (typeElem.value == "Flower") {
-					flowerIndex = typeIndex;
+				if (typeElem.value == "Unprocessed") {
+					unprocessedIndex = typeIndex;
 				}
 			})
-			if (!anyChecked && flowerIndex!=-1) {
-				elem_form.type[flowerIndex].checked = true;
+			if (!anyChecked && unprocessedIndex!=-1) {
+				elem_form.type[unprocessedIndex].checked = true;
 			};
 			resetResults();
 		}
