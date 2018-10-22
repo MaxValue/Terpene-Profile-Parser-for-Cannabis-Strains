@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+IGNORED_DATABASES = [
+	'analytical360'
+]
+
 import re, csv, argparse, json, logging
 
 parser = argparse.ArgumentParser(argument_default=False, description='Clean raw lab data.')
@@ -90,7 +94,9 @@ with open('results.csv', 'r', encoding='utf-8') as resultsCSV:
 	resultsCSV_reader = csv.DictReader(resultsCSV)
 	logging.info('Entering main CSV parsing loop . . .')
 	for row in resultsCSV_reader:
-		if row['Database'] not in databasesContainer['databases']:
+		if row['Database'] in IGNORED_DATABASES:
+			continue
+		elif row['Database'] not in databasesContainer['databases']:
 			databasesContainer['databases'][row['Database']] = {}
 		if row['Sample Type'] in sample_types:
 			if sample_types[row['Sample Type']] not in databasesContainer['databases'][row['Database']]:
