@@ -99,7 +99,7 @@
 			</div>
 			<div id="about">
 				<a id="infolink" href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2018-10-22T14:00:00+02:00/007</span>
+				<span id="appversion">v2018-10-22T15:19:00+02:00/008</span>
 			</div>
 		</div>
 	</body>
@@ -482,7 +482,7 @@
 				// cell.addEventListener("click", sortTable);
 				row.appendChild(cell);
 				var cell = document.createElement("td");
-				cell.innerText = "Average";
+				cell.innerText = "%";
 				row.appendChild(cell);
 
 				let rowCandidates = [];
@@ -531,7 +531,7 @@
 					// terpene amount
 					var cell = document.createElement("td");
 					var span = document.createElement("span");
-					span.innerText = toFixed(average, 2)+" %";
+					span.innerText = toFixed(average, 2);
 					if (average <= 0.01) {
 						cell.style.color = greyedOutColor;
 					}
