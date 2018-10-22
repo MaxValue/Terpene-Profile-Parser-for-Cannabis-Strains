@@ -94,23 +94,22 @@ with open('results.csv', 'r', encoding='utf-8') as resultsCSV:
 	resultsCSV_reader = csv.DictReader(resultsCSV)
 	logging.info('Entering main CSV parsing loop . . .')
 	for row in resultsCSV_reader:
-		if row['Database'] in IGNORED_DATABASES:
+		if row['Database Identifier'] in IGNORED_DATABASES:
 			continue
-		elif row['Database'] not in databasesContainer['databases']:
-			databasesContainer['databases'][row['Database']] = {}
+		elif row['Database Name'] not in databasesContainer['databases']:
+			databasesContainer['databases'][row['Database Name']] = {}
 		if row['Sample Type'] in sample_types:
-			if sample_types[row['Sample Type']] not in databasesContainer['databases'][row['Database']]:
-				databasesContainer['databases'][row['Database']][sample_types[row['Sample Type']]] = []
+			if sample_types[row['Sample Type']] not in databasesContainer['databases'][row['Database Name']]:
+				databasesContainer['databases'][row['Database Name']][sample_types[row['Sample Type']]] = []
 		else:
 			continue
 		sample_data = {
-			'Database': row['Database'],
 			'Sample Name': row['Sample Name']
 		}
 		for terpene_name in terpenes.keys():
 			if terpene_name in row:
 				sample_data[terpene_name] = row[terpene_name]
-		databasesContainer['databases'][row['Database']][sample_types[row['Sample Type']]].append(
+		databasesContainer['databases'][row['Database Name']][sample_types[row['Sample Type']]].append(
 			sample_data
 		)
 

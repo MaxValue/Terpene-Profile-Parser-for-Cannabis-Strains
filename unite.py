@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # coding: utf-8
-import argparse, os, csv, re
+import argparse, os, csv, json, re
 
 PLACEHOLDER_UNDEFINED = 'NaN'
 resulting_database_filename_CSV = 'results.csv'
 
 DATA_ROW_FIELDS = [
-	'Database',
+	'Database Identifier',
+	'Database Name',
 	'Test Result UID',
 	'Sample Name',
 	'Sample Type',
@@ -90,7 +91,10 @@ databases_list = sorted(os.listdir(os.path.expanduser(args.databases)))
 
 missing_files = []
 for raw_database_folder_name in databases_list:
+	database_config_file_name = os.path.join(os.path.expanduser(args.databases),raw_database_folder_name,'config.json')
 	csv_database = os.path.join(os.path.expanduser(args.databases),raw_database_folder_name,'results.csv')
+	if not os.path.exists(database_config_file_name):
+		missing_files.append(database_config_file_name)
 	if not os.path.exists(csv_database):
 		missing_files.append(csv_database)
 if len(missing_files) != 0:
@@ -102,14 +106,19 @@ for raw_database_folder_name in databases_list:
 	log_this('#'*80, level=2)
 	log_this('Getting database {} now.'.format(raw_database_folder_name), level=2)
 
-	#get database label
-	label = raw_database_folder_name
+	#get database label and name
+	database_config_file_name = os.path.join(os.path.expanduser(args.databases),raw_database_folder_name,'config.json')
+	with open(database_config_file_name, 'r', encoding='utf-8') as database_config_file:
+		database_config = json.load(database_config_file)
+		database_identifier = database_config['identifier']
+		database_name = database_config['name']
 
 	csv_database_file_name = os.path.join(os.path.expanduser(args.databases),raw_database_folder_name,'results.csv')
 	with open(csv_database_file_name, 'r', encoding='utf-8') as database_file_CSV:
 		database_file_reader_CSV = csv.DictReader(database_file_CSV)
 		for sample_data in database_file_reader_CSV:
-			sample_data["Database"] = label
+			sample_data["Database Identifier"] = database_identifier
+			sample_data["Database Name"] = database_name
 			write_to_csv(
 				resulting_database_filename_CSV,
 				DATA_ROW_FIELDS,
