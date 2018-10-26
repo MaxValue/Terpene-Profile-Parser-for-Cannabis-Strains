@@ -103,6 +103,23 @@
 				<span id="appversion">v2018-10-22T15:20:00+02:00/009</span>
 			</div>
 		</div>
+		<template id="templateResults">
+			<table id="results">
+				<caption></caption>
+				<thead>
+					<tr>
+						<td>Terpene</td><td class="graphcell">Graph</td><td>%</td>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</template>
+		<template id="templateResultsRow">
+			<tr>
+				<td></td><td class="graphcell"></td><td></td>
+			</tr>
+		</template>
 	</body>
 	<script type="text/javascript">
 		/*
@@ -283,7 +300,8 @@
 		var elem_form = document.getElementById("searchform");
 		var elem_databaseList = document.getElementById("databases");
 		var elem_sampleTypes = document.getElementById("sampleTypes");
-		var elem_resultsTable = document.getElementById("results");
+		var template_resultsTable = document.getElementById("templateResults");
+		var template_resultsTableRow = document.getElementById("templateResultsRow");
 
 		var sampleTypes = [];
 		var database_imports = 0;
@@ -405,9 +423,7 @@
 		function resetResults() {
 			elem_pagetitle.text = "StrainFinder";
 			elem_pageogtitle.content = "StrainFinder";
-			elem_resultsTable.caption.innerText = "";
-			elem_resultsTable.tBodies[0].innerHTML = "";
-			elem_resultsTable.tHead.children[0].innerHTML = "";
+			elem_form.resultswrapper.innerHTML = "";
 		}
 		function load_sample_data(elem_form) {
 			let averages = {};
@@ -469,22 +485,12 @@
 			})
 
 			if (resultsNum == 0) {
-				elem_resultsTable.caption.innerText = "No results found";
+				elem_form.resultswrapper.innerText = "No results found";
 			} else {
-				elem_resultsTable.caption.innerText = "Search Results for '"+searchstring+"' ("+resultsNum+" Sample"+(resultsNum==1?"":"s")+")";
+				var resultsStructure = document.importNode(template_resultsTable.content, true);
+				var elem_resultsTable = resultsStructure.getElementById("results");
 
-				let row = elem_resultsTable.tHead.children[0];
-				var cell = document.createElement("td");
-				cell.innerText = "Terpene";
-				row.appendChild(cell);
-				var cell = document.createElement("td");
-				cell.innerText = "Graph";
-				cell.className = "graphcell";
-				// cell.addEventListener("click", sortTable);
-				row.appendChild(cell);
-				var cell = document.createElement("td");
-				cell.innerText = "%";
-				row.appendChild(cell);
+				elem_resultsTable.caption.innerText = "Search Results for '"+searchstring+"' ("+resultsNum+" Sample"+(resultsNum==1?"":"s")+")";
 
 				let rowCandidates = [];
 				terpenes.forEach(function(terpene){
@@ -496,20 +502,19 @@
 
 					//table
 
-					let row = document.createElement("tr");
+					let row = document.importNode(templateResultsRow.content, true).children[0];
 					row.setAttribute("data-average", average);
 
 					////terpene name
-					var cell = document.createElement("td");
+					var cell = row.children[0];
 					cell.innerText = terpene.name;
 					if (average <= 0.01) {
 						cell.style.color = greyedOutColor;
 					}
-					row.appendChild(cell);
 
 					// graph
 					// (overlay all datapoints of this terpene onto each other with a transparency set to 100%/resultsNum)
-					var cell = document.createElement("td");
+					var cell = row.children[1];
 					cell.className = "graphcell";
 
 					if (average > 0.01) {
@@ -526,18 +531,14 @@
 											+graphEndPoint+"%)";
 					cell.style.backgroundImage = backgroundImage;
 
-					row.appendChild(cell);
-
-
 					// terpene amount
-					var cell = document.createElement("td");
+					var cell = row.children[2];
 					var span = document.createElement("span");
 					span.innerText = toFixed(average, 2);
 					if (average <= 0.01) {
 						cell.style.color = greyedOutColor;
 					}
 					cell.appendChild(span);
-					row.appendChild(cell);
 
 					rowCandidates.push(row);
 
@@ -546,6 +547,7 @@
 				rowCandidates.forEach(function(row){
 					elem_resultsTable.tBodies[0].appendChild(row);
 				});
+				elem_form.resultswrapper.appendChild(resultsStructure);
 			}
 			elem_pagetitle.text = "StrainFinder - '" + searchstring + "'";
 			elem_pageogtitle.content = "StrainFinder: '" + searchstring + "'";
