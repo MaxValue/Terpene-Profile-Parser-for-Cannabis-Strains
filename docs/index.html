@@ -79,7 +79,7 @@
 					<div>
 						<fieldset>
 							<legend>Databases:</legend>
-							<ul id="databases" onchange="updateDatabaseCheckboxes()">
+							<ul id="databases">
 							</ul>
 							<input type="file" name="fileUploader" accept="application/json, .json, .JSON" onchange="return changeHandler(this.files);">
 						</fieldset>
@@ -394,19 +394,17 @@
 				elem_form.type[unprocessedIndex].checked = true;
 			};
 		}
-		function updateDatabaseCheckboxes() {
+		function checkallDatabaseCheckboxes() {
 			let anyChecked = false;
-			let psilabsIndex = -1;
-			elem_form.database.forEach(function(databaseElem,databaseIndex){
+			elem_form.database.forEach(function(databaseElem){
 				if (databaseElem.checked) {
 					anyChecked = true;
 				}
-				if (databaseElem.value == "Psilabs") {
-					psilabsIndex = databaseIndex;
-				}
 			})
-			if (!anyChecked && psilabsIndex!=-1) {
-				elem_form.database[psilabsIndex].checked = true;
+			if (!anyChecked) {
+				elem_form.database.forEach(function(databaseElem){
+					databaseElem.checked = true;
+				})
 			};
 		}
 		function toFixed(stringNumber, decimalPlaces) {
@@ -594,7 +592,7 @@
 					break;
 			}
 		}
-		updateDatabaseCheckboxes();
+		checkallDatabaseCheckboxes();
 		updateTypeCheckboxes();
 		if (doSearch) {
 			load_sample_data(elem_form);
