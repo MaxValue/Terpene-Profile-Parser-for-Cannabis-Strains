@@ -65,9 +65,9 @@
 					<input type="submit" value="Search"><br>
 
 					<label for="search">Strain Name:</label>
-					<input type="search" name="q" id="search" inputmode="search" placeholder="Chocolope" autofocus="" oninput="resetResults()"><br>
+					<input type="search" name="q" id="search" inputmode="search" placeholder="Chocolope" autofocus=""><br>
 					<label for="exactmatch">Exact Match?</label>
-					<input type="checkbox" name="exact" id="exactmatch" value="1" onchange="resetResults()">
+					<input type="checkbox" name="exact" id="exactmatch" value="1">
 
 					<div>
 						<fieldset>
@@ -393,7 +393,6 @@
 			if (!anyChecked && unprocessedIndex!=-1) {
 				elem_form.type[unprocessedIndex].checked = true;
 			};
-			resetResults();
 		}
 		function updateDatabaseCheckboxes() {
 			let anyChecked = false;
@@ -409,7 +408,6 @@
 			if (!anyChecked && psilabsIndex!=-1) {
 				elem_form.database[psilabsIndex].checked = true;
 			};
-			resetResults();
 		}
 		function toFixed(stringNumber, decimalPlaces) {
 			let result = stringNumber.toFixed(decimalPlaces);
