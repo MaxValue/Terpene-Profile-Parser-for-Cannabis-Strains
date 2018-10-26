@@ -26,6 +26,14 @@
 			html {
 				font-family: "Roboto", sans-serif;
 			}
+			#searchform {
+				display: flex;
+				flex-wrap: wrap;
+				width: auto;
+			}
+			#searchform > * {
+				flex: 1;
+			}
 			.segmented-control {
 				display: flex;
 				align-items: center;
@@ -41,6 +49,7 @@
 				background-color: #FFF;
 
 				user-select: none;
+				-moz-user-select: none;
 				-webkit-user-select: none;
 				-webkit-tap-highlight-color: #0000;
 			}
@@ -97,7 +106,6 @@
 				}
 			}
 			#searchwrapper {
-				float: left;
 				margin-right: 5.6px;
 			}
 			#sampleTypes, #databases {
