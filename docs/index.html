@@ -564,22 +564,31 @@
 		}
 		let parsedURL = new URL(window.location);
 		let doSearch = false;
-		for (let p of parsedURL.searchParams) {
-			switch (p[0]) {
+		for (let param of parsedURL.searchParams) {
+			let paramKey = param[0];
+			let paramValue = param[1];
+			switch (paramKey) {
 				case "q":
-					elem_form[p[0]].value = p[1];
+					elem_form["q"].value = paramValue;
 					doSearch = true;
 					break;
 				case "exact":
-					if (p[1]=="1") {
-						elem_form[p[0]].checked = true;
+					if (paramValue=="1") {
+						elem_form["exact"].checked = true;
 						doSearch = true;
 					}
 					break;
 				case "type":
+					elem_form["type"].forEach(function(checkbox){
+						if (checkbox.value == paramValue) {
+							checkbox.checked = true;
+							doSearch = true;
+						}
+					})
+					break;
 				case "database":
-					elem_form[p[0]].forEach(function(checkbox){
-						if (checkbox.value == p[1]) {
+					elem_form["database"].forEach(function(checkbox){
+						if (checkbox.value == paramValue) {
 							checkbox.checked = true;
 							doSearch = true;
 						}
