@@ -72,7 +72,7 @@
 					<div>
 						<fieldset>
 							<legend>Sample Types:</legend>
-							<ul id="sampleTypes" onchange="updateTypeCheckboxes()">
+							<ul id="sampleTypes" onchange="checkTypeCheckboxes()">
 							</ul>
 						</fieldset>
 					</div>
@@ -379,7 +379,7 @@
 			let endColor = rgbaColor(rawcolor, transparency);
 			return "linear-gradient(to right, "+endColor+", "+endColor+" "+percentage+"%, rgba(0,0,0,0) "+percentage+"%)";
 		}
-		function updateTypeCheckboxes() {
+		function checkTypeCheckboxes() {
 			let anyChecked = false;
 			let unprocessedIndex = -1;
 			elem_form.type.forEach(function(typeElem,typeIndex){
@@ -394,7 +394,7 @@
 				elem_form.type[unprocessedIndex].checked = true;
 			};
 		}
-		function checkallDatabaseCheckboxes() {
+		function checkDatabaseCheckboxes() {
 			let anyChecked = false;
 			elem_form.database.forEach(function(databaseElem){
 				if (databaseElem.checked) {
@@ -592,8 +592,8 @@
 					break;
 			}
 		}
-		checkallDatabaseCheckboxes();
-		updateTypeCheckboxes();
+		checkDatabaseCheckboxes();
+		checkTypeCheckboxes();
 		if (doSearch) {
 			load_sample_data(elem_form);
 		}
