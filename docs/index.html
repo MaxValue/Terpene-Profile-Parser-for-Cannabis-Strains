@@ -26,6 +26,76 @@
 			html {
 				font-family: "Roboto", sans-serif;
 			}
+			.segmented-control {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				width: auto;
+				height: 28px;
+				margin-left: 22px;
+				margin-right: 22px;
+
+				border: 1px solid #007AFF;
+				border-radius: 4px;
+				background-color: #FFF;
+
+				user-select: none;
+				-webkit-user-select: none;
+				-webkit-tap-highlight-color: #0000;
+			}
+			.segmented-control input {
+				display: none;
+			}
+			.segmented-control label {
+				flex: 1;
+				overflow: hidden;
+			}
+			.segmented-control label div {
+				height: 28px;
+
+				border-width: 0 0.5px 0 0.5px;
+				border-color: #007AFF;
+				border-style: solid;
+				outline: none;
+
+				line-height: 28px;
+				font-size: 13px;
+				text-align: center;
+				color: #007AFF;
+			}
+			.segmented-control label:first-of-type div, .segmented-control label:first-of-type div:link {
+				border-left-style: none;
+				border-radius: 3px 0 0 3px;
+			}
+			.segmented-control label:last-of-type div, .segmented-control label:last-of-type div:link {
+				border-right-style: none;
+				border-radius: 0 3px 3px 0;
+			}
+			.segmented-control label input:checked + div {
+				animation: 0.125s linear 0s 1 both highlight;
+				background-color: #007AFF;
+				color: #FFF;
+			}
+			.segmented-control label div:hover, .segmented-control label div:active {
+				animation: 0.125s linear 0s 1 both hover;
+				background-color: #d6eaff;
+			}
+			@keyframes highlight {
+				from {
+					color: #007AFF;
+				} to {
+					background-color: #007AFF;
+					color: #FFF;
+				}
+			}
+			@keyframes hover {
+				from {
+					background-color: #FFF;
+				} to {
+					background-color: #d6eaff;
+				}
+			}
 			#searchwrapper {
 				float: left;
 				margin-right: 5.6px;
@@ -58,7 +128,7 @@
 			}
 		</style>
 	</head>
-	<body>
+	<body ontouchstart="">
 		<div id="GUI">
 			<form id="searchform" action="." onsubmit="return load_sample_data(this);">
 				<div id="searchwrapper">
@@ -94,6 +164,16 @@
 			</div>
 		</div>
 		<template id="templateResults">
+			<div class="segmented-control" onchange="sortTable()"
+				><label
+					><input type="radio" name="sortorder" value="default" checked=""
+					><div>Default</div
+				></label
+				><label
+					><input type="radio" name="sortorder" value="average"
+					><div>Average</div
+				></label
+			></div>
 			<table id="results">
 				<caption></caption>
 				<thead>
@@ -348,6 +428,7 @@
 
 		var sampleTypes = [];
 		var database_imports = 0;
+		var terpeneOrder = terpenes.map((terpene)=>terpene.id);
 
 		function changeHandler(files) {
 			for (let i = 0, file; file = files[i]; i++) {
@@ -465,6 +546,25 @@
 			elem_pageogtitle.content = "StrainFinder";
 			elem_form.resultswrapper.innerHTML = "";
 		}
+		function sortTable() {
+			var elem_resultsTable = document.getElementById("results");
+			for (let tBody of elem_resultsTable.tBodies) {
+				let rows = Array.from(tBody.rows);
+				switch (elem_form.sortorder.value) {
+					case "average":
+						rows.sort((a,b)=>parseFloat(b.getAttribute("data-average")) - parseFloat(a.getAttribute("data-average")));
+						break;
+					case "default":
+					default:
+						rows.sort((a,b)=>terpeneOrder.indexOf(a.getAttribute("data-terpene")) - terpeneOrder.indexOf(b.getAttribute("data-terpene")));
+						break;
+				}
+				tBody.innerHTML = "";
+				rows.forEach(function(row){
+					tBody.appendChild(row);
+				});
+			}
+		}
 		function load_sample_data(elem_form) {
 			let averages = {};
 			let resultsNum = 0;
@@ -537,7 +637,6 @@
 
 				elem_resultsTable.caption.innerText = "Search Results for '"+searchstring+"' ("+resultsNum+" Sample"+(resultsNum==1?"":"s")+")";
 
-				let rowCandidates = [];
 				terpenes.forEach(function(terpene){
 					let average = averages[terpene.name]/resultsNum;
 					averages[terpene.name] = average;
@@ -549,6 +648,7 @@
 
 					let row = document.importNode(templateResultsRow.content, true).children[0];
 					row.setAttribute("data-average", average);
+					row.setAttribute("data-terpene", terpene.id);
 
 					////terpene name
 					var cell = row.children[0];
@@ -585,13 +685,8 @@
 					}
 					cell.appendChild(span);
 
-					rowCandidates.push(row);
-
-				})
-				rowCandidates.sort((a,b)=>parseFloat(b.getAttribute("data-average")) - parseFloat(a.getAttribute("data-average")));
-				rowCandidates.forEach(function(row){
 					elem_resultsTable.tBodies[0].appendChild(row);
-				});
+				})
 				elem_form.resultswrapper.appendChild(resultsStructure);
 			}
 			return false;
