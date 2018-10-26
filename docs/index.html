@@ -60,8 +60,8 @@
 	</head>
 	<body>
 		<div id="GUI">
-			<div id="searchwrapper">
-				<form id="searchform" action="." onsubmit="return load_sample_data(this);">
+			<form id="searchform" action="." onsubmit="return load_sample_data(this);">
+				<div id="searchwrapper">
 					<input type="submit" value="Search"><br>
 
 					<label for="search">Strain Name:</label>
@@ -85,19 +85,19 @@
 						</fieldset>
 					</div>
 					<input type="submit" value="Search">
-				</form>
-			</div>
-			<div id="resultswrapper">
-				<table id="results">
-					<caption></caption>
-					<thead>
-						<tr>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
+				</div>
+				<output name="resultswrapper" for="search exactmatch sampleTypes databases">
+					<table id="results">
+						<caption></caption>
+						<thead>
+							<tr>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</output>
+			</form>
 			<div id="about">
 				<a id="infolink" href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
 				<span id="appversion">v2018-10-22T15:20:00+02:00/009</span>
