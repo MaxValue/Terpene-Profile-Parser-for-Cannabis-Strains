@@ -24,7 +24,7 @@
 		<script id="jsonloader" type="text/javascript" src="results.json"></script>
 		<style type="text/css">
 			html {
-				font-family: 'Roboto', sans-serif;
+				font-family: "Roboto", sans-serif;
 			}
 			#searchwrapper {
 				float: left;
@@ -133,157 +133,157 @@
 		*/
 		var terpenes = [
 			{
-				name: 'Terpinolene',
+				name: "Terpinolene",
 				color: 0xB00000, // dark red
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'beta-Ocimene',
+				name: "beta-Ocimene",
 				color: 0xFF6519, // orange
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: '3-Carene',
+				name: "3-Carene",
 				color: 0xFF8C1A, // brighter orange
 				boilingPoint: 168.0,
 				onsetTime: 0
 			},
 			{
-				name: 'delta-Limonene',
+				name: "delta-Limonene",
 				color: 0xFFD819, // yellow
 				boilingPoint: 177.0,
 				onsetTime: 0
 			},
 			{
-				name: 'gamma-Terpinene',
+				name: "gamma-Terpinene",
 				color: 0xA7CF58, // light green
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'alpha-Pinene',
+				name: "alpha-Pinene",
 				color: 0x68CF55, // green
 				boilingPoint: 156.0,
 				onsetTime: 0
 			},
 			{
-				name: 'alpha-Terpinene',
+				name: "alpha-Terpinene",
 				color: 0x379767, // darker green
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'beta-Pinene',
+				name: "beta-Pinene",
 				color: 0x008647, // darkest green
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'Camphene',
+				name: "Camphene",
 				color: 0x64A7B7, // grey blue
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'alpha-Humulene',
+				name: "alpha-Humulene",
 				color: 0x009DE5, // mid blue
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'beta-Caryophyllene',
+				name: "beta-Caryophyllene",
 				color: 0x4667CA, // dark blue
 				boilingPoint: 119.0,
 				onsetTime: 0
 			},
 			{
-				name: 'Linalool',
+				name: "Linalool",
 				color: 0x9366F1, // violet
 				boilingPoint: 198.0,
 				onsetTime: 0
 			},
 			{
-				name: 'Caryophyllene Oxide',
+				name: "Caryophyllene Oxide",
 				color: 0x510F3A, // dark purple
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'beta-Myrcene',
+				name: "beta-Myrcene",
 				color: 0x9E2576, // purple
 				boilingPoint: 167.0,
 				onsetTime: 0
 			},
 			{
-				name: 'cis-Nerolidol',
+				name: "cis-Nerolidol",
 				color: 0xC7C7CC, // gray
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'trans-Nerolidol',
+				name: "trans-Nerolidol",
 				color: 0xC7C7CC, // gray
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'trans-Nerolidol 1',
+				name: "trans-Nerolidol 1",
 				color: 0xC7C7CC, // gray
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'trans-Nerolidol 2',
+				name: "trans-Nerolidol 2",
 				color: 0xC7C7CC, // gray
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'trans-Ocimene',
+				name: "trans-Ocimene",
 				color: 0xC7C7CC, // gray
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'Eucalyptol',
+				name: "Eucalyptol",
 				color: 0xC7C7CC, // gray
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'Geraniol',
+				name: "Geraniol",
 				color: 0xC7C7CC, // gray
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'Guaiol',
+				name: "Guaiol",
 				color: 0xC7C7CC, // gray
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'Isopulegol',
+				name: "Isopulegol",
 				color: 0xC7C7CC, // gray
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'Ocimene',
+				name: "Ocimene",
 				color: 0xC7C7CC, // gray
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'alpha-Bisabolol',
+				name: "alpha-Bisabolol",
 				color: 0xC7C7CC, // gray
 				boilingPoint: NaN,
 				onsetTime: 0
 			},
 			{
-				name: 'p-Cymene',
+				name: "p-Cymene",
 				color: 0xC7C7CC, // gray
 				boilingPoint: 177.0,
 				onsetTime: 0
@@ -367,10 +367,10 @@
 			}
 		}
 		function hexColor(hexNumber) {
-			return hexNumber.toString(16).padStart(7,'#000000');
+			return hexNumber.toString(16).padStart(7,"#000000");
 		}
 		function rgbaColor(hexNumber, alpha=1) {
-			let hex = hexNumber.toString(16).padStart(6,'000000');
+			let hex = hexNumber.toString(16).padStart(6,"000000");
 			let red = parseInt(hex.slice(0,2), 16);
 			let green = parseInt(hex.slice(2,4), 16);
 			let blue = parseInt(hex.slice(4,6), 16);
