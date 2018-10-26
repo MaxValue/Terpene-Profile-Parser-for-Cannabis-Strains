@@ -10,7 +10,7 @@
 		<link rel="icon" type="image/x-icon" href="favicon.ico" />
 		<link rel="manifest" href="manifest.webmanifest" />
 		<link rel="canonical" href="https://maxvalue.github.io/Terpene-Profile-Parser-for-Cannabis-Strains/" />
-		<meta property="og:url" content="https://maxvalue.github.io/Terpene-Profile-Parser-for-Cannabis-Strains/" />
+		<meta property="og:url" id="ogurl" content="https://maxvalue.github.io/Terpene-Profile-Parser-for-Cannabis-Strains/" />
 		<meta property="og:title" id="ogtitle" content="StrainFinder" />
 		<meta property="og:description" content="Compare terpene profiles of cannabis strains using lab test data. Find out which compounds of your favourite strain affect your body." />
 		<meta property="og:image" content="https://maxvalue.github.io/Terpene-Profile-Parser-for-Cannabis-Strains/img/opengraph-icon-1200x1200.png" />
@@ -296,6 +296,7 @@
 		// That's it!
 
 		var elem_pagetitle = document.getElementById("title");
+		var elem_pageogurl = document.getElementById("ogurl");
 		var elem_pageogtitle = document.getElementById("ogtitle");
 		var elem_form = document.getElementById("searchform");
 		var elem_databaseList = document.getElementById("databases");
@@ -418,6 +419,7 @@
 		}
 		function resetResults() {
 			elem_pagetitle.text = "StrainFinder";
+			elem_pageogurl.content = document.querySelector("link[rel='canonical']").href;
 			elem_pageogtitle.content = "StrainFinder";
 			elem_form.resultswrapper.innerHTML = "";
 		}
@@ -426,6 +428,9 @@
 			let resultsNum = 0;
 			let searchstring = elem_form.q.value.toLowerCase();
 			let newURL = new URL(window.location);
+
+			resetResults();
+
 			newURL.search = "";
 			if (elem_form.q.value != "") {
 				newURL.searchParams.append(elem_form.q.name, elem_form.q.value);
@@ -445,7 +450,9 @@
 			})
 			window.history.pushState({},"",newURL);
 
-			resetResults();
+			elem_pagetitle.text = "StrainFinder - '" + searchstring + "'";
+			elem_pageogurl.content = newURL;
+			elem_pageogtitle.content = "StrainFinder: '" + searchstring + "'";
 
 			elem_form.database.forEach(function(databaseCheckbox){
 				if (databaseCheckbox.checked) {
@@ -545,8 +552,6 @@
 				});
 				elem_form.resultswrapper.appendChild(resultsStructure);
 			}
-			elem_pagetitle.text = "StrainFinder - '" + searchstring + "'";
-			elem_pageogtitle.content = "StrainFinder: '" + searchstring + "'";
 			return false;
 		}
 
