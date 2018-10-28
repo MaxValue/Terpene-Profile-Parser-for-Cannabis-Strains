@@ -1,7 +1,7 @@
 {
-	databases: {
-		LABIDENTIFIER: {
-			Processed: [
+	"databases": {
+		"LABIDENTIFIER": {
+			"Processed": [
 				{
 					"Sample Name": "SAMPLENAME",
 					"Sample Type": "SAMPLETYPE",
@@ -9,7 +9,7 @@
 					"delta-Limonene": 99.99
 				}
 			],
-			Unprocessed: [
+			"Unprocessed": [
 				{
 					"Sample Name": "SAMPLENAME",
 					"Sample Type": "SAMPLETYPE",
