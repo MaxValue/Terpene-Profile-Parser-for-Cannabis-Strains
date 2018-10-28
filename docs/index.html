@@ -168,7 +168,7 @@
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2018-10-27T01:32:00+02:00/005</span>
+				<span id="appversion">v2018-10-28T18:47:00+01:00/001</span>
 			</div>
 		</div>
 		<template id="templateResults">
@@ -425,9 +425,12 @@
 		var maxGraphPercentage = 1;
 		// That's it!
 
+		var elem_pageCanonicalURL = document.querySelector("link[rel='canonical']");
+		var baseURL = elem_pageCanonicalURL.href;
+
 		var elem_pagetitle = document.getElementById("title");
-		var elem_pageogurl = document.getElementById("ogurl");
 		var elem_pageogtitle = document.getElementById("ogtitle");
+		var elem_pageogurl = document.getElementById("ogurl");
 		var elem_form = document.getElementById("searchform");
 		var elem_databaseList = document.getElementById("databases");
 		var elem_sampleTypes = document.getElementById("sampleTypes");
@@ -550,7 +553,8 @@
 		}
 		function resetResults() {
 			elem_pagetitle.text = "StrainFinder";
-			elem_pageogurl.content = document.querySelector("link[rel='canonical']").href;
+			elem_pageCanonicalURL.href = baseURL;
+			elem_pageogurl.content = baseURL;
 			elem_pageogtitle.content = "StrainFinder";
 			elem_form.resultswrapper.innerHTML = "";
 		}
@@ -601,6 +605,7 @@
 			window.history.pushState({},"",newURL);
 
 			elem_pagetitle.text = "StrainFinder - '" + searchstring + "'";
+			elem_pageCanonicalURL.href = newURL;
 			elem_pageogurl.content = newURL;
 			elem_pageogtitle.content = "StrainFinder: '" + searchstring + "'";
 
