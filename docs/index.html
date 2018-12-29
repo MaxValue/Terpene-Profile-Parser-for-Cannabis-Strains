@@ -168,7 +168,7 @@
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2018-10-28T18:47:00+01:00/001</span>
+				<span id="appversion">v2018-12-29T17:02:00+01:00/001</span>
 			</div>
 		</div>
 		<template id="templateResults">
@@ -179,14 +179,18 @@
 				></label
 				><label
 					><input type="radio" name="sortorder" value="average"
-					><div>Average</div
+					><div>Average &#9660;</div
+				></label
+				><label
+					><input type="radio" name="sortorder" value="variance"
+					><div>Variance &sigma;&sup2; &#9660;</div
 				></label
 			></div>
 			<table id="results">
 				<caption></caption>
 				<thead>
 					<tr>
-						<td>Terpene</td><td class="graphcell">Graph</td><td>%</td>
+						<td>Terpene</td><td class="graphcell">Graph</td><td>%</td><td>&sigma;&sup2;</td>
 					</tr>
 				</thead>
 				<tbody>
@@ -195,7 +199,7 @@
 		</template>
 		<template id="templateResultsRow">
 			<tr>
-				<td></td><td class="graphcell"></td><td></td>
+				<td></td><td class="graphcell"></td><td></td><td></td>
 			</tr>
 		</template>
 	</body>
@@ -566,6 +570,9 @@
 					case "average":
 						rows.sort((a,b)=>parseFloat(b.getAttribute("data-average")) - parseFloat(a.getAttribute("data-average")));
 						break;
+					case "variance":
+						rows.sort((a,b)=>parseFloat(b.getAttribute("data-variance")) - parseFloat(a.getAttribute("data-variance")));
+						break;
 					case "default":
 					default:
 						rows.sort((a,b)=>terpeneOrder.indexOf(a.getAttribute("data-terpene")) - terpeneOrder.indexOf(b.getAttribute("data-terpene")));
@@ -578,7 +585,7 @@
 			}
 		}
 		function load_sample_data(elem_form) {
-			let averages = {};
+			let searchResults = {}; // [terpene.name].avg; [terpene.name].variance
 			let resultsNum = 0;
 			let searchstring = elem_form.q.value.toLowerCase();
 			let newURL = new URL(window.location);
@@ -629,10 +636,14 @@
 									resultsNum ++;
 									terpenes.forEach(function(terpene){
 										let currentTerpeneValue = parseFloat(sample[terpene.name]) || 0.0;
-										if (terpene.name in averages) {
-											averages[terpene.name] += currentTerpeneValue;
+										if (terpene.name in searchResults) {
+											searchResults[terpene.name].avg += currentTerpeneValue;
+											searchResults[terpene.name].values.push(currentTerpeneValue);
 										} else {
-											averages[terpene.name] = currentTerpeneValue;
+											searchResults[terpene.name] = {
+												"avg": currentTerpeneValue,
+												"values": [currentTerpeneValue]
+											};
 										}
 									});
 								}
@@ -651,16 +662,25 @@
 				elem_resultsTable.caption.innerText = "Search Results for '"+searchstring+"' ("+resultsNum+" Sample"+(resultsNum==1?"":"s")+")";
 
 				terpenes.forEach(function(terpene){
-					let average = averages[terpene.name]/resultsNum;
-					averages[terpene.name] = average;
+					searchResults[terpene.name].avg /= resultsNum;
+				})
+				terpenes.forEach(function(terpene){
+					let average = searchResults[terpene.name].avg;
+					let sumSquaredDelta = 0;
+					for (let individualValue of searchResults[terpene.name].values) {
+						sumSquaredDelta += Math.pow(individualValue - average, 2);
+					}
+					searchResults[terpene.name].variance = sumSquaredDelta / resultsNum;
 				})
 				terpenes.forEach(function(terpene,terpeneIndex){
-					let average = averages[terpene.name];
+					let average = searchResults[terpene.name].avg;
+					let variance = searchResults[terpene.name].variance;
 
 					//table
 
 					let row = document.importNode(templateResultsRow.content, true).children[0];
 					row.setAttribute("data-average", average);
+					row.setAttribute("data-variance", variance);
 					row.setAttribute("data-terpene", terpene.id);
 
 					////terpene name
@@ -697,6 +717,10 @@
 						cell.style.color = greyedOutColor;
 					}
 					cell.appendChild(span);
+
+					////terpene variance
+					var cell = row.children[3];
+					cell.innerText = toFixed(variance, 2);
 
 					elem_resultsTable.tBodies[0].appendChild(row);
 				})
