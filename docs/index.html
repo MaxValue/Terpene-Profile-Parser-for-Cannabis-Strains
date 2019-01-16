@@ -160,7 +160,6 @@
 							<legend>Databases:</legend>
 							<ul id="databases">
 							</ul>
-							<input type="file" name="fileUploader" accept="application/json, .json, .JSON" onchange="return changeHandler(this.files);">
 						</fieldset>
 					</div>
 					<input type="submit" value="Search">
@@ -443,37 +442,8 @@
 		var template_resultsTableRow = document.getElementById("templateResultsRow");
 
 		var sampleTypes = [];
-		var database_imports = 0;
 		var terpeneOrder = terpenes.map((terpene)=>terpene.id);
 
-		function changeHandler(files) {
-			for (let i = 0, file; file = files[i]; i++) {
-				if (file.type!="application/json") {
-					continue;
-				}
-				let reader = new FileReader();
-				reader.onload = function(event) {
-					let newDatabaseString = event.target.result;
-					if (newDatabaseString.startsWith("databasesContainer=")) {
-						newDatabaseString = newDatabaseString.substr(19);
-					}
-					let newDatabasesContainer = JSON.parse(newDatabaseString);
-					database_imports++;
-					for (const databaseName of Object.keys(newDatabasesContainer.databases)) {
-						addDatabaseItem("import"+database_imports.toString()+"_"+databaseName, "Imported: "+databaseName);
-						databasesContainer.databases["import"+database_imports.toString()+"_"+databaseName] = newDatabasesContainer.databases[databaseName];
-
-						// sample type list
-						Object.keys(newDatabasesContainer.databases[databaseName]).forEach(function(newSampleType){
-							addSampletype(newSampleType);
-						})
-
-					}
-				}
-				reader.readAsText(file);
-			}
-			return false;
-		}
 		function addDatabaseItem(identifier, label) {
 			let databaseListItem = document.createElement("li");
 			let databaseInput = document.createElement("input");
