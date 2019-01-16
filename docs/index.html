@@ -176,22 +176,22 @@
 			<div class="segmented-control" onchange="sortTable()"
 				><label
 					><input type="radio" name="sortorder" value="default" checked=""
-					><div>Default</div
+					><div title="Sort by Default Order">Default</div
 				></label
 				><label
 					><input type="radio" name="sortorder" value="average"
-					><div>Average &#9660;</div
+					><div title="Sort by Average Descending">Average &#9660;</div
 				></label
 				><label
 					><input type="radio" name="sortorder" value="variance"
-					><div>Variance &sigma;&sup2; &#9660;</div
+					><div title="Sort by Variance Descending">Variance &sigma;&sup2; &#9660;</div
 				></label
 			></div>
 			<table id="results">
 				<caption></caption>
 				<thead>
 					<tr>
-						<td>Terpene</td><td class="graphcell">Graph</td><td>%</td><td>&sigma;&sup2;</td>
+						<td>Terpene</td><td class="graphcell" title="(Mapped to an 1% maximum)">Graph</td><td title="Average Percentage">%</td><td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
 					</tr>
 				</thead>
 				<tbody>
