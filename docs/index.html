@@ -120,6 +120,12 @@
 				border: 1px solid black;
 				border-collapse: collapse;
 			}
+			#results tbody > tr > td {
+				text-align: right;
+			}
+			#results tbody > tr > td:nth-of-type(1) {
+				text-align: left;
+			}
 			#results thead {
 				background-color: rgb(222,222,222);
 				text-align: center;
@@ -185,12 +191,20 @@
 					><input type="radio" name="sortorder" value="variance"
 					><div title="Sort by Variance Descending">Variance &sigma;&sup2; &#9660;</div
 				></label
+				><label
+					><input type="radio" name="sortorder" value="stability"
+					><div title="Sort by Stability Descending">Stability &#9660;</div
+				></label
 			></div>
 			<table id="results">
 				<caption></caption>
 				<thead>
 					<tr>
-						<td>Terpene</td><td class="graphcell" title="(Mapped to an 1% maximum)">Graph</td><td title="Average Percentage">%</td><td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
+						<td>Terpene</td>
+						<td class="graphcell" title="(Mapped to an 1% maximum)">Graph</td>
+						<td title="Average Percentage">%</td>
+						<td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
+						<td title="How stable the appearance of the terpene is">Stability</td>
 					</tr>
 				</thead>
 				<tbody>
@@ -199,7 +213,7 @@
 		</template>
 		<template id="templateResultsRow">
 			<tr>
-				<td></td><td class="graphcell"></td><td></td><td></td>
+				<td></td><td class="graphcell"></td><td></td><td></td><td></td>
 			</tr>
 		</template>
 	</body>
@@ -427,6 +441,7 @@
 		// You can change those values directly below, but please don't touch the others.
 		var greyedOutColor = "#d9d9d9";
 		var maxGraphPercentage = 1;
+		var terpeneStabilityThreshold = 0.01;
 		// That's it!
 
 		var elem_pageCanonicalURL = document.querySelector("link[rel='canonical']");
@@ -541,6 +556,9 @@
 					case "average":
 						rows.sort((a,b)=>parseFloat(b.getAttribute("data-average")) - parseFloat(a.getAttribute("data-average")));
 						break;
+					case "stability":
+						rows.sort((a,b)=>parseFloat(b.getAttribute("data-stability")) - parseFloat(a.getAttribute("data-stability")));
+						break;
 					case "variance":
 						rows.sort((a,b)=>parseFloat(b.getAttribute("data-variance")) - parseFloat(a.getAttribute("data-variance")));
 						break;
@@ -609,10 +627,14 @@
 										let currentTerpeneValue = parseFloat(sample[terpene.name]) || 0.0;
 										if (terpene.name in searchResults) {
 											searchResults[terpene.name].avg += currentTerpeneValue;
+											if (currentTerpeneValue > terpeneStabilityThreshold) {
+												searchResults[terpene.name].stability ++;
+											}
 											searchResults[terpene.name].values.push(currentTerpeneValue);
 										} else {
 											searchResults[terpene.name] = {
 												"avg": currentTerpeneValue,
+												"stability": ( currentTerpeneValue>terpeneStabilityThreshold ? 1 : 0 ),
 												"values": [currentTerpeneValue]
 											};
 										}
@@ -636,6 +658,10 @@
 					searchResults[terpene.name].avg /= resultsNum;
 				})
 				terpenes.forEach(function(terpene){
+					searchResults[terpene.name].stability *= 100;
+					searchResults[terpene.name].stability /= resultsNum;
+				})
+				terpenes.forEach(function(terpene){
 					let average = searchResults[terpene.name].avg;
 					let sumSquaredDelta = 0;
 					for (let individualValue of searchResults[terpene.name].values) {
@@ -645,12 +671,14 @@
 				})
 				terpenes.forEach(function(terpene,terpeneIndex){
 					let average = searchResults[terpene.name].avg;
+					let stability = searchResults[terpene.name].stability;
 					let variance = searchResults[terpene.name].variance;
 
 					//table
 
 					let row = document.importNode(templateResultsRow.content, true).children[0];
 					row.setAttribute("data-average", average);
+					row.setAttribute("data-stability", stability);
 					row.setAttribute("data-variance", variance);
 					row.setAttribute("data-terpene", terpene.id);
 
@@ -692,6 +720,10 @@
 					////terpene variance
 					var cell = row.children[3];
 					cell.innerText = toFixed(variance, 2);
+
+					////terpene stability
+					var cell = row.children[4];
+					cell.innerText = toFixed(stability, 2);
 
 					elem_resultsTable.tBodies[0].appendChild(row);
 				})
