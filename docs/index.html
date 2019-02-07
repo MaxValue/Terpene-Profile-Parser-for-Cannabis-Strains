@@ -174,7 +174,7 @@
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2018-12-29T17:02:00+01:00/001</span>
+				<span id="appversion">v2019-02-07T10:56:00+01:00/003</span>
 			</div>
 		</div>
 		<template id="templateResults">
@@ -442,9 +442,9 @@
 		var greyedOutColor = "#d9d9d9";
 		var maxGraphPercentage = 1;
 		var terpeneStabilityThreshold = 0.01;
-		var averageDecimalPlaces = 2;
-		var stabilityDecimalPlaces = 0;
-		var varianceDecimalPlaces = 2;
+		var FormatAverage = new Intl.NumberFormat('en',{style:'decimal',minimumFractionDigits:2,maximumFractionDigits:2});
+		var FormatStability = new Intl.NumberFormat('en',{style:'percent',minimumFractionDigits:0,maximumFractionDigits:0});
+		var FormatVariance = new Intl.NumberFormat('en',{style:'decimal',minimumFractionDigits:2,maximumFractionDigits:2});
 		// That's it!
 
 		var elem_pageCanonicalURL = document.querySelector("link[rel='canonical']");
@@ -534,15 +534,6 @@
 					databaseElem.checked = true;
 				})
 			};
-		}
-		function toFixed(stringNumber, decimalPlaces) {
-			let result = stringNumber.toFixed(decimalPlaces);
-			let zeroMask = (0.0).toFixed(decimalPlaces);
-			if (result == "-"+zeroMask) {
-				return zeroMask
-			} else {
-				return result
-			}
 		}
 		function resetResults() {
 			elem_pagetitle.text = "StrainFinder";
@@ -661,7 +652,6 @@
 					searchResults[terpene.name].avg /= resultsNum;
 				})
 				terpenes.forEach(function(terpene){
-					searchResults[terpene.name].stability *= 100;
 					searchResults[terpene.name].stability /= resultsNum;
 				})
 				terpenes.forEach(function(terpene){
@@ -714,7 +704,7 @@
 					// terpene amount
 					var cell = row.children[2];
 					var span = document.createElement("span");
-					span.innerText = toFixed(average, averageDecimalPlaces);
+					span.innerText = FormatAverage.format(average);
 					if (average <= 0.01) {
 						cell.style.color = greyedOutColor;
 					}
@@ -722,11 +712,11 @@
 
 					////terpene variance
 					var cell = row.children[3];
-					cell.innerText = toFixed(variance, varianceDecimalPlaces);
+					cell.innerText = FormatVariance.format(variance);
 
 					////terpene stability
 					var cell = row.children[4];
-					cell.innerText = toFixed(stability, stabilityDecimalPlaces);
+					cell.innerText = FormatStability.format(stability);
 
 					elem_resultsTable.tBodies[0].appendChild(row);
 				})
