@@ -442,6 +442,9 @@
 		var greyedOutColor = "#d9d9d9";
 		var maxGraphPercentage = 1;
 		var terpeneStabilityThreshold = 0.01;
+		var averageDecimalPlaces = 2;
+		var stabilityDecimalPlaces = 0;
+		var varianceDecimalPlaces = 2;
 		// That's it!
 
 		var elem_pageCanonicalURL = document.querySelector("link[rel='canonical']");
@@ -711,7 +714,7 @@
 					// terpene amount
 					var cell = row.children[2];
 					var span = document.createElement("span");
-					span.innerText = toFixed(average, 2);
+					span.innerText = toFixed(average, averageDecimalPlaces);
 					if (average <= 0.01) {
 						cell.style.color = greyedOutColor;
 					}
@@ -719,11 +722,11 @@
 
 					////terpene variance
 					var cell = row.children[3];
-					cell.innerText = toFixed(variance, 2);
+					cell.innerText = toFixed(variance, varianceDecimalPlaces);
 
 					////terpene stability
 					var cell = row.children[4];
-					cell.innerText = toFixed(stability, 2);
+					cell.innerText = toFixed(stability, stabilityDecimalPlaces);
 
 					elem_resultsTable.tBodies[0].appendChild(row);
 				})
