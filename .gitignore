@@ -113,9 +113,6 @@ test*/*
 # Hiding the damn fuse hidden file
 .fuse_hidden*
 
-# Hiding my (very unstable and varying) notes
-/links.txt
-
 # Hiding the parsing logs
 log-*
 .~lock.*
@@ -125,3 +122,6 @@ log-*
 
 # Do track the appcache file
 !/docs/cache.manifest
+
+# Hiding the documentation/notes folder
+/reference-files/
