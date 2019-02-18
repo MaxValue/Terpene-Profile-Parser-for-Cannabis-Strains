@@ -127,4 +127,4 @@ log-*
 browser_profiles/
 
 # Do track the appcache file
-!/webapp/cache.manifest
+!/docs/cache.manifest
