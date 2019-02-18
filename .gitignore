@@ -121,7 +121,7 @@ log-*
 .~lock.*
 
 # Hiding the folder containing the browser profiles
-browser_profiles/
+/browser_profiles/
 
 # Do track the appcache file
 !/docs/cache.manifest
