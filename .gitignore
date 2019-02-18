@@ -113,9 +113,6 @@ test*/*
 # Hiding the damn fuse hidden file
 .fuse_hidden*
 
-# Hiding the virtualenv files
-venv/*
-
 # Hiding my (very unstable and varying) notes
 /links.txt
 
