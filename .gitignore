@@ -121,7 +121,7 @@ log-*
 /browser_profiles/
 
 # Hiding the documentation/notes folder
-/reference-files/
+reference-files/
 
 # Hiding backups
 /backups/
