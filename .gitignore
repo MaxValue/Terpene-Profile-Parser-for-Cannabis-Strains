@@ -125,3 +125,6 @@ log-*
 
 # Hiding the documentation/notes folder
 /reference-files/
+
+# Hiding backups
+/backups/
