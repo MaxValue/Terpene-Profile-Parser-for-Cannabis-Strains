@@ -1,0 +1,25 @@
+{
+	"folders":
+	[
+		{
+			"folder_exclude_patterns":
+			[
+				"__pycache__",
+				"browser_profiles",
+				"venv"
+			],
+			"name": "Project",
+			"path": "./"
+		},
+		{
+			"folder_exclude_patterns":
+			[
+				"__pycache__",
+				"browser_profiles",
+				"venv"
+			],
+			"name": "Testing",
+			"path": "../Terpene-Parser-Testing/"
+		}
+	]
+}

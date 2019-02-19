@@ -128,3 +128,6 @@ log-*
 
 # Hiding backups
 /backups/
+
+# Hiding Sublime Text workspace files
+/*.sublime-workspace
