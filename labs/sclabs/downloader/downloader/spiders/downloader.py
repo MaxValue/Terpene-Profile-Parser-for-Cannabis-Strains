@@ -62,7 +62,7 @@ class OnlineDatabaseSpider(scrapy.Spider):
 		'''Generates the client links'''
 		self.logger.debug('Launching initial requests . . .')
 
-		for client_number in range(7501, -1, -1): #TODO
+		for client_number in range(7600, -1, -1): #TODO
 			self.logger.debug('%d: Building request for client.', client_number)
 			wanted_link = self.template_resultspage.format(client_number=client_number, page=1)
 			request = scrapy.Request(url=wanted_link, callback=self.read_client, errback=self.errback)
