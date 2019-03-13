@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import scrapy, os, urllib.parse, re, datetime, scrapy.spidermiddlewares.httperror
-import db
+import scrapy, os, urllib.parse, re, datetime, scrapy.spidermiddlewares.httperror, db, scrapy_splash
 
 # 'png': 1,
 # 'width': 600,
@@ -100,7 +99,7 @@ class OnlineDatabaseSpider(scrapy.Spider):
 		# 			self.session.add(page)
 		# 		self.session.commit()
 		# 		self.logger.debug('Yielding request.')
-		# 		yield scrapy.Request(url=wanted_link, callback=self.read_sample, meta={'splash':splash_args}, errback=self.errback)
+		# 		yield scrapy_splash.SplashRequest(url=wanted_link, callback=self.read_sample, args=splash_args, errback=self.errback)
 
 	def real_statusCode(self, response):
 		'''tests current page for errors'''
@@ -169,7 +168,7 @@ class OnlineDatabaseSpider(scrapy.Spider):
 					self.logger.debug('Terpene test present, will crawl sample "%s", counter has been reset.', sample_link)
 			if should_crawl:
 				self.logger.debug('%d: Building request for sample "%s".', client_number, sample_link)
-				request = scrapy.Request(url=sample_link, callback=self.read_sample, meta={'splash':splash_args}, errback=self.errback)
+				request = scrapy_splash.SplashRequest(url=sample_link, callback=self.read_sample, args=splash_args, errback=self.errback)
 				request.meta['data-sclabs-client-number'] = client_number
 				page = self.session.query(db.Page).filter(db.Page.source_url==sample_link).first()
 				if page:
@@ -310,7 +309,7 @@ class SplashTestSpider(scrapy.Spider):
 
 	def start_requests(self):
 		'''Generates the client links'''
-		yield scrapy.Request(url='https://maxvalue.github.io/IsJavascriptWorking/', callback=self.parse, meta={'splash':splash_args})
+		yield scrapy_splash.SplashRequest(url='https://maxvalue.github.io/IsJavascriptWorking/', callback=self.parse, args=splash_args)
 
 	def parse(self, response):
 		query_results = response.xpath('//span[@id="result"]/text()')
