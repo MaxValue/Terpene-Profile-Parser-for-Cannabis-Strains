@@ -221,8 +221,8 @@ class OnlineDatabaseSpider(scrapy.Spider):
 				request.meta['data-sclabs-client-currentpage'] = currentpage_num+1
 				request.meta['data-sclabs-client-number'] = client_number
 				request.meta['data-sclabs-NTterpenes-counter'] = no_terpenes_counter
-				if currentpage_num+1 == maxpage_num:
-					request.meta['dont_cache'] = True
+				# if currentpage_num+1 == maxpage_num:
+				# 	request.meta['dont_cache'] = True
 				next_page = self.session.query(db.Page).filter(db.Page.source_url==wanted_link).first()
 				if next_page:
 					self.logger.debug('%d: Next client page already in DB.', client_number)
