@@ -70,9 +70,9 @@ class OnlineDatabaseSpider(scrapy.Spider):
 			request.meta['data-sclabs-client-number'] = client_number
 			request.meta['data-sclabs-client-lastknown-maxpage'] = 10000
 			request.meta['data-sclabs-client-currentpage'] = 1
-			self.logger.debug('Setting currentpage counter to "%d".', request.meta['data-sclabs-client-currentpage'])
+			self.logger.debug('%d: Setting currentpage counter to "%d".', client_number, request.meta['data-sclabs-client-currentpage'])
 			request.meta['data-sclabs-NTterpenes-counter'] = 0
-			self.logger.debug('Setting NTterpenes counter to "%d".', request.meta['data-sclabs-NTterpenes-counter'])
+			self.logger.debug('%d: Setting NTterpenes counter to "%d".', client_number, request.meta['data-sclabs-NTterpenes-counter'])
 			request.meta['dont_cache'] = True
 			page = self.session.query(db.Page).filter(db.Page.source_url==wanted_link).first()
 			if page:
@@ -83,7 +83,7 @@ class OnlineDatabaseSpider(scrapy.Spider):
 				page = db.Page(source_url=wanted_link, online_database_id=self.lab_id)
 				self.session.add(page)
 			self.session.commit()
-			self.logger.debug('Yielding request.')
+			self.logger.debug('%d: Yielding request.', client_number)
 			yield request
 		# for sample_number in range(0,310000):
 		# 	self.logger.debug('Building request for sample "%d".', sample_number)
@@ -104,7 +104,9 @@ class OnlineDatabaseSpider(scrapy.Spider):
 
 	def real_statusCode(self, response):
 		'''tests current page for errors'''
-		self.logger.debug('Detecting actual HTTP status code...')
+		client_number = response.meta['data-sclabs-client-number']
+
+		self.logger.debug('%d: Detecting actual HTTP status code...', client_number)
 		status_code = 0
 
 		for error_code in self.error_selectors.items():
@@ -112,7 +114,7 @@ class OnlineDatabaseSpider(scrapy.Spider):
 				status_code = int(error_code[0])
 		else:
 			status_code = response.status
-		self.logger.debug('Has HTTP status code "%s".', status_code)
+		self.logger.debug('%d: Has HTTP status code "%s".', client_number, status_code)
 
 	def errback(self, failure):
 		'''Logs failed pages'''
