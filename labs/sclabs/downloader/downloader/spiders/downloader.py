@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import scrapy, os, urllib.parse, re, datetime, scrapy.spidermiddlewares.httperror
-import sqlalchemy as sqla
 import db
 
 # 'png': 1,
