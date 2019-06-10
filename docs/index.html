@@ -174,18 +174,18 @@
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2019-06-10T17:23:00+02:00/001</span>
+				<span id="appversion">v2019-06-10T17:57:00+02:00/002</span>
 			</div>
 		</div>
 		<template id="templateResults">
 			<div class="segmented-control" onchange="sortTable()"
 				><label
-					><input type="radio" name="sortorder" value="default" checked=""
-					><div title="Sort by Default Order">Default</div
+					><input type="radio" name="sortorder" value="average" checked=""
+					><div title="Sort by Average Descending">Average &#9660;</div
 				></label
 				><label
-					><input type="radio" name="sortorder" value="average"
-					><div title="Sort by Average Descending">Average &#9660;</div
+					><input type="radio" name="sortorder" value="static"
+					><div title="Sort by Names">Static</div
 				></label
 				><label
 					><input type="radio" name="sortorder" value="variance"
@@ -547,18 +547,18 @@
 			for (let tBody of elem_resultsTable.tBodies) {
 				let rows = Array.from(tBody.rows);
 				switch (elem_form.sortorder.value) {
-					case "average":
-						rows.sort((a,b)=>parseFloat(b.getAttribute("data-average")) - parseFloat(a.getAttribute("data-average")));
-						break;
 					case "stability":
 						rows.sort((a,b)=>parseFloat(b.getAttribute("data-stability")) - parseFloat(a.getAttribute("data-stability")));
 						break;
 					case "variance":
 						rows.sort((a,b)=>parseFloat(b.getAttribute("data-variance")) - parseFloat(a.getAttribute("data-variance")));
 						break;
-					case "default":
-					default:
+					case "static":
 						rows.sort((a,b)=>terpeneOrder.indexOf(a.getAttribute("data-terpene")) - terpeneOrder.indexOf(b.getAttribute("data-terpene")));
+						break;
+					default:
+					case "average":
+						rows.sort((a,b)=>parseFloat(b.getAttribute("data-average")) - parseFloat(a.getAttribute("data-average")));
 						break;
 				}
 				tBody.innerHTML = "";
@@ -721,6 +721,7 @@
 					elem_resultsTable.tBodies[0].appendChild(row);
 				})
 				elem_form.resultswrapper.appendChild(resultsStructure);
+				sortTable();
 			}
 			return false;
 		}
