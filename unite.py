@@ -53,8 +53,6 @@ DATA_ROW_FIELDS = [
 	'CBDV-A',
 	'delta-9 CBG-A',
 	'delta-9 CBG',
-	'CBG-A',
-	'CBG',
 	'CBC',
 	'Moisture Content',
 ]
