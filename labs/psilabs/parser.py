@@ -23,7 +23,7 @@ DATA_ROW_FIELDS = [
 	'trans-Nerolidol 1',
 	'trans-Nerolidol 2',
 	'trans-Ocimene',
-	'delta-3-Carene',
+	'3-Carene',
 	'Camphene',
 	'Caryophyllene Oxide',
 	'Eucalyptol',
@@ -52,6 +52,8 @@ DATA_ROW_FIELDS = [
 	'CBN',
 	'CBD-A',
 	'CBD',
+	'CBDV',
+	'CBDV-A',
 	'delta-9 CBG-A',
 	'delta-9 CBG',
 	'CBG-A',
@@ -210,7 +212,7 @@ xpath_time_tested =				'/html/body/ui-view/div/md-content/ui-view/div/md-content
 xpath_time_received =			'/html/body/ui-view/div/md-content/ui-view/div/md-content/div[2]/md-card[1]/md-card-content/md-list/md-list-item/span/h3[following-sibling::p[text()="Date Received"]]/text()'
 
 terpenes = {
-	'delta-3-Carene':		re.compile(r'^(delta)?[-_/\s.]*(3|Three|Tri)[-_/\s.]*Carene$',	re.IGNORECASE),
+	'3-Carene':				re.compile(r'^(delta)?[-_/\s.]*(3|Three|Tri)[-_/\s.]*Carene$',	re.IGNORECASE),
 	'Camphene':				re.compile(r'^Camphene$',										re.IGNORECASE),
 	'Caryophyllene Oxide':	re.compile(r'^Caryophyllene[-_/\s.]*Oxide$',					re.IGNORECASE),
 	'Eucalyptol':			re.compile(r'^Eucalyptol$',										re.IGNORECASE),
@@ -246,6 +248,8 @@ cannabinoids = {
 	'CBN':					re.compile(r'^CBN$',											re.IGNORECASE),
 	'CBD-A':				re.compile(r'^CBD[-_/\s.]*A$',									re.IGNORECASE),
 	'CBD':					re.compile(r'^CBD$',											re.IGNORECASE),
+	'CBDV':					re.compile(r'^CBDV$',											re.IGNORECASE),
+	'CBDV-A':				re.compile(r'^CBDV[-_/\s.]*A$',									re.IGNORECASE),
 	'CBG-A':				re.compile(r'^CBG[-_/\s.]*A$',									re.IGNORECASE),
 	'CBG':					re.compile(r'^CBG$',											re.IGNORECASE),
 	'delta-9 CBG-A':		re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*CBG[-_/\s.]*A$',	re.IGNORECASE),
@@ -428,8 +432,9 @@ for type_index, type_folder in enumerate(type_folders):
 			tree=tree,
 			xpath=xpath_terpenes_total,
 			fallback='',
-			fallback_file=logfile_terpenes_total_noneFound,
-			fallback_data={'Filename':raw_sample_file_name}
+			errlevel=logging.ERROR,
+			errmsg='%s: Terpenes TOTAL was not found',
+			errparams=[raw_sample_file_name]
 		)
 		terpene_amount_match = re_percentageValue.match(raw_terpene_total)
 		if terpene_amount_match:
@@ -508,7 +513,7 @@ for type_index, type_folder in enumerate(type_folders):
 					# Match none?
 					logging.error('%s: Cannabinoid did not match anything: %s (at list index %d).', raw_sample_file_name, original_cannabinoid_name, i)
 			if cannabinoid_data == {}:
-				logging.debug('%s: No cannabinoids were added (%d were found).', raw_sample_file_name, len(raw_cannabinoids_1+raw_cannabinoids_2))
+				logging.debug('%s: No cannabinoids were added (%d were found).', raw_sample_file_name, len(raw_cannabinoids_1))
 		if args.force_cannabinoids and cannabinoid_data == {}:
 			skip_this_file = True
 
@@ -518,8 +523,9 @@ for type_index, type_folder in enumerate(type_folders):
 			tree=tree,
 			xpath=xpath_thc_total,
 			fallback='',
-			fallback_file=logfile_thc_total_noneFound,
-			fallback_data={'Filename':raw_sample_file_name}
+			errlevel=logging.ERROR,
+			errmsg='%s: THC TOTAL was not found',
+			errparams=[raw_sample_file_name]
 		)
 		thc_amount_match = re_percentageValue.match(raw_thc_total)
 		if thc_amount_match:
@@ -538,8 +544,9 @@ for type_index, type_folder in enumerate(type_folders):
 			tree=tree,
 			xpath=xpath_cbd_total,
 			fallback='',
-			fallback_file=logfile_cbd_total_noneFound,
-			fallback_data={'Filename':raw_sample_file_name}
+			errlevel=logging.ERROR,
+			errmsg='%s: CBD TOTAL was not found',
+			errparams=[raw_sample_file_name]
 		)
 		cbd_amount_match = re_percentageValue.match(raw_cbd_total)
 		if cbd_amount_match:
@@ -600,8 +607,10 @@ for type_index, type_folder in enumerate(type_folders):
 			fallback=get_single_value(
 				tree=tree,
 				xpath=xpath_sample_provider_anon,
-				fallback_file=logfile_provider_noneFound,
-				fallback_data={'Filename':raw_sample_file_name}
+				fallback='',
+				errlevel=logging.ERROR,
+				errmsg='%s: Provider was not found',
+				errparams=[raw_sample_file_name]
 			)
 		)
 		if sample_provider == 'Anonymous':
@@ -617,8 +626,9 @@ for type_index, type_folder in enumerate(type_folders):
 			tree=tree,
 			xpath=xpath_test_uid,
 			fallback='',
-			fallback_file=logfile_uid_noneFound,
-			fallback_data={'Filename':raw_sample_file_name}
+			errlevel=logging.ERROR,
+			errmsg='%s: Test UID was not found',
+			errparams=[raw_sample_file_name]
 		)
 		test_uid_match = re_test_uid.match(raw_test_uid)
 		if test_uid_match:
@@ -717,4 +727,4 @@ if args.json:
 	with open(sample_database_JSONfile, "a", encoding="utf-8") as databases_file:
 		databases_file.write('}}')
 
-print('All files have been processed. Please check the contents of the log file {}. It lists pages regarding different errors.', args.log)
+print('All files have been processed. If you defined a log file, please check its contents. It lists pages regarding different errors.')

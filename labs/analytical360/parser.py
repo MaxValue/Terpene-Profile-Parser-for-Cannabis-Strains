@@ -43,6 +43,8 @@ DATA_ROW_FIELDS = [
 	'CBN',
 	'CBD-A',
 	'CBD',
+	'CBDV',
+	'CBDV-A',
 	'delta-9 CBG-A',
 	'delta-9 CBG',
 	'CBG-A',
@@ -390,6 +392,8 @@ cannabinoids = {
 	'CBG':					re.compile(r'^CBG$',											re.IGNORECASE),
 	'delta-9 CBG-A':		re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*CBG[-_/\s.]*A$',	re.IGNORECASE),
 	'delta-9 CBG':			re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*CBG$',				re.IGNORECASE),
+	'CBDV':					re.compile(r'^CBDV$',											re.IGNORECASE),
+	'CBDV-A':				re.compile(r'^CBDV[-_/\s.]*A$',									re.IGNORECASE),
 	'CBC':					re.compile(r'^CBC$',											re.IGNORECASE),
 	'THCV':					re.compile(r'^THCV$',											re.IGNORECASE),
 	'delta-8 THC':			re.compile(r'^(delta|Δ|∆)[-_/\s.]*8[-_/\s.]*THC$',				re.IGNORECASE),
@@ -836,4 +840,4 @@ if args.json:
 	with open(sample_database_JSONfile, "a", encoding="utf-8") as databases_file:
 		databases_file.write('}}')
 
-print('All files have been processed. Please check the contents of the log file {}. It lists pages regarding different errors.', args.log)
+print('All files have been processed. If you defined a log file, please check its contents. It lists pages regarding different errors.')

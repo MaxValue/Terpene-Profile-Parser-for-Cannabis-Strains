@@ -49,6 +49,8 @@ DATA_ROW_FIELDS = [
 	'CBN',
 	'CBD-A',
 	'CBD',
+	'CBDV',
+	'CBDV-A',
 	'delta-9 CBG-A',
 	'delta-9 CBG',
 	'CBG-A',

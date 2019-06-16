@@ -52,6 +52,8 @@ DATA_ROW_FIELDS = [
 	'CBN',
 	'CBD-A',
 	'CBD',
+	'CBDV',
+	'CBDV-A',
 	'delta-9 CBG-A',
 	'delta-9 CBG',
 	'CBG-A',
@@ -251,7 +253,7 @@ xpath_terpenes_amounts =		'/html/body//div[@id="terpene-detail"]//div[@id="terpe
 # xpath_terpenes_total =			'/html/body/ui-view/div/md-content/ui-view/div/md-content/div/md-card[@ng-if="Sample.details.terpeneTestComplete"]/md-card-header/md-card-header-text/span[text()=" Total Terpenes "]/preceding-sibling::span[@class="md-title"]/text()'
 
 # Finds the list items of the cannabinoid test
-xpath_cannabinoids_1 =			'/html/body//div[@id="potency-detail"]/div/div/div[@id="potency-percent"]/table/tbody/tr[td[2][text()]]'
+xpath_cannabinoids_1 =			'/html/body//div[@id="potency-detail"]/div/div/div[@id="potency-percent"]/h4[text()="Full Cannabinoid Profile"]/following-sibling::table/tbody/tr'
 
 # Finds the amount of total THC present in the sample
 # xpath_thc_total =				'/html/body/ui-view/div/md-content/ui-view/div/md-content/div/md-card[@ng-if="Sample.details.potencyTestComplete"]/md-card-header/md-card-header-text/span[text()="Total THC"][@ng-show="Sample.details.totalTHC"]/preceding-sibling::span[1][@ng-show="Sample.details.totalTHC"]/text()'
@@ -411,21 +413,22 @@ sclabs_terpenes_order = [
 ]
 
 cannabinoids = {
-
-	'delta9THCA':			re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*THC[-_/\s.]*A$',	re.IGNORECASE),
-	'delta9THC':			re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*THC$',				re.IGNORECASE),
+	'delta-9 THC-A':		re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*THC[-_/\s.]*A$',	re.IGNORECASE),
+	'delta-9 THC':			re.compile(r'^((delta|Δ|∆)[-_/\s.]*9[-_/\s.]*)?THC$',			re.IGNORECASE),
 	'CBN':					re.compile(r'^CBN$',											re.IGNORECASE),
-	'CBDA':					re.compile(r'^CBD[-_/\s.]*A$',									re.IGNORECASE),
+	'CBD-A':				re.compile(r'^CBD[-_/\s.]*A$',									re.IGNORECASE),
 	'CBD':					re.compile(r'^CBD$',											re.IGNORECASE),
-	'CBGA':					re.compile(r'^CBG[-_/\s.]*A$',									re.IGNORECASE),
+	'CBDV':					re.compile(r'^CBDV$',											re.IGNORECASE),
+	'CBDV-A':				re.compile(r'^CBDV[-_/\s.]*A$',									re.IGNORECASE),
+	'CBG-A':				re.compile(r'^CBG[-_/\s.]*A$',									re.IGNORECASE),
 	'CBG':					re.compile(r'^CBG$',											re.IGNORECASE),
-	'delta9CBGA':			re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*CBG[-_/\s.]*A$',	re.IGNORECASE),
-	'delta9CBG':			re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*CBG$',				re.IGNORECASE),
+	'delta-9 CBG-A':		re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*CBG[-_/\s.]*A$',	re.IGNORECASE),
+	'delta-9 CBG':			re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*CBG$',				re.IGNORECASE),
 	'CBC':					re.compile(r'^CBC$',											re.IGNORECASE),
 	'THCV':					re.compile(r'^THCV$',											re.IGNORECASE),
-	'delta8THC':			re.compile(r'^(delta|Δ|∆)[-_/\s.]*8[-_/\s.]*THC$',				re.IGNORECASE),
+	'delta-8 THC':			re.compile(r'^(delta|Δ|∆)[-_/\s.]*8[-_/\s.]*THC$',				re.IGNORECASE),
 	# 'Moisture Content':		re.compile(r'^Moisture[-_/\s.]*[-_/\s.]+Content$',				re.IGNORECASE),
-	'THCA':					re.compile(r'^THC[-_/\s.]*A$',									re.IGNORECASE),
+	'THC-A':				re.compile(r'^THC[-_/\s.]*A$',									re.IGNORECASE),
 }
 # cannabinoids['THC TOTAL'] = re.compile(r'^THC[-_/\s.]*TOTAL',								re.IGNORECASE)
 # cannabinoids['delta-9 THC TOTAL'] = re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*THC[-_/\s.]*TOTAL$',re.IGNORECASE)
@@ -689,113 +692,115 @@ for file_index, file_name in enumerate(file_list):
 	# 	continue
 
 	# 1 Test Data Cannabinoids
-	# raw_cannabinoids_1 = tree.xpath(xpath_cannabinoids_1)
+	raw_cannabinoids_1 = tree.xpath(xpath_cannabinoids_1)
 	cannabinoid_data = {}
-	# if len(raw_cannabinoids_1) > 0:
-	# 	log_this('{}: both cannabinoid queries match!', level=3)
-	# if 0 == len(raw_cannabinoids_1):
-	# 	log_this('{}: no potency'.format(raw_sample_file_name), level=3)
-	# 	write_to_logfile(
-	# 		filepath=logfile_cannabinoids_noneFound,
-	# 		fieldnames=['Filename'],
-	# 		data={'Filename':raw_sample_file_name}
-	# 	)
-	# else:
-	# 	for i, raw_cannabinoid in enumerate(raw_cannabinoids_1, 1):
+	if len(raw_cannabinoids_1) > 0:
+		log_this('{}: both cannabinoid queries match!', level=3)
+	if 0 == len(raw_cannabinoids_1):
+		log_this('{}: no potency'.format(raw_sample_file_name), level=3)
+		write_to_logfile(
+			filepath=logfile_cannabinoids_noneFound,
+			fieldnames=['Filename'],
+			data={'Filename':raw_sample_file_name}
+		)
+	else:
+		for i, raw_cannabinoid in enumerate(raw_cannabinoids_1, 1):
 
-	# 		# AMOUNT
-	# 		raw_cannabinoid_amount = get_single_value(
-	# 			tree=raw_cannabinoid,
-	# 			xpath='td[2]/text()',
-	# 			fallback=''
-	# 		)
-	# 		cannabinoid_amount_match = re_percentageValue.match(raw_cannabinoid_amount)
-	# 		if cannabinoid_amount_match:
-	# 			try:
-	# 				cannabinoid_amount = normalize_number(
-	# 					numberstring=raw_cannabinoid_amount[cannabinoid_amount_match.start():cannabinoid_amount_match.end()]
-	# 				)
-	# 			except ValueError as e:
-	# 				log_this('{}: cannabinoid number error'.format(raw_sample_file_name), level=1)
-	# 				write_to_logfile(
-	# 					filepath=logfile_cannabinoids_nonNumber,
-	# 					fieldnames=['Filename','List Index', 'Amount'],
-	# 					data={'Filename':raw_sample_file_name, 'List Index':i, 'Amount':raw_cannabinoid_amount}
-	# 				)
-	# 				continue
-	# 		else:
-	# 			log_this('{}: non percentage cannabinoid'.format(raw_sample_file_name), level=3)
-	# 			write_to_logfile(
-	# 				filepath=logfile_cannabinoids_notPercentage,
-	# 				fieldnames=['Filename','List Index'],
-	# 				data={'Filename':raw_sample_file_name, 'List Index':i}
-	# 			)
-	# 			continue
+			# AMOUNT
+			raw_cannabinoid_amount = get_single_value(
+				tree=raw_cannabinoid,
+				xpath='td[3]/text()',
+				fallback=''
+			)
+			cannabinoid_amount_match = re_percentageValue.match(raw_cannabinoid_amount)
+			if cannabinoid_amount_match:
+				try:
+					cannabinoid_amount = normalize_number(
+						numberstring=raw_cannabinoid_amount[cannabinoid_amount_match.start():cannabinoid_amount_match.end()]
+					)
+				except ValueError as e:
+					log_this('{}: cannabinoid number error'.format(raw_sample_file_name), level=1)
+					write_to_logfile(
+						filepath=logfile_cannabinoids_nonNumber,
+						fieldnames=['Filename','List Index', 'Amount'],
+						data={'Filename':raw_sample_file_name, 'List Index':i, 'Amount':raw_cannabinoid_amount}
+					)
+					continue
+			elif raw_cannabinoid_amount == 'ND':
+				cannabinoid_amount = 0.0
+			else:
+				log_this('{}: non percentage cannabinoid'.format(raw_sample_file_name), level=3)
+				write_to_logfile(
+					filepath=logfile_cannabinoids_notPercentage,
+					fieldnames=['Filename','List Index'],
+					data={'Filename':raw_sample_file_name, 'List Index':i}
+				)
+				continue
 
-	# 		# NAME
-	# 		## TODO: we could do levenshtein- and typewriterdistance (en-US) here
-	# 		original_cannabinoid_name = get_single_value(
-	# 			tree=raw_cannabinoid,
-	# 			xpath='td[1]/text()',
-	# 			fallback=''
-	# 		)
+			# NAME
+			## TODO: we could do levenshtein- and typewriterdistance (en-US) here
+			original_cannabinoid_name = get_single_value(
+				tree=raw_cannabinoid,
+				xpath='td[2]/text()',
+				fallback=''
+			)
 
-	# 		log_this('####################NEW CANNABINOID: {} #####################'.format(original_cannabinoid_name), level=3)
-	# 		regex_matched = False
-	# 		for cannabinoid_name in cannabinoids.keys():
-	# 			cannabinoid_regex = cannabinoids[cannabinoid_name]
-	# 			log_this('trying regex {}'.format(cannabinoid_regex.pattern), level=3)
-	# 			cannabinoid_match = cannabinoid_regex.match(original_cannabinoid_name)
-	# 			if cannabinoid_match:
-	# 				log_this('{} cnbnd matched {} regex'.format(original_cannabinoid_name, cannabinoid_regex.pattern), level=3)
-	# 				if regex_matched:
-	# 					log_this('{}: Cannabinoid matches multiple patterns'.format(raw_sample_file_name), level=1)
-	# 					# Match more than one regex?
-	# 					write_to_logfile(
-	# 						filepath=logfile_cannabinoids_oneMatchMultipleTypes,
-	# 						fieldnames=['Filename', 'List Index', 'Cannabinoid'],
-	# 						data={'Filename':raw_sample_file_name,'List Index':i,'Cannabinoid':cannabinoid_name}
-	# 					)
-	# 					skip_this_file = True
-	# 				else:
-	# 					log_this('Regex matched first time', level=3)
-	# 					regex_matched = True
-	# 				if cannabinoid_name in cannabinoid_data:
-	# 					log_this('{}: Cannabinoid already recorded: {}'.format(raw_sample_file_name, cannabinoid_name), level=1)
-	# 					# Multiple items match same regex
-	# 					write_to_logfile(
-	# 						filepath=logfile_cannabinoids_multipleMatchSameType,
-	# 						fieldnames=['Filename', 'List Index', 'Cannabinoid'],
-	# 						data={'Filename':raw_sample_file_name,'List Index':i,'Cannabinoid':cannabinoid_name}
-	# 					)
-	# 					skip_this_file = True
-	# 				else:
-	# 					cannabinoid_data[cannabinoid_name] = cannabinoid_amount
+			log_this('####################NEW CANNABINOID: {} #####################'.format(original_cannabinoid_name), level=3)
+			regex_matched = False
+			for cannabinoid_name in cannabinoids.keys():
+				cannabinoid_regex = cannabinoids[cannabinoid_name]
+				log_this('trying regex {}'.format(cannabinoid_regex.pattern), level=3)
+				cannabinoid_match = cannabinoid_regex.match(original_cannabinoid_name)
+				if cannabinoid_match:
+					log_this('{} cnbnd matched {} regex'.format(original_cannabinoid_name, cannabinoid_regex.pattern), level=3)
+					if regex_matched:
+						log_this('{}: Cannabinoid matches multiple patterns'.format(raw_sample_file_name), level=1)
+						# Match more than one regex?
+						write_to_logfile(
+							filepath=logfile_cannabinoids_oneMatchMultipleTypes,
+							fieldnames=['Filename', 'List Index', 'Cannabinoid'],
+							data={'Filename':raw_sample_file_name,'List Index':i,'Cannabinoid':cannabinoid_name}
+						)
+						skip_this_file = True
+					else:
+						log_this('Regex matched first time', level=3)
+						regex_matched = True
+					if cannabinoid_name in cannabinoid_data:
+						log_this('{}: Cannabinoid already recorded: {}'.format(raw_sample_file_name, cannabinoid_name), level=1)
+						# Multiple items match same regex
+						write_to_logfile(
+							filepath=logfile_cannabinoids_multipleMatchSameType,
+							fieldnames=['Filename', 'List Index', 'Cannabinoid'],
+							data={'Filename':raw_sample_file_name,'List Index':i,'Cannabinoid':cannabinoid_name}
+						)
+						skip_this_file = True
+					else:
+						cannabinoid_data[cannabinoid_name] = cannabinoid_amount
 
-	# 		if original_cannabinoid_name is None:
-	# 			log_this('{}: cannabinoid name empty'.format(raw_sample_file_name), level=1)
-	# 			write_to_logfile(
-	# 				filepath=logfile_cannabinoids_noname,
-	# 				fieldnames=['Filename', 'List Index'],
-	# 				data={'Filename':raw_sample_file_name, 'List Index':i}
-	# 			)
-	# 		elif not regex_matched:
-	# 			log_this('{}: cannabinoid did not match anything: {}'.format(raw_sample_file_name, original_cannabinoid_name), level=3)
-	# 			# Match none?
-	# 			write_to_logfile(
-	# 				filepath=logfile_cannabinoids_unknown,
-	# 				fieldnames=['Filename', 'Cannabinoid', 'List Index'],
-	# 				data={'Filename':raw_sample_file_name, 'Cannabinoid':cannabinoid_name, 'List Index':i}
-	# 			)
-	# 	if cannabinoid_data == {}:
-	# 		log_this('{}: no cannabinoids were added'.format(raw_sample_file_name), level=3)
-	# 		write_to_logfile(
-	# 			filepath=logfile_cannabinoids_allNoMatch,
-	# 			fieldnames=['Filename', 'Amount'],
-	# 			data={'Filename':raw_sample_file_name, 'Amount':len(raw_cannabinoids_1)}
-	# 		)
-	# if args.force_cannabinoids and cannabinoid_data == {}:
-	# 	skip_this_file = True
+			if original_cannabinoid_name is None:
+				log_this('{}: cannabinoid name empty'.format(raw_sample_file_name), level=1)
+				write_to_logfile(
+					filepath=logfile_cannabinoids_noname,
+					fieldnames=['Filename', 'List Index'],
+					data={'Filename':raw_sample_file_name, 'List Index':i}
+				)
+			elif not regex_matched:
+				log_this('{}: cannabinoid did not match anything: {}'.format(raw_sample_file_name, original_cannabinoid_name), level=3)
+				# Match none?
+				write_to_logfile(
+					filepath=logfile_cannabinoids_unknown,
+					fieldnames=['Filename', 'Cannabinoid', 'List Index'],
+					data={'Filename':raw_sample_file_name, 'Cannabinoid':cannabinoid_name, 'List Index':i}
+				)
+		if cannabinoid_data == {}:
+			log_this('{}: no cannabinoids were added'.format(raw_sample_file_name), level=3)
+			write_to_logfile(
+				filepath=logfile_cannabinoids_allNoMatch,
+				fieldnames=['Filename', 'Amount'],
+				data={'Filename':raw_sample_file_name, 'Amount':len(raw_cannabinoids_1)}
+			)
+	if args.force_cannabinoids and cannabinoid_data == {}:
+		skip_this_file = True
 
 	# 2 Test Data THC Total
 	thc_total = None
@@ -1001,7 +1006,7 @@ for file_index, file_name in enumerate(file_list):
 		# 'THC TOTAL':thc_total,
 		# 'CBD TOTAL':cbd_total,
 	}
-	# sample_data.update(cannabinoid_data)
+	sample_data.update(cannabinoid_data)
 	sample_data.update(terpenes_data)
 
 	if sample_data == {}:
