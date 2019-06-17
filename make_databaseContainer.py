@@ -58,6 +58,22 @@ terpenes = {
 	'trans-Ocimene':		re.compile(r'^(trans)[-_/\s.]*Ocimene$',						re.IGNORECASE),
 }
 
+cannabinoids = {
+	'delta-9 THC-A':		re.compile(r'^(delta|Δ|∆)[-_/\s.]*9[-_/\s.]*THC[-_/\s.]*A$',	re.IGNORECASE),
+	'delta-9 THC':			re.compile(r'^((delta|Δ|∆)[-_/\s.]*9[-_/\s.]*)?THC$',			re.IGNORECASE),
+	'CBN':					re.compile(r'^CBN$',											re.IGNORECASE),
+	'CBD-A':				re.compile(r'^CBD[-_/\s.]*A$',									re.IGNORECASE),
+	'CBD':					re.compile(r'^CBD$',											re.IGNORECASE),
+	'CBDV':					re.compile(r'^CBDV$',											re.IGNORECASE),
+	'CBDV-A':				re.compile(r'^CBDV[-_/\s.]*A$',									re.IGNORECASE),
+	'delta-9 CBG-A':		re.compile(r'^((delta|Δ|∆)[-_/\s.]*9[-_/\s.]*)?CBG[-_/\s.]*A$',	re.IGNORECASE),
+	'delta-9 CBG':			re.compile(r'^((delta|Δ|∆)[-_/\s.]*9[-_/\s.]*)?CBG$',			re.IGNORECASE),
+	'CBC':					re.compile(r'^CBC$',											re.IGNORECASE),
+	'THCV':					re.compile(r'^THCV$',											re.IGNORECASE),
+	'delta-8 THC':			re.compile(r'^(delta|Δ|∆)[-_/\s.]*8[-_/\s.]*THC$',				re.IGNORECASE),
+	'THC-A':				re.compile(r'^THC[-_/\s.]*A$',									re.IGNORECASE),
+}
+
 sample_types = {
 	'Flower': 'Unprocessed',
 	'Honey Bud, Flower, Inhalable': 'Unprocessed',
@@ -109,6 +125,9 @@ with open('results.csv', 'r', encoding='utf-8') as resultsCSV:
 		for terpene_name in terpenes.keys():
 			if terpene_name in row:
 				sample_data[terpene_name] = row[terpene_name]
+		for cannabinoid_name in cannabinoids.keys():
+			if cannabinoid_name in row:
+				sample_data[cannabinoid_name] = row[cannabinoid_name]
 		databasesContainer['databases'][row['Database Name']][sample_types[row['Sample Type']]].append(
 			sample_data
 		)

@@ -113,20 +113,24 @@
 				list-style-type: none;
 				padding-left: 0;
 			}
-			#results {
-				white-space: nowrap;
+			#searchSummary {
+				text-align: center;
 			}
-			#results,#results td,#results tr {
+			.ResultsTable {
+				white-space: nowrap;
+				margin-bottom: 5.6px;
+			}
+			.ResultsTable,.ResultsTable td,.ResultsTable tr {
 				border: 1px solid black;
 				border-collapse: collapse;
 			}
-			#results tbody > tr > td {
+			.ResultsTable tbody > tr > td {
 				text-align: right;
 			}
-			#results tbody > tr > td:nth-of-type(1) {
+			.ResultsTable tbody > tr > td:nth-of-type(1) {
 				text-align: left;
 			}
-			#results thead {
+			.ResultsTable thead {
 				background-color: rgb(222,222,222);
 				text-align: center;
 			}
@@ -174,11 +178,11 @@
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2019-06-10T19:21:00+02:00/003</span>
+				<span id="appversion">v2019-06-17T23:43:00+02:00/001</span>
 			</div>
 		</div>
 		<template id="templateResults">
-			<div class="segmented-control" onchange="sortTable()"
+			<div class="segmented-control" onchange="sortTables()"
 				><label
 					><input type="radio" name="sortorder" value="average" checked=""
 					><div title="Sort by Average Descending">Average &#9660;</div
@@ -196,8 +200,8 @@
 					><div title="Sort by Stability Descending">Stability &#9660;</div
 				></label
 			></div>
-			<table id="results">
-				<caption></caption>
+			<div id="searchSummary"></div>
+			<table id="terpenes" class="ResultsTable">
 				<thead>
 					<tr>
 						<td>Terpene</td>
@@ -205,6 +209,19 @@
 						<td title="Average Percentage">%</td>
 						<td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
 						<td title="How stable the appearance of the terpene is">Stability</td>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<table id="cannabinoids" class="ResultsTable">
+				<thead>
+					<tr>
+						<td>Cannabinoid</td>
+						<td class="graphcell" title="(Mapped to an 1% maximum)">Graph</td>
+						<td title="Average Percentage">%</td>
+						<td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
+						<td title="How stable the appearance of the cannabinoid is">Stability</td>
 					</tr>
 				</thead>
 				<tbody>
@@ -437,11 +454,118 @@
 				onsetTime: 0
 			}
 		];
+		var cannabinoids = [
+			{
+				id: 'delta-9 THC-A',
+				name: 'delta-9 THC-A',
+				effects: "",
+				color: 0x333333, //black
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+			{
+				id: 'delta-9 THC',
+				name: 'delta-9 THC',
+				effects: "",
+				color: 0xC7C7CC, //gray
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+			{
+				id: 'delta-8 THC',
+				name: 'delta-8 THC',
+				effects: "",
+				color: 0xC7C7CC, //gray
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+			{
+				id: 'THC-A',
+				name: 'THC-A',
+				effects: "",
+				color: 0x333333, //black
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+			{
+				id: 'THCV',
+				name: 'THCV',
+				effects: "",
+				color: 0xC7C7CC, //gray
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+			{
+				id: 'CBN',
+				name: 'CBN',
+				effects: "",
+				color: 0xC7C7CC, //gray
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+			{
+				id: 'CBD-A',
+				name: 'CBD-A',
+				effects: "",
+				color: 0xC7C7CC, //gray
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+			{
+				id: 'CBD',
+				name: 'CBD',
+				effects: "",
+				color: 0xC7C7CC, //gray
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+			{
+				id: 'CBDV',
+				name: 'CBDV',
+				effects: "",
+				color: 0xC7C7CC, //gray
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+			{
+				id: 'CBDV-A',
+				name: 'CBDV-A',
+				effects: "",
+				color: 0xC7C7CC, //gray
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+			{
+				id: 'delta-9 CBG-A',
+				name: 'CBG-A',
+				effects: "",
+				color: 0xA0A0A0, //medium gray
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+			{
+				id: 'delta-9 CBG',
+				name: 'CBG',
+				effects: "",
+				color: 0xC7C7CC, //gray
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+			{
+				id: 'CBC',
+				name: 'CBC',
+				effects: "",
+				color: 0xC7C7CC, //gray
+				boilingPoint: NaN,
+				onsetTime: 0
+			},
+		]
 		// Hi there fellow code enthusiast!
 		// You can change those values directly below, but please don't touch the others.
 		var greyedOutColor = "#d9d9d9";
 		var maxGraphPercentage = 1;
 		var terpeneStabilityThreshold = 0.01;
+		var cannabinoidStabilityThreshold = 0.01;
 		var FormatAverage = new Intl.NumberFormat('en',{style:'decimal',minimumFractionDigits:2,maximumFractionDigits:2});
 		var FormatStability = new Intl.NumberFormat('en',{style:'percent',minimumFractionDigits:0,maximumFractionDigits:0});
 		var FormatVariance = new Intl.NumberFormat('en',{style:'decimal',minimumFractionDigits:2,maximumFractionDigits:2});
@@ -461,6 +585,7 @@
 
 		var sampleTypes = [];
 		var terpeneOrder = terpenes.map((terpene)=>terpene.id);
+		var cannabinoidOrder = cannabinoids.map((cannabinoid)=>cannabinoid.id);
 
 		function addDatabaseItem(identifier, label) {
 			let databaseListItem = document.createElement("li");
@@ -542,9 +667,9 @@
 			elem_pageogtitle.content = "StrainFinder";
 			elem_form.resultswrapper.innerHTML = "";
 		}
-		function sortTable() {
-			var elem_resultsTable = document.getElementById("results");
-			for (let tBody of elem_resultsTable.tBodies) {
+		function sortTables() {
+			var elem_terpenesTable = document.getElementById("terpenes");
+			for (let tBody of elem_terpenesTable.tBodies) {
 				let rows = Array.from(tBody.rows);
 				switch (elem_form.sortorder.value) {
 					case "stability":
@@ -555,6 +680,29 @@
 						break;
 					case "static":
 						rows.sort((a,b)=>terpeneOrder.indexOf(a.getAttribute("data-terpene")) - terpeneOrder.indexOf(b.getAttribute("data-terpene")));
+						break;
+					default:
+					case "average":
+						rows.sort((a,b)=>parseFloat(b.getAttribute("data-average")) - parseFloat(a.getAttribute("data-average")));
+						break;
+				}
+				tBody.innerHTML = "";
+				rows.forEach(function(row){
+					tBody.appendChild(row);
+				});
+			}
+			var elem_cannabinoidsTable = document.getElementById("cannabinoids");
+			for (let tBody of elem_cannabinoidsTable.tBodies) {
+				let rows = Array.from(tBody.rows);
+				switch (elem_form.sortorder.value) {
+					case "stability":
+						rows.sort((a,b)=>parseFloat(b.getAttribute("data-stability")) - parseFloat(a.getAttribute("data-stability")));
+						break;
+					case "variance":
+						rows.sort((a,b)=>parseFloat(b.getAttribute("data-variance")) - parseFloat(a.getAttribute("data-variance")));
+						break;
+					case "static":
+						rows.sort((a,b)=>cannabinoidOrder.indexOf(a.getAttribute("data-cannabinoid")) - cannabinoidOrder.indexOf(b.getAttribute("data-cannabinoid")));
 						break;
 					default:
 					case "average":
@@ -633,6 +781,22 @@
 											};
 										}
 									});
+									cannabinoids.forEach(function(cannabinoid){
+										let currentCannabinoidValue = parseFloat(sample[cannabinoid.name]) || 0.0;
+										if (cannabinoid.name in searchResults) {
+											searchResults[cannabinoid.name].avg += currentCannabinoidValue;
+											if (currentCannabinoidValue > cannabinoidStabilityThreshold) {
+												searchResults[cannabinoid.name].stability ++;
+											}
+											searchResults[cannabinoid.name].values.push(currentCannabinoidValue);
+										} else {
+											searchResults[cannabinoid.name] = {
+												"avg": currentCannabinoidValue,
+												"stability": ( currentCannabinoidValue>cannabinoidStabilityThreshold ? 1 : 0 ),
+												"values": [currentCannabinoidValue]
+											};
+										}
+									});
 								}
 							})
 						}
@@ -644,15 +808,23 @@
 				elem_form.resultswrapper.innerText = "No results found";
 			} else {
 				var resultsStructure = document.importNode(template_resultsTable.content, true);
-				var elem_resultsTable = resultsStructure.getElementById("results");
+				var elem_terpeneResultsTable = resultsStructure.getElementById("terpenes");
+				var elem_cannabinoidResultsTable = resultsStructure.getElementById("cannabinoids");
+				var elem_searchSummary = resultsStructure.getElementById("searchSummary");
 
-				elem_resultsTable.caption.innerText = "Search Results for '"+searchstring+"' ("+resultsNum+" Sample"+(resultsNum==1?"":"s")+")";
+				elem_searchSummary.innerText = "Search Results for '"+searchstring+"' ("+resultsNum+" Sample"+(resultsNum==1?"":"s")+")";
 
 				terpenes.forEach(function(terpene){
 					searchResults[terpene.name].avg /= resultsNum;
 				})
+				cannabinoids.forEach(function(cannabinoid){
+					searchResults[cannabinoid.name].avg /= resultsNum;
+				})
 				terpenes.forEach(function(terpene){
 					searchResults[terpene.name].stability /= resultsNum;
+				})
+				cannabinoids.forEach(function(cannabinoid){
+					searchResults[cannabinoid.name].stability /= resultsNum;
 				})
 				terpenes.forEach(function(terpene){
 					let average = searchResults[terpene.name].avg;
@@ -661,6 +833,14 @@
 						sumSquaredDelta += Math.pow(individualValue - average, 2);
 					}
 					searchResults[terpene.name].variance = sumSquaredDelta / resultsNum;
+				})
+				cannabinoids.forEach(function(cannabinoid){
+					let average = searchResults[cannabinoid.name].avg;
+					let sumSquaredDelta = 0;
+					for (let individualValue of searchResults[cannabinoid.name].values) {
+						sumSquaredDelta += Math.pow(individualValue - average, 2);
+					}
+					searchResults[cannabinoid.name].variance = sumSquaredDelta / resultsNum;
 				})
 				terpenes.forEach(function(terpene,terpeneIndex){
 					let average = searchResults[terpene.name].avg;
@@ -718,10 +898,68 @@
 					var cell = row.children[4];
 					cell.innerText = FormatStability.format(stability);
 
-					elem_resultsTable.tBodies[0].appendChild(row);
+					elem_terpeneResultsTable.tBodies[0].appendChild(row);
+				})
+				cannabinoids.forEach(function(cannabinoid,cannabinoidIndex){
+					let average = searchResults[cannabinoid.name].avg;
+					let stability = searchResults[cannabinoid.name].stability;
+					let variance = searchResults[cannabinoid.name].variance;
+
+					//table
+
+					let row = document.importNode(templateResultsRow.content, true).children[0];
+					row.setAttribute("data-average", average);
+					row.setAttribute("data-stability", stability);
+					row.setAttribute("data-variance", variance);
+					row.setAttribute("data-cannabinoid", cannabinoid.id);
+
+					////cannabinoid name
+					var cell = row.children[0];
+					cell.innerText = cannabinoid.name;
+					if (average <= 0.01) {
+						cell.style.color = greyedOutColor;
+					}
+
+					// graph
+					// (overlay all datapoints of this cannabinoid onto each other with a transparency set to 100%/resultsNum)
+					var cell = row.children[1];
+					cell.className = "graphcell";
+
+					if (average > 0.01) {
+						var graphColor = hexColor(cannabinoid.color);
+					} else {
+						var graphColor = greyedOutColor;
+					}
+					let graphStartPoint = (50-((50*average)/maxGraphPercentage));
+					let graphEndPoint = (50+((50*average)/maxGraphPercentage));
+					let backgroundImage = "linear-gradient(to right,#0000,#0000 "
+											+graphStartPoint+"%,"
+											+graphColor+" "+graphStartPoint+"%,"
+											+graphColor+" "+graphEndPoint+"%,#0000 "
+											+graphEndPoint+"%)";
+					cell.style.backgroundImage = backgroundImage;
+
+					// cannabinoid amount
+					var cell = row.children[2];
+					var span = document.createElement("span");
+					span.innerText = FormatAverage.format(average);
+					if (average <= 0.01) {
+						cell.style.color = greyedOutColor;
+					}
+					cell.appendChild(span);
+
+					////cannabinoid variance
+					var cell = row.children[3];
+					cell.innerText = FormatVariance.format(variance);
+
+					////cannabinoid stability
+					var cell = row.children[4];
+					cell.innerText = FormatStability.format(stability);
+
+					elem_cannabinoidResultsTable.tBodies[0].appendChild(row);
 				})
 				elem_form.resultswrapper.appendChild(resultsStructure);
-				sortTable();
+				sortTables();
 			}
 			return false;
 		}
