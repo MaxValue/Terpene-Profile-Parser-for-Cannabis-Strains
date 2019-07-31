@@ -1,11 +1,11 @@
 # These are supported funding model platforms
 
-github: [maxvalue, paulfuxjaeger]
+github: [maxvalue]
 patreon: publicbetamax
-# open_collective: maxvalue
+# open_collective: maxvalue # Not at least 100 stars yet.
 ko_fi: publicbetamax
 # tidelift: # The account signup form doesnt work. # Replace with a single Tidelift platform-name/package-name e.g., npm/babel
-# community_bridge: # Not yet approved. # Replace with a single Community Bridge project-name e.g., cloud-foundry
+community_bridge: terpene-profile-parser-for-cannabis-strains
 liberapay: maxvalue
 # issuehunt: # Replace with a single IssueHunt username
 # otechie: # Replace with a single Otechie username
