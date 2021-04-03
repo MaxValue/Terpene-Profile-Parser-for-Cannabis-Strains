@@ -3,31 +3,14 @@ Lab Name: `Psi Labs`
 
 Web Address: `psilabs.org`
 
-Database Web Address: `psilabs.org/results/`
-
 Postal Address: `3970 Varsity Dr. Ann Arbor, MI 48108`
-
-Javascript needed for extraction: `Yes`
 
 ## Description
 This folder contains:
-* A web crawler to download lab test results of different cannabis strains as HTML-pages from [Psi Labs](https://psilabs.org/results/test-results/)
-* A parser to extract the actual terpene profile from each of those HTML-pages as CSV-list
+* A parser to extract the actual terpene profile from each of the downloaded HTML-pages as CSV-list
 * The CSV list of extracted terpene and cannabinoid profiles, as well as a JSON version of this list
 
 ## How to use
-### The web crawler
-This crawler utilizes [Selenium](https://www.seleniumhq.org/) to go through all search results. You will need:
-* Python3: `sudo apt-get install python3 python3-pip`
-* Selenium: `python3 -m pip install selenium`
-* [Geckodriver](https://github.com/mozilla/geckodriver/releases): Put this in your PATH so it can be called as `geckodriver`
-* Dateparser:  `python3 -m pip install dateparser`
-
-The crawler can be run like this:
-`python3 downloader.py --save-path='database_dump/'`
-
-It will produce a folder called `database_dump` containing all sample pages.
-
 ### The parser
 This parser runs multiple XPath queries and RegEx expressions to find the wanted data in those HTML-files. You can run it like this:
 `python3 parser.py --csv database_dump/`

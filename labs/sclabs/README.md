@@ -3,8 +3,6 @@ Lab Name: `SC Labs`
 
 Web Address: `sclabs.com`
 
-Database Web Address: `client.sclabs.com/`
-
 Postal Address: `100 Pioneer Street, Suite E, Santa Cruz, CA 95060`
 
 Postal Address: `15865 SW 74th Ave #110, Tigard, OR 97224`
@@ -13,28 +11,14 @@ Postal Address: `1822 Carnegie Ave, Santa Ana, CA 92705`
 
 Postal Address: `1066 4th Street, Suite D, Santa Rosa, CA 95404`
 
-Javascript needed for extraction: `Yes`
-
-TODO: Config File (SQL init, selectors, crawl directives)
+TODO: Config File (SQL init, selectors)
 
 ## Description
 This folder contains:
-* A web crawler to download lab test results of different cannabis strains as HTML-pages from [SC Labs](https://client.sclabs.com/client/)
-* A parser to extract the actual terpene profile from each of those HTML-pages as CSV-list
+* A parser to extract the actual terpene profile from each of the downloaded HTML-pages as CSV-list
 * The CSV list of extracted terpene and cannabinoid profiles, as well as a JSON version of this list
 
 ## How to use
-### The web crawler
-This crawler utilizes [Scrapy](https://scrapy.org/) to go through all lab results by using the base URL https://client.sclabs.com/client/ and appending an incrementing integer to the end of it. You will need:
-* Python3: `sudo apt-get install python3 python3-pip`
-* Scrapy:  `python3 -m pip install scrapy`
-* Dateparser:  `python3 -m pip install dateparser`
-
-The crawler can be run like this:
-`scrapy run sclabs_spider`
-
-It will produce a folder called `database_dump` containing all sample pages counting upwards in order of their download.
-
 ### The parser
 This parser runs multiple XPath queries and RegEx expressions to find the wanted data in those HTML-files. You can run it like this:
 `python3 parser.py --csv database_dump/`

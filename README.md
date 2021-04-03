@@ -7,7 +7,6 @@ _Parser and Database to index the Terpene Profile of different Strains Of Cannab
 ## Description
 This repository contains:
 * A folder for each online database which displays test results about the terpene profile of cannabis strains (Found in [labs/](labs/)). These folders usually contain:
-  * A web crawler to download lab test results of different cannabis strains from the database
   * A parser to extract the actual terpene profile from each of those HTML-pages as CSV-list
   * The CSV list of extracted terpene profiles
 
