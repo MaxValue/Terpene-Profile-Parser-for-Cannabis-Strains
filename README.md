@@ -35,7 +35,7 @@ In the future a sort-of search engine is planned to search by terpene profile wh
 See the regarding folders' `README.md` file for instructions.
 
 ## How to contribute
-[Let me know if](https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains/issues/new):
+[Let me know if](https://gitlab.com/cannabis-terpene-parser/Terpene-Profile-Parser-for-Cannabis-Strains/-/issues/new):
 * I missed some data
 * There is an online database i haven't noticed
 * The scientific information to explain the project is wrong
@@ -44,6 +44,7 @@ As with all those points: Please provide sources/proofs that your information (q
 
 ## Project history
 The idea for this project comes from Paul Fuxjäger who wants to find high quality medical cannabis for new health treatment options. The code for extracting and cleaning the data was written by Max Fuxjäger.
+The development (issues) has been moved to GitLab but the old GitHub remote is kept to avoid braking links to this project.
 
 ## Copyright
 Have fun. We hope you can use this data to do good for humanity.
