@@ -175,17 +175,6 @@
 		function hexColor(hexNumber) {
 			return hexNumber.toString(16).padStart(7,"#000000");
 		}
-		function rgbaColor(hexNumber, alpha=1) {
-			let hex = hexNumber.toString(16).padStart(6,"000000");
-			let red = parseInt(hex.slice(0,2), 16);
-			let green = parseInt(hex.slice(2,4), 16);
-			let blue = parseInt(hex.slice(4,6), 16);
-			return "rgba("+red+", "+green+", "+blue+", "+alpha+")";
-		}
-		function linearGradient(rawcolor, percentage, transparency) {
-			let endColor = rgbaColor(rawcolor, transparency);
-			return "linear-gradient(to right, "+endColor+", "+endColor+" "+percentage+"%, rgba(0,0,0,0) "+percentage+"%)";
-		}
 		function checkTypeCheckboxes() {
 			let anyChecked = false;
 			let unprocessedIndex = -1;
