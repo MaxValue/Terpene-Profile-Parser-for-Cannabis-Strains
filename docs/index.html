@@ -203,13 +203,6 @@
 				})
 			};
 		}
-		function resetResults() {
-			elem_pagetitle.text = "StrainFinder";
-			elem_pageCanonicalURL.href = baseURL;
-			elem_pageogurl.content = baseURL;
-			elem_pageogtitle.content = "StrainFinder";
-			elem_form.resultswrapper.innerHTML = "";
-		}
 		function sortTables() {
 			var elem_terpenesTable = document.getElementById("terpenes");
 			for (let tBody of elem_terpenesTable.tBodies) {
@@ -263,8 +256,6 @@
 			let resultsNum = 0;
 			let searchstring = elem_form.q.value.toLowerCase();
 			let newURL = new URL(window.location);
-
-			resetResults();
 
 			newURL.search = "";
 			if (elem_form.q.value != "") {
@@ -501,6 +492,7 @@
 
 					elem_cannabinoidResultsTable.tBodies[0].appendChild(row);
 				})
+				elem_form.resultswrapper.innerHTML = "";
 				elem_form.resultswrapper.appendChild(resultsStructure);
 				sortTables();
 			}
