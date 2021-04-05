@@ -473,14 +473,16 @@
 		}
 
 		function on_load() {
-			// available databases list
+			// add databases from container to GUI
 			for (const databaseName of Object.keys(databasesContainer.databases)) {
 				addDatabaseItem(databaseName, databaseName);
-				// sample type list
+				// add sample types from those databases to the GUI too
 				Object.keys(databasesContainer.databases[databaseName]).forEach(function(newSampleType){
 					addSampletype(newSampleType);
 				})
 			}
+
+			// parse search parameters from URL and fill them into the GUI
 			let parsedURL = new URL(window.location);
 			let doSearch = false;
 			for (let param of parsedURL.searchParams) {
@@ -515,8 +517,14 @@
 						break;
 				}
 			}
+
+			// sanitize database checkboxes
 			checkDatabaseCheckboxes();
+
+			// sanitize sample type checkboxes
 			checkTypeCheckboxes();
+
+			// perform search only if non-default parameters were given
 			if (doSearch) {
 				load_sample_data(elem_form);
 			}
