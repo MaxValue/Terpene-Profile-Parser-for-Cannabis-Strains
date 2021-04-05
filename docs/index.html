@@ -176,53 +176,35 @@
 				})
 			};
 		}
+		function sort_table(tableElem, componentOrder) {
+			for (let tBody of tableElem.tBodies) {
+				let rows = Array.from(tBody.rows);
+				switch (elem_form.sortorder.value) {
+					case "stability":
+						rows.sort((a,b)=>parseFloat(b.getAttribute("data-stability")) - parseFloat(a.getAttribute("data-stability")));
+						break;
+					case "variance":
+						rows.sort((a,b)=>parseFloat(b.getAttribute("data-variance")) - parseFloat(a.getAttribute("data-variance")));
+						break;
+					case "static":
+						rows.sort((a,b)=>componentOrder.indexOf(a.getAttribute("data-component")) - componentOrder.indexOf(b.getAttribute("data-component")));
+						break;
+					default:
+					case "average":
+						rows.sort((a,b)=>parseFloat(b.getAttribute("data-average")) - parseFloat(a.getAttribute("data-average")));
+						break;
+				}
+				tBody.innerHTML = "";
+				rows.forEach(function(row){
+					tBody.appendChild(row);
+				});
+			}
+		}
 		function change_sortOrder() {
 			var elem_terpenesTable = document.getElementById("terpenes");
-			for (let tBody of elem_terpenesTable.tBodies) {
-				let rows = Array.from(tBody.rows);
-				switch (elem_form.sortorder.value) {
-					case "stability":
-						rows.sort((a,b)=>parseFloat(b.getAttribute("data-stability")) - parseFloat(a.getAttribute("data-stability")));
-						break;
-					case "variance":
-						rows.sort((a,b)=>parseFloat(b.getAttribute("data-variance")) - parseFloat(a.getAttribute("data-variance")));
-						break;
-					case "static":
-						rows.sort((a,b)=>terpeneOrder.indexOf(a.getAttribute("data-component")) - terpeneOrder.indexOf(b.getAttribute("data-component")));
-						break;
-					default:
-					case "average":
-						rows.sort((a,b)=>parseFloat(b.getAttribute("data-average")) - parseFloat(a.getAttribute("data-average")));
-						break;
-				}
-				tBody.innerHTML = "";
-				rows.forEach(function(row){
-					tBody.appendChild(row);
-				});
-			}
+			sort_table(elem_terpenesTable, terpeneOrder);
 			var elem_cannabinoidsTable = document.getElementById("cannabinoids");
-			for (let tBody of elem_cannabinoidsTable.tBodies) {
-				let rows = Array.from(tBody.rows);
-				switch (elem_form.sortorder.value) {
-					case "stability":
-						rows.sort((a,b)=>parseFloat(b.getAttribute("data-stability")) - parseFloat(a.getAttribute("data-stability")));
-						break;
-					case "variance":
-						rows.sort((a,b)=>parseFloat(b.getAttribute("data-variance")) - parseFloat(a.getAttribute("data-variance")));
-						break;
-					case "static":
-						rows.sort((a,b)=>cannabinoidOrder.indexOf(a.getAttribute("data-component")) - cannabinoidOrder.indexOf(b.getAttribute("data-component")));
-						break;
-					default:
-					case "average":
-						rows.sort((a,b)=>parseFloat(b.getAttribute("data-average")) - parseFloat(a.getAttribute("data-average")));
-						break;
-				}
-				tBody.innerHTML = "";
-				rows.forEach(function(row){
-					tBody.appendChild(row);
-				});
-			}
+			sort_table(elem_cannabinoidsTable, cannabinoidOrder);
 		}
 		function load_sample_data(elem_form) {
 			let searchResults = {}; // [terpene.name].avg; [terpene.name].variance
