@@ -71,7 +71,7 @@
 						><div title="Sort by Stability Descending">Stability &#9660;</div
 					></label
 				></div>
-				<output name="resultswrapper" for="search exactmatch sampleTypes databases"></output>
+				<output name="resultswrapper" class="searchform-output" for="search exactmatch sampleTypes databases"></output>
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://github.com/MaxValue/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
@@ -79,33 +79,36 @@
 			</div>
 		</div>
 		<template id="templateResults">
-			<div id="searchSummary"></div>
-			<table id="terpenes" class="ResultsTable">
-				<thead>
-					<tr>
-						<td>Terpene</td>
-						<td class="graphcell" title="(Mapped to an 1% maximum)">Graph</td>
-						<td title="Average Percentage">%</td>
-						<td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
-						<td title="How stable the appearance of the terpene is">Stability</td>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-			<table id="cannabinoids" class="ResultsTable">
-				<thead>
-					<tr>
-						<td>Cannabinoid</td>
-						<td class="graphcell" title="(Mapped to an 1% maximum)">Graph</td>
-						<td title="Average Percentage">%</td>
-						<td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
-						<td title="How stable the appearance of the cannabinoid is">Stability</td>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
+			<div class="placeholder-noresults">No results found</div>
+			<div class="placeholder-results">
+				<div id="searchSummary"></div>
+				<table id="terpenes" class="ResultsTable">
+					<thead>
+						<tr>
+							<td>Terpene</td>
+							<td class="graphcell" title="(Mapped to an 1% maximum)">Graph</td>
+							<td title="Average Percentage">%</td>
+							<td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
+							<td title="How stable the appearance of the terpene is">Stability</td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+				<table id="cannabinoids" class="ResultsTable">
+					<thead>
+						<tr>
+							<td>Cannabinoid</td>
+							<td class="graphcell" title="(Mapped to an 1% maximum)">Graph</td>
+							<td title="Average Percentage">%</td>
+							<td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
+							<td title="How stable the appearance of the cannabinoid is">Stability</td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
 		</template>
 		<template id="templateResultsRow">
 			<tr>
@@ -294,7 +297,8 @@
 			})
 
 			if (resultsNum == 0) {
-				elem_resultswrapper.innerText = "No results found";
+				elem_resultswrapper.classList.remove("has-results");
+				elem_resultswrapper.classList.add("has-noresults");
 			} else {
 				var resultsStructure = document.importNode(template_resultsTable.content, true);
 				var elem_terpeneResultsTable = resultsStructure.getElementById("terpenes");
@@ -447,6 +451,8 @@
 
 					elem_cannabinoidResultsTable.tBodies[0].appendChild(row);
 				})
+				elem_resultswrapper.classList.remove("has-noresults");
+				elem_resultswrapper.classList.add("has-results");
 				elem_resultswrapper.innerHTML = "";
 				elem_resultswrapper.appendChild(resultsStructure);
 				change_sortOrder();

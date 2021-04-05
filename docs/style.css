@@ -87,6 +87,18 @@ html {
   list-style-type: none;
   padding-left: 0;
 }
+.searchform-output {
+  display: none;
+}
+.searchform-output.has-results, .searchform-output.has-noresults {
+  display: block;
+}
+.searchform-output.has-results .placeholder-noresults {
+  display: none;
+}
+.searchform-output.has-noresults .placeholder-results {
+  display: none;
+}
 #searchSummary {
   text-align: center;
 }
