@@ -188,7 +188,7 @@
 						rows.sort((a,b)=>parseFloat(b.getAttribute("data-variance")) - parseFloat(a.getAttribute("data-variance")));
 						break;
 					case "static":
-						rows.sort((a,b)=>terpeneOrder.indexOf(a.getAttribute("data-terpene")) - terpeneOrder.indexOf(b.getAttribute("data-terpene")));
+						rows.sort((a,b)=>terpeneOrder.indexOf(a.getAttribute("data-component")) - terpeneOrder.indexOf(b.getAttribute("data-component")));
 						break;
 					default:
 					case "average":
@@ -211,7 +211,7 @@
 						rows.sort((a,b)=>parseFloat(b.getAttribute("data-variance")) - parseFloat(a.getAttribute("data-variance")));
 						break;
 					case "static":
-						rows.sort((a,b)=>cannabinoidOrder.indexOf(a.getAttribute("data-cannabinoid")) - cannabinoidOrder.indexOf(b.getAttribute("data-cannabinoid")));
+						rows.sort((a,b)=>cannabinoidOrder.indexOf(a.getAttribute("data-component")) - cannabinoidOrder.indexOf(b.getAttribute("data-component")));
 						break;
 					default:
 					case "average":
@@ -360,7 +360,7 @@
 					row.setAttribute("data-average", average);
 					row.setAttribute("data-stability", stability);
 					row.setAttribute("data-variance", variance);
-					row.setAttribute("data-terpene", terpene.id);
+					row.setAttribute("data-component", terpene.id);
 
 					////terpene name
 					var cell = row.children[0];
@@ -418,7 +418,7 @@
 					row.setAttribute("data-average", average);
 					row.setAttribute("data-stability", stability);
 					row.setAttribute("data-variance", variance);
-					row.setAttribute("data-cannabinoid", cannabinoid.id);
+					row.setAttribute("data-component", cannabinoid.id);
 
 					////cannabinoid name
 					var cell = row.children[0];
