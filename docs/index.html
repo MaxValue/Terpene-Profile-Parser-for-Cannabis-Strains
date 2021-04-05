@@ -61,7 +61,7 @@
 			</div>
 		</div>
 		<template id="templateResults">
-			<div class="segmented-control" onchange="sortTables()"
+			<div class="segmented-control" onchange="change_sortOrder()"
 				><label
 					><input type="radio" name="sortorder" value="average" checked=""
 					><div title="Sort by Average Descending">Average &#9660;</div
@@ -176,7 +176,7 @@
 				})
 			};
 		}
-		function sortTables() {
+		function change_sortOrder() {
 			var elem_terpenesTable = document.getElementById("terpenes");
 			for (let tBody of elem_terpenesTable.tBodies) {
 				let rows = Array.from(tBody.rows);
@@ -467,7 +467,7 @@
 				})
 				elem_resultswrapper.innerHTML = "";
 				elem_resultswrapper.appendChild(resultsStructure);
-				sortTables();
+				change_sortOrder();
 			}
 			return false;
 		}
