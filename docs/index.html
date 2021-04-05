@@ -312,7 +312,7 @@
 			})
 
 			if (resultsNum == 0) {
-				elem_form.resultswrapper.innerText = "No results found";
+				elem_resultswrapper.innerText = "No results found";
 			} else {
 				var resultsStructure = document.importNode(template_resultsTable.content, true);
 				var elem_terpeneResultsTable = resultsStructure.getElementById("terpenes");
@@ -465,8 +465,8 @@
 
 					elem_cannabinoidResultsTable.tBodies[0].appendChild(row);
 				})
-				elem_form.resultswrapper.innerHTML = "";
-				elem_form.resultswrapper.appendChild(resultsStructure);
+				elem_resultswrapper.innerHTML = "";
+				elem_resultswrapper.appendChild(resultsStructure);
 				sortTables();
 			}
 			return false;
@@ -548,6 +548,7 @@
 		var elem_pageogtitle = document.getElementById("ogtitle");
 		var elem_pageogurl = document.getElementById("ogurl");
 		var elem_form = document.getElementById("searchform");
+		var elem_resultswrapper = elem_form.resultswrapper;
 		var elem_databaseList = document.getElementById("databases");
 		var elem_sampleTypes = document.getElementById("sampleTypes");
 		var template_resultsTable = document.getElementById("templateResults");
