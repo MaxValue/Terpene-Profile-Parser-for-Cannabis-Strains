@@ -53,6 +53,24 @@
 					</div>
 					<input type="submit" value="Search">
 				</div>
+				<div class="segmented-control" onchange="change_sortOrder()"
+					><label
+						><input type="radio" name="sortorder" value="average" checked=""
+						><div title="Sort by Average Descending">Average &#9660;</div
+					></label
+					><label
+						><input type="radio" name="sortorder" value="static"
+						><div title="Sort by Names">Static</div
+					></label
+					><label
+						><input type="radio" name="sortorder" value="variance"
+						><div title="Sort by Variance Descending">Variance &sigma;&sup2; &#9660;</div
+					></label
+					><label
+						><input type="radio" name="sortorder" value="stability"
+						><div title="Sort by Stability Descending">Stability &#9660;</div
+					></label
+				></div>
 				<output name="resultswrapper" for="search exactmatch sampleTypes databases"></output>
 			</form>
 			<div id="about">
@@ -61,24 +79,6 @@
 			</div>
 		</div>
 		<template id="templateResults">
-			<div class="segmented-control" onchange="change_sortOrder()"
-				><label
-					><input type="radio" name="sortorder" value="average" checked=""
-					><div title="Sort by Average Descending">Average &#9660;</div
-				></label
-				><label
-					><input type="radio" name="sortorder" value="static"
-					><div title="Sort by Names">Static</div
-				></label
-				><label
-					><input type="radio" name="sortorder" value="variance"
-					><div title="Sort by Variance Descending">Variance &sigma;&sup2; &#9660;</div
-				></label
-				><label
-					><input type="radio" name="sortorder" value="stability"
-					><div title="Sort by Stability Descending">Stability &#9660;</div
-				></label
-			></div>
 			<div id="searchSummary"></div>
 			<table id="terpenes" class="ResultsTable">
 				<thead>
