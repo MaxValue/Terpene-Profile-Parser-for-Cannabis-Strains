@@ -114,33 +114,6 @@
 		</template>
 	</body>
 	<script type="text/javascript">
-		// Hi there fellow code enthusiast!
-		// You can change those values directly below, but please don't touch the others.
-		var greyedOutColor = "#d9d9d9";
-		var maxGraphPercentage = 1;
-		var terpeneStabilityThreshold = 0.01;
-		var cannabinoidStabilityThreshold = 0.01;
-		var FormatAverage = new Intl.NumberFormat('en',{style:'decimal',minimumFractionDigits:2,maximumFractionDigits:2});
-		var FormatStability = new Intl.NumberFormat('en',{style:'percent',minimumFractionDigits:0,maximumFractionDigits:0});
-		var FormatVariance = new Intl.NumberFormat('en',{style:'decimal',minimumFractionDigits:2,maximumFractionDigits:2});
-		// That's it!
-
-		var elem_pageCanonicalURL = document.querySelector("link[rel='canonical']");
-		var baseURL = elem_pageCanonicalURL.href;
-
-		var elem_pagetitle = document.getElementById("title");
-		var elem_pageogtitle = document.getElementById("ogtitle");
-		var elem_pageogurl = document.getElementById("ogurl");
-		var elem_form = document.getElementById("searchform");
-		var elem_databaseList = document.getElementById("databases");
-		var elem_sampleTypes = document.getElementById("sampleTypes");
-		var template_resultsTable = document.getElementById("templateResults");
-		var template_resultsTableRow = document.getElementById("templateResultsRow");
-
-		var sampleTypes = [];
-		var terpeneOrder = terpenes.map((terpene)=>terpene.id);
-		var cannabinoidOrder = cannabinoids.map((cannabinoid)=>cannabinoid.id);
-
 		function addDatabaseItem(identifier, label) {
 			let databaseListItem = document.createElement("li");
 			let databaseInput = document.createElement("input");
@@ -499,52 +472,83 @@
 			return false;
 		}
 
-		// available databases list
-		for (const databaseName of Object.keys(databasesContainer.databases)) {
-			addDatabaseItem(databaseName, databaseName);
-			// sample type list
-			Object.keys(databasesContainer.databases[databaseName]).forEach(function(newSampleType){
-				addSampletype(newSampleType);
-			})
-		}
-		let parsedURL = new URL(window.location);
-		let doSearch = false;
-		for (let param of parsedURL.searchParams) {
-			let paramKey = param[0];
-			let paramValue = param[1];
-			switch (paramKey) {
-				case "q":
-					elem_form["q"].value = paramValue;
-					doSearch = true;
-					break;
-				case "exact":
-					if (paramValue=="1") {
-						elem_form["exact"].checked = true;
+		function on_load() {
+			// available databases list
+			for (const databaseName of Object.keys(databasesContainer.databases)) {
+				addDatabaseItem(databaseName, databaseName);
+				// sample type list
+				Object.keys(databasesContainer.databases[databaseName]).forEach(function(newSampleType){
+					addSampletype(newSampleType);
+				})
+			}
+			let parsedURL = new URL(window.location);
+			let doSearch = false;
+			for (let param of parsedURL.searchParams) {
+				let paramKey = param[0];
+				let paramValue = param[1];
+				switch (paramKey) {
+					case "q":
+						elem_form["q"].value = paramValue;
 						doSearch = true;
-					}
-					break;
-				case "type":
-					elem_form["type"].forEach(function(checkbox){
-						if (checkbox.value == paramValue) {
-							checkbox.checked = true;
+						break;
+					case "exact":
+						if (paramValue=="1") {
+							elem_form["exact"].checked = true;
 							doSearch = true;
 						}
-					})
-					break;
-				case "database":
-					elem_form["database"].forEach(function(checkbox){
-						if (checkbox.value == paramValue) {
-							checkbox.checked = true;
-							doSearch = true;
-						}
-					})
-					break;
+						break;
+					case "type":
+						elem_form["type"].forEach(function(checkbox){
+							if (checkbox.value == paramValue) {
+								checkbox.checked = true;
+								doSearch = true;
+							}
+						})
+						break;
+					case "database":
+						elem_form["database"].forEach(function(checkbox){
+							if (checkbox.value == paramValue) {
+								checkbox.checked = true;
+								doSearch = true;
+							}
+						})
+						break;
+				}
+			}
+			checkDatabaseCheckboxes();
+			checkTypeCheckboxes();
+			if (doSearch) {
+				load_sample_data(elem_form);
 			}
 		}
-		checkDatabaseCheckboxes();
-		checkTypeCheckboxes();
-		if (doSearch) {
-			load_sample_data(elem_form);
-		}
+
+		// Hi there fellow code enthusiast!
+		// You can change those values directly below, but please don't touch the others.
+		var greyedOutColor = "#d9d9d9";
+		var maxGraphPercentage = 1;
+		var terpeneStabilityThreshold = 0.01;
+		var cannabinoidStabilityThreshold = 0.01;
+		var FormatAverage = new Intl.NumberFormat('en',{style:'decimal',minimumFractionDigits:2,maximumFractionDigits:2});
+		var FormatStability = new Intl.NumberFormat('en',{style:'percent',minimumFractionDigits:0,maximumFractionDigits:0});
+		var FormatVariance = new Intl.NumberFormat('en',{style:'decimal',minimumFractionDigits:2,maximumFractionDigits:2});
+		// That's it!
+
+		var elem_pageCanonicalURL = document.querySelector("link[rel='canonical']");
+		var baseURL = elem_pageCanonicalURL.href;
+
+		var elem_pagetitle = document.getElementById("title");
+		var elem_pageogtitle = document.getElementById("ogtitle");
+		var elem_pageogurl = document.getElementById("ogurl");
+		var elem_form = document.getElementById("searchform");
+		var elem_databaseList = document.getElementById("databases");
+		var elem_sampleTypes = document.getElementById("sampleTypes");
+		var template_resultsTable = document.getElementById("templateResults");
+		var template_resultsTableRow = document.getElementById("templateResultsRow");
+
+		var sampleTypes = [];
+		var terpeneOrder = terpenes.map((terpene)=>terpene.id);
+		var cannabinoidOrder = cannabinoids.map((cannabinoid)=>cannabinoid.id);
+
+		on_load();
 	</script>
 </html>
