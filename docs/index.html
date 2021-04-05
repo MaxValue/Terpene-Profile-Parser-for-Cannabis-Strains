@@ -210,7 +210,7 @@
 			sort_table(elem_cannabinoidsTable, cannabinoidOrder);
 		}
 		function load_sample_data(elem_form) {
-			let searchResults = {}; // [terpene.name].avg; [terpene.name].variance
+			let searchResults = {}; // [terpene.id].avg; [terpene.id].variance
 			let resultsNum = 0;
 			let searchstring = elem_form.q.value.toLowerCase();
 			let newURL = new URL(window.location);
@@ -258,15 +258,15 @@
 								if (matched) {
 									resultsNum ++;
 									terpenes.forEach(function(terpene){
-										let currentTerpeneValue = parseFloat(sample[terpene.name]) || 0.0;
-										if (terpene.name in searchResults) {
-											searchResults[terpene.name].avg += currentTerpeneValue;
+										let currentTerpeneValue = parseFloat(sample[terpene.id]) || 0.0;
+										if (terpene.id in searchResults) {
+											searchResults[terpene.id].avg += currentTerpeneValue;
 											if (currentTerpeneValue > terpeneStabilityThreshold) {
-												searchResults[terpene.name].stability ++;
+												searchResults[terpene.id].stability ++;
 											}
-											searchResults[terpene.name].values.push(currentTerpeneValue);
+											searchResults[terpene.id].values.push(currentTerpeneValue);
 										} else {
-											searchResults[terpene.name] = {
+											searchResults[terpene.id] = {
 												"avg": currentTerpeneValue,
 												"stability": ( currentTerpeneValue>terpeneStabilityThreshold ? 1 : 0 ),
 												"values": [currentTerpeneValue]
@@ -274,15 +274,15 @@
 										}
 									});
 									cannabinoids.forEach(function(cannabinoid){
-										let currentCannabinoidValue = parseFloat(sample[cannabinoid.name]) || 0.0;
-										if (cannabinoid.name in searchResults) {
-											searchResults[cannabinoid.name].avg += currentCannabinoidValue;
+										let currentCannabinoidValue = parseFloat(sample[cannabinoid.id]) || 0.0;
+										if (cannabinoid.id in searchResults) {
+											searchResults[cannabinoid.id].avg += currentCannabinoidValue;
 											if (currentCannabinoidValue > cannabinoidStabilityThreshold) {
-												searchResults[cannabinoid.name].stability ++;
+												searchResults[cannabinoid.id].stability ++;
 											}
-											searchResults[cannabinoid.name].values.push(currentCannabinoidValue);
+											searchResults[cannabinoid.id].values.push(currentCannabinoidValue);
 										} else {
-											searchResults[cannabinoid.name] = {
+											searchResults[cannabinoid.id] = {
 												"avg": currentCannabinoidValue,
 												"stability": ( currentCannabinoidValue>cannabinoidStabilityThreshold ? 1 : 0 ),
 												"values": [currentCannabinoidValue]
@@ -308,37 +308,37 @@
 				elem_searchSummary.innerText = "Search Results for '"+searchstring+"' ("+resultsNum+" Sample"+(resultsNum==1?"":"s")+")";
 
 				terpenes.forEach(function(terpene){
-					searchResults[terpene.name].avg /= resultsNum;
+					searchResults[terpene.id].avg /= resultsNum;
 				})
 				cannabinoids.forEach(function(cannabinoid){
-					searchResults[cannabinoid.name].avg /= resultsNum;
+					searchResults[cannabinoid.id].avg /= resultsNum;
 				})
 				terpenes.forEach(function(terpene){
-					searchResults[terpene.name].stability /= resultsNum;
+					searchResults[terpene.id].stability /= resultsNum;
 				})
 				cannabinoids.forEach(function(cannabinoid){
-					searchResults[cannabinoid.name].stability /= resultsNum;
+					searchResults[cannabinoid.id].stability /= resultsNum;
 				})
 				terpenes.forEach(function(terpene){
-					let average = searchResults[terpene.name].avg;
+					let average = searchResults[terpene.id].avg;
 					let sumSquaredDelta = 0;
-					for (let individualValue of searchResults[terpene.name].values) {
+					for (let individualValue of searchResults[terpene.id].values) {
 						sumSquaredDelta += Math.pow(individualValue - average, 2);
 					}
-					searchResults[terpene.name].variance = sumSquaredDelta / resultsNum;
+					searchResults[terpene.id].variance = sumSquaredDelta / resultsNum;
 				})
 				cannabinoids.forEach(function(cannabinoid){
-					let average = searchResults[cannabinoid.name].avg;
+					let average = searchResults[cannabinoid.id].avg;
 					let sumSquaredDelta = 0;
-					for (let individualValue of searchResults[cannabinoid.name].values) {
+					for (let individualValue of searchResults[cannabinoid.id].values) {
 						sumSquaredDelta += Math.pow(individualValue - average, 2);
 					}
-					searchResults[cannabinoid.name].variance = sumSquaredDelta / resultsNum;
+					searchResults[cannabinoid.id].variance = sumSquaredDelta / resultsNum;
 				})
 				terpenes.forEach(function(terpene,terpeneIndex){
-					let average = searchResults[terpene.name].avg;
-					let stability = searchResults[terpene.name].stability;
-					let variance = searchResults[terpene.name].variance;
+					let average = searchResults[terpene.id].avg;
+					let stability = searchResults[terpene.id].stability;
+					let variance = searchResults[terpene.id].variance;
 
 					//table
 
@@ -394,9 +394,9 @@
 					elem_terpeneResultsTable.tBodies[0].appendChild(row);
 				})
 				cannabinoids.forEach(function(cannabinoid,cannabinoidIndex){
-					let average = searchResults[cannabinoid.name].avg;
-					let stability = searchResults[cannabinoid.name].stability;
-					let variance = searchResults[cannabinoid.name].variance;
+					let average = searchResults[cannabinoid.id].avg;
+					let stability = searchResults[cannabinoid.id].stability;
+					let variance = searchResults[cannabinoid.id].variance;
 
 					//table
 

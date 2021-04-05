@@ -8,7 +8,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "betaOcimene",
+    id: "beta-Ocimene",
     name: "beta-Ocimene",
     effects: "",
     color: 0xFF6519, // orange
@@ -16,7 +16,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "delta3Carene",
+    id: "delta-3-Carene",
     name: "3-Carene",
     effects: "",
     color: 0xFF8C1A, // brighter orange
@@ -24,7 +24,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "deltaLimonene",
+    id: "delta-Limonene",
     name: "delta-Limonene",
     effects: "",
     color: 0xFFD819, // yellow
@@ -32,7 +32,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "gammaTerpinene",
+    id: "gamma-Terpinene",
     name: "gamma-Terpinene",
     effects: "",
     color: 0xA7CF58, // light green
@@ -40,7 +40,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "alphaPinene",
+    id: "alpha-Pinene",
     name: "alpha-Pinene",
     effects: "",
     color: 0x68CF55, // green
@@ -48,7 +48,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "alphaTerpinene",
+    id: "alpha-Terpinene",
     name: "alpha-Terpinene",
     effects: "",
     color: 0x379767, // darker green
@@ -56,7 +56,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "betaPinene",
+    id: "beta-Pinene",
     name: "beta-Pinene",
     effects: "",
     color: 0x008647, // darkest green
@@ -72,7 +72,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "alphaHumulene",
+    id: "alpha-Humulene",
     name: "alpha-Humulene",
     effects: "",
     color: 0x009DE5, // mid blue
@@ -80,7 +80,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "betaCaryophyllene",
+    id: "beta-Caryophyllene",
     name: "beta-Caryophyllene",
     effects: "",
     color: 0x4667CA, // dark blue
@@ -96,7 +96,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "CaryophylleneOxide",
+    id: "Caryophyllene Oxide",
     name: "Caryophyllene Oxide",
     effects: "",
     color: 0x510F3A, // dark purple
@@ -104,7 +104,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "betaMyrcene",
+    id: "beta-Myrcene",
     name: "beta-Myrcene",
     effects: "",
     color: 0x9E2576, // purple
@@ -112,7 +112,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "cisNerolidol",
+    id: "cis-Nerolidol",
     name: "cis-Nerolidol",
     effects: "",
     color: 0xC7C7CC, // gray
@@ -120,7 +120,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "transNerolidol",
+    id: "trans-Nerolidol",
     name: "trans-Nerolidol",
     effects: "",
     color: 0xC7C7CC, // gray
@@ -128,7 +128,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "transNerolidol1",
+    id: "trans-Nerolidol 1",
     name: "trans-Nerolidol 1",
     effects: "",
     color: 0xC7C7CC, // gray
@@ -136,7 +136,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "transNerolidol2",
+    id: "trans-Nerolidol 2",
     name: "trans-Nerolidol 2",
     effects: "",
     color: 0xC7C7CC, // gray
@@ -144,7 +144,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "transOcimene",
+    id: "trans-Ocimene",
     name: "trans-Ocimene",
     effects: "",
     color: 0xC7C7CC, // gray
@@ -192,7 +192,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "alphaBisabolol",
+    id: "alpha-Bisabolol",
     name: "alpha-Bisabolol",
     effects: "",
     color: 0xC7C7CC, // gray
@@ -200,7 +200,7 @@ terpenes = [
     onsetTime: 0
   },
   {
-    id: "pCymene",
+    id: "p-Cymene",
     name: "p-Cymene",
     effects: "",
     color: 0xC7C7CC, // gray
