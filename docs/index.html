@@ -71,48 +71,47 @@
 						><div title="Sort by Stability Descending">Stability &#9660;</div
 					></label
 				></div>
-				<output name="resultswrapper" class="searchform-output" for="search exactmatch sampleTypes databases"></output>
+				<output name="resultswrapper" class="searchform-output" for="search exactmatch sampleTypes databases">
+					<div class="placeholder-noresults">No results found</div>
+					<div class="placeholder-results">
+						<div id="searchSummary"></div>
+						<table id="terpenes" class="ResultsTable">
+							<thead>
+								<tr>
+									<td>Terpene</td>
+									<td class="graphcell" title="(Mapped to an 1% maximum)">Graph</td>
+									<td title="Average Percentage">%</td>
+									<td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
+									<td title="How stable the appearance of the terpene is">Stability</td>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<table id="cannabinoids" class="ResultsTable">
+							<thead>
+								<tr>
+									<td>Cannabinoid</td>
+									<td class="graphcell" title="(Mapped to an 1% maximum)">Graph</td>
+									<td title="Average Percentage">%</td>
+									<td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
+									<td title="How stable the appearance of the cannabinoid is">Stability</td>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</output>
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://gitlab.com/cannabis-terpene-parser/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2021-04-05T23:20:00+02:00/010</span>
+				<span id="appversion">v2021-04-08T08:32:00+02:00/001</span>
 			</div>
 		</div>
-		<template id="templateResults">
-			<div class="placeholder-noresults">No results found</div>
-			<div class="placeholder-results">
-				<div id="searchSummary"></div>
-				<table id="terpenes" class="ResultsTable">
-					<thead>
-						<tr>
-							<td>Terpene</td>
-							<td class="graphcell" title="(Mapped to an 1% maximum)">Graph</td>
-							<td title="Average Percentage">%</td>
-							<td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
-							<td title="How stable the appearance of the terpene is">Stability</td>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-				<table id="cannabinoids" class="ResultsTable">
-					<thead>
-						<tr>
-							<td>Cannabinoid</td>
-							<td class="graphcell" title="(Mapped to an 1% maximum)">Graph</td>
-							<td title="Average Percentage">%</td>
-							<td title="The square of the standard deviation (σ²)">&sigma;&sup2;</td>
-							<td title="How stable the appearance of the cannabinoid is">Stability</td>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
-		</template>
 		<template id="templateResultsRow">
 			<tr>
-				<td></td><td class="graphcell"></td><td></td><td></td><td></td>
+				<td class="component-name"></td><td class="graphcell"></td><td></td><td></td><td></td>
 			</tr>
 		</template>
 	</body>
@@ -209,6 +208,60 @@
 			var elem_cannabinoidsTable = document.getElementById("cannabinoids");
 			sort_table(elem_cannabinoidsTable, cannabinoidOrder);
 		}
+		function create_ComponentRow(component) {
+			let row = document.importNode(templateResultsRow.content, true).children[0];
+			row.setAttribute("data-component", component.id);
+			row.children[0].innerText = component.name;
+			return row;
+		}
+		function update_ComponentRow(component, searchResults) {
+			let compID = component.id;
+			let average = searchResults[compID].avg;
+			let stability = searchResults[compID].stability;
+			let variance = searchResults[compID].variance;
+
+			let row = document.querySelector(`tr[data-component='${compID}']`);
+			row.setAttribute("data-average", average);
+			row.setAttribute("data-stability", stability);
+			row.setAttribute("data-variance", variance);
+
+			// name color
+			var cell = row.children[0];
+			if (average <= 0.01) {
+				cell.style.color = greyedOutColor;
+			}
+
+			// graph
+			var cell = row.children[1];
+			if (average > 0.01) {
+				var graphColor = hexColor(component.color);
+			} else {
+				var graphColor = greyedOutColor;
+			}
+			let graphStartPoint = (50-((50*average)/maxGraphPercentage));
+			let graphEndPoint = (50+((50*average)/maxGraphPercentage));
+			let backgroundImage = "linear-gradient(to right,#0000,#0000 "
+									+graphStartPoint+"%,"
+									+graphColor+" "+graphStartPoint+"%,"
+									+graphColor+" "+graphEndPoint+"%,#0000 "
+									+graphEndPoint+"%)";
+			cell.style.backgroundImage = backgroundImage;
+
+			// component amount
+			var cell = row.children[2];
+			cell.innerText = FormatAverage.format(average);
+			if (average <= 0.01) {
+				cell.style.color = greyedOutColor;
+			}
+
+			////component variance
+			var cell = row.children[3];
+			cell.innerText = FormatVariance.format(variance);
+
+			////component stability
+			var cell = row.children[4];
+			cell.innerText = FormatStability.format(stability);
+		}
 		function load_sample_data(elem_form) {
 			let searchResults = {}; // [terpene.id].avg; [terpene.id].variance
 			let resultsNum = 0;
@@ -300,11 +353,6 @@
 				elem_resultswrapper.classList.remove("has-results");
 				elem_resultswrapper.classList.add("has-noresults");
 			} else {
-				var resultsStructure = document.importNode(template_resultsTable.content, true);
-				var elem_terpeneResultsTable = resultsStructure.getElementById("terpenes");
-				var elem_cannabinoidResultsTable = resultsStructure.getElementById("cannabinoids");
-				var elem_searchSummary = resultsStructure.getElementById("searchSummary");
-
 				elem_searchSummary.innerText = "Search Results for '"+searchstring+"' ("+resultsNum+" Sample"+(resultsNum==1?"":"s")+")";
 
 				terpenes.forEach(function(terpene){
@@ -335,126 +383,14 @@
 					}
 					searchResults[cannabinoid.id].variance = sumSquaredDelta / resultsNum;
 				})
-				terpenes.forEach(function(terpene,terpeneIndex){
-					let average = searchResults[terpene.id].avg;
-					let stability = searchResults[terpene.id].stability;
-					let variance = searchResults[terpene.id].variance;
-
-					//table
-
-					let row = document.importNode(templateResultsRow.content, true).children[0];
-					row.setAttribute("data-average", average);
-					row.setAttribute("data-stability", stability);
-					row.setAttribute("data-variance", variance);
-					row.setAttribute("data-component", terpene.id);
-
-					////terpene name
-					var cell = row.children[0];
-					cell.innerText = terpene.name;
-					if (average <= 0.01) {
-						cell.style.color = greyedOutColor;
-					}
-
-					// graph
-					// (overlay all datapoints of this terpene onto each other with a transparency set to 100%/resultsNum)
-					var cell = row.children[1];
-					cell.className = "graphcell";
-
-					if (average > 0.01) {
-						var graphColor = hexColor(terpene.color);
-					} else {
-						var graphColor = greyedOutColor;
-					}
-					let graphStartPoint = (50-((50*average)/maxGraphPercentage));
-					let graphEndPoint = (50+((50*average)/maxGraphPercentage));
-					let backgroundImage = "linear-gradient(to right,#0000,#0000 "
-											+graphStartPoint+"%,"
-											+graphColor+" "+graphStartPoint+"%,"
-											+graphColor+" "+graphEndPoint+"%,#0000 "
-											+graphEndPoint+"%)";
-					cell.style.backgroundImage = backgroundImage;
-
-					// terpene amount
-					var cell = row.children[2];
-					var span = document.createElement("span");
-					span.innerText = FormatAverage.format(average);
-					if (average <= 0.01) {
-						cell.style.color = greyedOutColor;
-					}
-					cell.appendChild(span);
-
-					////terpene variance
-					var cell = row.children[3];
-					cell.innerText = FormatVariance.format(variance);
-
-					////terpene stability
-					var cell = row.children[4];
-					cell.innerText = FormatStability.format(stability);
-
-					elem_terpeneResultsTable.tBodies[0].appendChild(row);
+				terpenes.forEach(function(terpene){
+					update_ComponentRow(terpene, searchResults);
 				})
 				cannabinoids.forEach(function(cannabinoid,cannabinoidIndex){
-					let average = searchResults[cannabinoid.id].avg;
-					let stability = searchResults[cannabinoid.id].stability;
-					let variance = searchResults[cannabinoid.id].variance;
-
-					//table
-
-					let row = document.importNode(templateResultsRow.content, true).children[0];
-					row.setAttribute("data-average", average);
-					row.setAttribute("data-stability", stability);
-					row.setAttribute("data-variance", variance);
-					row.setAttribute("data-component", cannabinoid.id);
-
-					////cannabinoid name
-					var cell = row.children[0];
-					cell.innerText = cannabinoid.name;
-					if (average <= 0.01) {
-						cell.style.color = greyedOutColor;
-					}
-
-					// graph
-					// (overlay all datapoints of this cannabinoid onto each other with a transparency set to 100%/resultsNum)
-					var cell = row.children[1];
-					cell.className = "graphcell";
-
-					if (average > 0.01) {
-						var graphColor = hexColor(cannabinoid.color);
-					} else {
-						var graphColor = greyedOutColor;
-					}
-					let graphStartPoint = (50-((50*average)/maxGraphPercentage));
-					let graphEndPoint = (50+((50*average)/maxGraphPercentage));
-					let backgroundImage = "linear-gradient(to right,#0000,#0000 "
-											+graphStartPoint+"%,"
-											+graphColor+" "+graphStartPoint+"%,"
-											+graphColor+" "+graphEndPoint+"%,#0000 "
-											+graphEndPoint+"%)";
-					cell.style.backgroundImage = backgroundImage;
-
-					// cannabinoid amount
-					var cell = row.children[2];
-					var span = document.createElement("span");
-					span.innerText = FormatAverage.format(average);
-					if (average <= 0.01) {
-						cell.style.color = greyedOutColor;
-					}
-					cell.appendChild(span);
-
-					////cannabinoid variance
-					var cell = row.children[3];
-					cell.innerText = FormatVariance.format(variance);
-
-					////cannabinoid stability
-					var cell = row.children[4];
-					cell.innerText = FormatStability.format(stability);
-
-					elem_cannabinoidResultsTable.tBodies[0].appendChild(row);
+					update_ComponentRow(cannabinoid, searchResults);
 				})
 				elem_resultswrapper.classList.remove("has-noresults");
 				elem_resultswrapper.classList.add("has-results");
-				elem_resultswrapper.innerHTML = "";
-				elem_resultswrapper.appendChild(resultsStructure);
 				change_sortOrder();
 			}
 			return false;
@@ -512,6 +448,20 @@
 			// sanitize sample type checkboxes
 			checkTypeCheckboxes();
 
+			// create terpene rows
+			terpenes.forEach(function(terpene) {
+				elem_terpeneResultsTable.tBodies[0].appendChild(
+					create_ComponentRow(terpene)
+				);
+			});
+
+			// create cannabinoid rows
+			cannabinoids.forEach(function(cannabinoid) {
+				elem_cannabinoidResultsTable.tBodies[0].appendChild(
+					create_ComponentRow(cannabinoid)
+				);
+			});
+
 			// perform search only if non-default parameters were given
 			if (doSearch) {
 				load_sample_data(elem_form);
@@ -539,8 +489,10 @@
 		var elem_resultswrapper = elem_form.resultswrapper;
 		var elem_databaseList = document.getElementById("databases");
 		var elem_sampleTypes = document.getElementById("sampleTypes");
-		var template_resultsTable = document.getElementById("templateResults");
 		var template_resultsTableRow = document.getElementById("templateResultsRow");
+		var elem_terpeneResultsTable = elem_resultswrapper.querySelector("#terpenes");
+		var elem_cannabinoidResultsTable = elem_resultswrapper.querySelector("#cannabinoids");
+		var elem_searchSummary = elem_resultswrapper.querySelector("#searchSummary");
 
 		var sampleTypes = [];
 		var terpeneOrder = terpenes.map((terpene)=>terpene.id);
