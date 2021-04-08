@@ -53,27 +53,27 @@
 					</div>
 					<input type="submit" value="Search">
 				</div>
-				<div class="segmented-control" onchange="change_sortOrder()"
-					><label
-						><input type="radio" name="sortorder" value="average" checked=""
-						><div title="Sort by Average Descending">Average &#9660;</div
-					></label
-					><label
-						><input type="radio" name="sortorder" value="static"
-						><div title="Sort by Names">Static</div
-					></label
-					><label
-						><input type="radio" name="sortorder" value="variance"
-						><div title="Sort by Variance Descending">Variance &sigma;&sup2; &#9660;</div
-					></label
-					><label
-						><input type="radio" name="sortorder" value="stability"
-						><div title="Sort by Stability Descending">Stability &#9660;</div
-					></label
-				></div>
 				<output name="resultswrapper" class="searchform-output" for="search exactmatch sampleTypes databases">
 					<div class="placeholder-noresults">No results found</div>
 					<div class="placeholder-results">
+						<div class="segmented-control" onchange="change_sortOrder()"
+							><label
+								><input type="radio" name="sortorder" value="average" checked=""
+								><div title="Sort by Average Descending">Average &#9660;</div
+							></label
+							><label
+								><input type="radio" name="sortorder" value="static"
+								><div title="Sort by Names">Static</div
+							></label
+							><label
+								><input type="radio" name="sortorder" value="variance"
+								><div title="Sort by Variance Descending">Variance &sigma;&sup2; &#9660;</div
+							></label
+							><label
+								><input type="radio" name="sortorder" value="stability"
+								><div title="Sort by Stability Descending">Stability &#9660;</div
+							></label
+						></div>
 						<div id="searchSummary"></div>
 						<table id="terpenes" class="ResultsTable">
 							<thead>
@@ -106,7 +106,7 @@
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://gitlab.com/cannabis-terpene-parser/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2021-04-08T08:32:00+02:00/001</span>
+				<span id="appversion">v2021-04-08T08:36:00+02:00/002</span>
 			</div>
 		</div>
 		<template id="templateResultsRow">
