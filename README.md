@@ -1,16 +1,17 @@
 Terpene Profile Parser for Cannabis Strains
 ===========================================
-_Parser and Database to index the Terpene Profile of different Strains Of Cannabis from Online-Databases_
+_Parser, Database and Web App to index the Terpene Profile of different Strains Of Cannabis from Online-Databases_
 
 ## Description
 This repository contains:
+* The web app (at [docs/index.html](docs/index.html)). [Live version](https://maxvalue.github.io/Terpene-Profile-Parser-for-Cannabis-Strains/)
 * A folder for each online database which displays test results about the terpene profile of cannabis strains (Found in [labs/](labs/)). These folders usually contain:
   * A parser to extract the actual terpene profile from each of those HTML-pages as CSV-list
   * The CSV list of extracted terpene profiles
 
 ## FAQ
 ### What are Terpenes? What is a Terpene?
-A terpene is a chemical compound which can have physiological effects on the human body. It can make you sleepy, awake, more concentrated, relaxed or less anxious. Read more [on Wikipedia](https://en.wikipedia.org/wiki/Terpene). [This page](https://tandcsurf.github.io/terpeneuses/) and [this lab page](https://psilabs.org/services/) has some information which is also useful.
+A terpene is a chemical compound which can have physiological effects on the human body. It can make you sleepy, horny, awake, more concentrated, relaxed or less anxious. Read more [on Wikipedia](https://en.wikipedia.org/wiki/Terpene). [This lab page](https://psilabs.org/services/) has some information which is also useful.
 ### What is a Terpene Profile?
 A terpene profile is a listing of terpenes present in a biological sample.
 This project is only concerned with specific terpenes such as Linalool, Caryophyllene oxide, Myrcene, beta-Pinene, Limonene, Terpinolene, alpha-Pinene, Humulene and Caryophyllene, but Linalool, beta-Pinene, Limonene, alpha-Pinene are the most important ones.
@@ -32,12 +33,31 @@ By building statistical models we can filter away the incorrect data from the di
 In the future a sort-of search engine is planned to search by terpene profile which gives you a sorted list of fitting strains.
 
 ## How to use
-See the regarding folders' `README.md` file for instructions.
+You are probably interested in the web app. [Launch it here](https://maxvalue.github.io/Terpene-Profile-Parser-for-Cannabis-Strains/).
+If you are paranoid, you can also launch it locally: just clone/download the repo.
+Or save the web app in one browser and view it offline later.
+For the explanation of the sample data for each lab, see the regarding folders' `README.md` file for instructions.
+
+### Development
+You will need to create a virtual Python environment. Go to the project root and run:
+```bash
+source setup_project_environment.sh
+```
+This installs Python3.9 and sets up a virtual environment in the project root.
+#### Web App
+Before you commit:
+1. Update version string in the `index.html`.
+2. Update version string in the `cache.manifest`.
+#### Parsers
+Before you commit:
+* If you changed the parsed data, also regenerate the web app `db.js`:
+    * `rm docs/db.js`
+    * `./make_databaseContainer.py --results results.csv --ignore analytical360 --components active_components.json --sample-types sample_types.json --outfile docs/db.js`
 
 ## How to contribute
 [Let me know if](https://gitlab.com/cannabis-terpene-parser/Terpene-Profile-Parser-for-Cannabis-Strains/-/issues/new):
 * I missed some data
-* There is an online database i haven't noticed
+* There is an online lab/database i haven't noticed
 * The scientific information to explain the project is wrong
 
 As with all those points: Please provide sources/proofs that your information (query, link, scientifc sources) is more valid than the present one.

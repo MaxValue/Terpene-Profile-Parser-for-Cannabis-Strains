@@ -1,5 +1,5 @@
 {
-	"databases": {
+	"labs": {
 		"LABIDENTIFIER": {
 			"Processed": [
 				{
@@ -17,5 +17,21 @@
 				}
 			]
 		}
+	},
+	"components": {
+		"terpenes": [
+			{
+				"id": "",
+				"name": "",
+				"color": "",
+			}
+		],
+		"cannabinoids": [
+			{
+				"id": "",
+				"name": "",
+				"color": "",
+			}
+		]
 	}
 }

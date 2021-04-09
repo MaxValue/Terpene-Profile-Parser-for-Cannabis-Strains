@@ -1,14 +1,22 @@
 #!/usr/bin/env bash
 
-sudo apt-get update
-sudo apt-get --assume-yes install python3-pip python3-venv
+dependencies=(
+  # "python3.8-dev"\
+  "python3.9-venv"\
+  "python3-pip"\
+)
 
-python3 -m venv --clear venv
+for dependency in "${dependencies[@]}"; do
+  if ! dpkg --search "$dependency" >/dev/null 2>&1; then
+    sudo apt-get update
+    sudo apt-get --assume-yes install "${dependencies[@]}"
+    break
+  fi
+done
+
+python3.9 -m venv --clear venv
 source venv/bin/activate
-	python3 -m pip install --upgrade pip
-	python3 -m pip install --upgrade SQLAlchemy
-	python3 -m pip install --upgrade dateparser
-	python3 -m pip install --upgrade scrapy
-	python3 -m pip install --upgrade scrapy-splash
-	python3 -m pip install --upgrade selenium
+  pip install --upgrade pip
+  pip install --upgrade wheel
+  pip install --upgrade --requirement requirements.txt
 deactivate

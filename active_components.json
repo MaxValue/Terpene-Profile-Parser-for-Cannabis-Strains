@@ -1,0 +1,406 @@
+{
+  "terpenes": [
+    {
+      "id": "Terpinolene",
+      "name": "Terpinolene",
+      "regex": "^Terpinolene$",
+      "effects": "",
+      "color": "#B00000",
+      "colorDesc": "dark red",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "beta-Ocimene",
+      "name": "beta-Ocimene",
+      "regex": "^(beta|B|β)[-_/\\s.]*Ocimene$",
+      "effects": "",
+      "color": "#FF6519",
+      "colorDesc": "orange",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "delta-3-Carene",
+      "name": "3-Carene",
+      "regex": "^(delta)?[-_/\\s.]*(3|Three|Tri)[-_/\\s.]*Carene$",
+      "effects": "",
+      "color": "#FF8C1A",
+      "colorDesc": "brighter orange",
+      "boilingPoint": 168.0,
+      "onsetTime": null
+    },
+    {
+      "id": "delta-Limonene",
+      "name": "delta-Limonene",
+      "regex": "^(delta|D|δ)?[-_/\\s.]*Limonene$",
+      "effects": "",
+      "color": "#FFD819",
+      "colorDesc": "yellow",
+      "boilingPoint": 177.0,
+      "onsetTime": null
+    },
+    {
+      "id": "gamma-Terpinene",
+      "name": "gamma-Terpinene",
+      "regex": "^(gamma|G|Y|γ)[-_/\\s.]*Terpinene$",
+      "effects": "",
+      "color": "#A7CF58",
+      "colorDesc": "light green",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "alpha-Pinene",
+      "name": "alpha-Pinene",
+      "regex": "^(alpha|A|α)[-_/\\s.]*Pinene$",
+      "effects": "",
+      "color": "#68CF55",
+      "colorDesc": "green",
+      "boilingPoint": 156.0,
+      "onsetTime": null
+    },
+    {
+      "id": "alpha-Terpinene",
+      "name": "alpha-Terpinene",
+      "regex": "^(alpha|A|α)[-_/\\s.]*Terpinene$",
+      "effects": "",
+      "color": "#379767",
+      "colorDesc": "darker green",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "beta-Pinene",
+      "name": "beta-Pinene",
+      "regex": "^(beta|B|β)[-_/\\s.]*Pinene$",
+      "effects": "",
+      "color": "#008647",
+      "colorDesc": "darkest green",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "Camphene",
+      "name": "Camphene",
+      "regex": "^Camphene$",
+      "effects": "",
+      "color": "#64A7B7",
+      "colorDesc": "grey blue",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "alpha-Humulene",
+      "name": "alpha-Humulene",
+      "regex": "^(alpha|A|α)?[-_/\\s.]*Humulene$",
+      "effects": "",
+      "color": "#009DE5",
+      "colorDesc": "mid blue",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "beta-Caryophyllene",
+      "name": "beta-Caryophyllene",
+      "regex": "^(beta|B|β)?[-_/\\s.]*Caryophyllene$",
+      "effects": "",
+      "color": "#4667CA",
+      "colorDesc": "dark blue",
+      "boilingPoint": 119.0,
+      "onsetTime": null
+    },
+    {
+      "id": "Linalool",
+      "name": "Linalool",
+      "regex": "^Linalool$",
+      "effects": "",
+      "color": "#9366F1",
+      "colorDesc": "violet",
+      "boilingPoint": 198.0,
+      "onsetTime": null
+    },
+    {
+      "id": "Caryophyllene Oxide",
+      "name": "Caryophyllene Oxide",
+      "regex": "^Caryophyllene[-_/\\s.]*Oxide$",
+      "effects": "",
+      "color": "#510F3A",
+      "colorDesc": "dark purple",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "beta-Myrcene",
+      "name": "beta-Myrcene",
+      "regex": "^(beta|B|β)?[-_/\\s.]*Myrcene$",
+      "effects": "",
+      "color": "#9E2576",
+      "colorDesc": "purple",
+      "boilingPoint": 167.0,
+      "onsetTime": null
+    },
+    {
+      "id": "cis-Nerolidol",
+      "name": "cis-Nerolidol",
+      "regex": "^(cis)[-_/\\s.]*Nerolidol$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "trans-Nerolidol",
+      "name": "trans-Nerolidol",
+      "regex": "^(trans)[-_/\\s.]*Nerolidol$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "trans-Nerolidol 1",
+      "name": "trans-Nerolidol 1",
+      "regex": "^(trans)[-_/\\s.]*Nerolidol[-_/\\s.]*1$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "trans-Nerolidol 2",
+      "name": "trans-Nerolidol 2",
+      "regex": "^(trans)[-_/\\s.]*Nerolidol[-_/\\s.]*2$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "trans-Ocimene",
+      "name": "trans-Ocimene",
+      "regex": "^(trans)[-_/\\s.]*Ocimene$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "Eucalyptol",
+      "name": "Eucalyptol",
+      "regex": "^Eucalyptol$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "Geraniol",
+      "name": "Geraniol",
+      "regex": "^Geraniol$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "Guaiol",
+      "name": "Guaiol",
+      "regex": "^Guaiol$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "Isopulegol",
+      "name": "Isopulegol",
+      "regex": "^(\\(-\\)[-_/\\s.]+)?Isopulegol$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "Ocimene",
+      "name": "Ocimene",
+      "regex": "^Ocimene$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "alpha-Bisabolol",
+      "name": "alpha-Bisabolol",
+      "regex": "^(alpha|A|α)[-_/\\s.]*Bisabolol$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "p-Cymene",
+      "name": "p-Cymene",
+      "regex": "^(p)[-_/\\s.]*Cymene$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": 177.0,
+      "onsetTime": null
+    },
+    {
+      "id": "Farnesene",
+      "name": "Farnesene",
+      "regex": "^Farnesene$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    }
+  ],
+  "cannabinoids": [
+    {
+      "id": "delta-9 THC-A",
+      "name": "delta-9 THC-A",
+      "regex": "^(delta|Δ|∆)[-_/\\s.]*9[-_/\\s.]*THC[-_/\\s.]*A$",
+      "effects": "",
+      "color": "#333333",
+      "colorDesc": "black",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "delta-9 THC",
+      "name": "delta-9 THC",
+      "regex": "^((delta|Δ|∆)[-_/\\s.]*9[-_/\\s.]*)?THC$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "delta-8 THC",
+      "name": "delta-8 THC",
+      "regex": "^(delta|Δ|∆)[-_/\\s.]*8[-_/\\s.]*THC$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "THC-A",
+      "name": "THC-A",
+      "regex": "^THC[-_/\\s.]*A$",
+      "effects": "",
+      "color": "#333333",
+      "colorDesc": "black",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "THCV",
+      "name": "THCV",
+      "regex": "^THCV$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "CBN",
+      "name": "CBN",
+      "regex": "^CBN$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "CBD-A",
+      "name": "CBD-A",
+      "regex": "^CBD[-_/\\s.]*A$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "CBD",
+      "name": "CBD",
+      "regex": "^CBD$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "CBDV",
+      "name": "CBDV",
+      "regex": "^CBDV$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "CBDV-A",
+      "name": "CBDV-A",
+      "regex": "^CBDV[-_/\\s.]*A$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "delta-9 CBG-A",
+      "name": "CBG-A",
+      "regex": "^((delta|Δ|∆)[-_/\\s.]*9[-_/\\s.]*)?CBG[-_/\\s.]*A$",
+      "effects": "",
+      "color": "#A0A0A0",
+      "colorDesc": "medium gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "delta-9 CBG",
+      "name": "CBG",
+      "regex": "^((delta|Δ|∆)[-_/\\s.]*9[-_/\\s.]*)?CBG$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    },
+    {
+      "id": "CBC",
+      "name": "CBC",
+      "regex": "^CBC$",
+      "effects": "",
+      "color": "#C7C7CC",
+      "colorDesc": "gray",
+      "boilingPoint": null,
+      "onsetTime": null
+    }
+  ]
+}

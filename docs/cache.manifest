@@ -1,10 +1,11 @@
 CACHE MANIFEST
 
-# Cache Manifest v2021-04-08T08:36:00+02:00
+# Cache Manifest v2021-04-09T17:09:00+02:00
 
 /manifest.webmanifest
 /index.html
-/results.json
+/style.css
+/db.js
 /img/opengraph-icon-1200x1200.png
 /img/apple-touch-icon-120x120.png
 /img/apple-touch-icon-152x152.png

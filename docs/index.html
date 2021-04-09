@@ -22,8 +22,7 @@
 		<link rel="apple-touch-icon" sizes="1200x1200" href="img/apple-touch-icon.png" />
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png" />
 		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
-		<script id="loader_results" type="text/javascript" src="results.js"></script>
-		<script id="loader_activeComponents" type="text/javascript" src="active_components.js"></script>
+		<script id="loader_db" type="text/javascript" src="db.js"></script>
 		<link href="style.css" rel="stylesheet">
 	</head>
 	<body ontouchstart="">
@@ -46,14 +45,14 @@
 					</div>
 					<div>
 						<fieldset>
-							<legend>Databases:</legend>
-							<ul id="databases">
+							<legend>Labs:</legend>
+							<ul id="labs">
 							</ul>
 						</fieldset>
 					</div>
 					<input type="submit" value="Search">
 				</div>
-				<output name="resultswrapper" class="searchform-output" for="search exactmatch sampleTypes databases">
+				<output name="resultswrapper" class="searchform-output" for="search exactmatch sampleTypes labs">
 					<div class="placeholder-noresults">No results found</div>
 					<div class="placeholder-results">
 						<div class="segmented-control" onchange="change_sortOrder()"
@@ -106,7 +105,7 @@
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://gitlab.com/cannabis-terpene-parser/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2021-04-08T08:36:00+02:00/002</span>
+				<span id="appversion">v2021-04-09T17:09:00+02:00/001</span>
 			</div>
 		</div>
 		<template id="templateResultsRow">
@@ -116,19 +115,19 @@
 		</template>
 	</body>
 	<script type="text/javascript">
-		function addDatabaseItem(identifier, label) {
-			let databaseListItem = document.createElement("li");
-			let databaseInput = document.createElement("input");
-			let databaseLabel = document.createElement("label");
-			databaseInput.type = "checkbox";
-			databaseInput.name = "database";
-			databaseInput.id = "database_" + identifier;
-			databaseInput.value = identifier;
-			databaseListItem.appendChild(databaseInput);
-			databaseLabel.htmlFor = "database_" + identifier;
-			databaseLabel.innerText = label;
-			databaseListItem.appendChild(databaseLabel);
-			elem_databaseList.appendChild(databaseListItem);
+		function addLabItem(identifier, label) {
+			let labListItem = document.createElement("li");
+			let labInput = document.createElement("input");
+			let labLabel = document.createElement("label");
+			labInput.type = "checkbox";
+			labInput.name = "lab";
+			labInput.id = "lab_" + identifier;
+			labInput.value = identifier;
+			labListItem.appendChild(labInput);
+			labLabel.htmlFor = "lab_" + identifier;
+			labLabel.innerText = label;
+			labListItem.appendChild(labLabel);
+			elem_labList.appendChild(labListItem);
 		}
 		function addSampletype(sampleType) {
 			if (!sampleTypes.includes(sampleType)) {
@@ -147,9 +146,6 @@
 				elem_sampleTypes.appendChild(li);
 			}
 		}
-		function hexColor(hexNumber) {
-			return hexNumber.toString(16).padStart(7,"#000000");
-		}
 		function checkTypeCheckboxes() {
 			let anyChecked = false;
 			let unprocessedIndex = -1;
@@ -165,16 +161,16 @@
 				elem_form.type[unprocessedIndex].checked = true;
 			};
 		}
-		function checkDatabaseCheckboxes() {
+		function checkLabCheckboxes() {
 			let anyChecked = false;
-			elem_form.database.forEach(function(databaseElem){
-				if (databaseElem.checked) {
+			elem_form.lab.forEach(function(labElem){
+				if (labElem.checked) {
 					anyChecked = true;
 				}
 			})
 			if (!anyChecked) {
-				elem_form.database.forEach(function(databaseElem){
-					databaseElem.checked = true;
+				elem_form.lab.forEach(function(labElem){
+					labElem.checked = true;
 				})
 			};
 		}
@@ -234,7 +230,7 @@
 			// graph
 			var cell = row.children[1];
 			if (average > 0.01) {
-				var graphColor = hexColor(component.color);
+				var graphColor = component.color;
 			} else {
 				var graphColor = greyedOutColor;
 			}
@@ -280,9 +276,9 @@
 					newURL.searchParams.append(typeCheckbox.name, typeCheckbox.value);
 				}
 			})
-			elem_form.database.forEach(function(databaseCheckbox){
-				if (databaseCheckbox.checked) {
-					newURL.searchParams.append(databaseCheckbox.name, databaseCheckbox.value);
+			elem_form.lab.forEach(function(labCheckbox){
+				if (labCheckbox.checked) {
+					newURL.searchParams.append(labCheckbox.name, labCheckbox.value);
 				}
 			})
 			window.history.pushState({},"",newURL);
@@ -292,12 +288,12 @@
 			elem_pageogurl.content = newURL;
 			elem_pageogtitle.content = "StrainFinder: '" + searchstring + "'";
 
-			elem_form.database.forEach(function(databaseCheckbox){
-				if (databaseCheckbox.checked) {
-					let database = databasesContainer.databases[databaseCheckbox.value];
+			elem_form.lab.forEach(function(labCheckbox){
+				if (labCheckbox.checked) {
+					let lab = db.labs[labCheckbox.value];
 					elem_form.type.forEach(function(typeCheckbox){
-						if (typeCheckbox.checked && (typeCheckbox.value in database)) {
-							database[typeCheckbox.value].forEach(function(sample){
+						if (typeCheckbox.checked && (typeCheckbox.value in lab)) {
+							lab[typeCheckbox.value].forEach(function(sample){
 								let matched = false;
 								if (elem_form.exact.checked) {
 									if (sample["Sample Name"].toLowerCase() == searchstring) {
@@ -397,11 +393,11 @@
 		}
 
 		function on_load() {
-			// add databases from container to GUI
-			for (const databaseName of Object.keys(databasesContainer.databases)) {
-				addDatabaseItem(databaseName, databaseName);
-				// add sample types from those databases to the GUI too
-				Object.keys(databasesContainer.databases[databaseName]).forEach(function(newSampleType){
+			// add labs from container to GUI
+			for (const labName of Object.keys(db.labs)) {
+				addLabItem(labName, labName);
+				// add sample types from those labs to the GUI too
+				Object.keys(db.labs[labName]).forEach(function(newSampleType){
 					addSampletype(newSampleType);
 				})
 			}
@@ -431,8 +427,8 @@
 							}
 						})
 						break;
-					case "database":
-						elem_form["database"].forEach(function(checkbox){
+					case "lab":
+						elem_form["lab"].forEach(function(checkbox){
 							if (checkbox.value == paramValue) {
 								checkbox.checked = true;
 								doSearch = true;
@@ -442,8 +438,8 @@
 				}
 			}
 
-			// sanitize database checkboxes
-			checkDatabaseCheckboxes();
+			// sanitize lab checkboxes
+			checkLabCheckboxes();
 
 			// sanitize sample type checkboxes
 			checkTypeCheckboxes();
@@ -487,7 +483,7 @@
 		var elem_pageogurl = document.getElementById("ogurl");
 		var elem_form = document.getElementById("searchform");
 		var elem_resultswrapper = elem_form.resultswrapper;
-		var elem_databaseList = document.getElementById("databases");
+		var elem_labList = document.getElementById("labs");
 		var elem_sampleTypes = document.getElementById("sampleTypes");
 		var template_resultsTableRow = document.getElementById("templateResultsRow");
 		var elem_terpeneResultsTable = elem_resultswrapper.querySelector("#terpenes");
@@ -495,6 +491,8 @@
 		var elem_searchSummary = elem_resultswrapper.querySelector("#searchSummary");
 
 		var sampleTypes = [];
+		var terpenes = db.components.terpenes;
+		var cannabinoids = db.components.cannabinoids;
 		var terpeneOrder = terpenes.map((terpene)=>terpene.id);
 		var cannabinoidOrder = cannabinoids.map((cannabinoid)=>cannabinoid.id);
 
