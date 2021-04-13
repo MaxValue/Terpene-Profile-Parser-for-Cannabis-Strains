@@ -105,7 +105,7 @@
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://gitlab.com/cannabis-terpene-parser/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2021-04-09T17:09:00+02:00/001</span>
+				<span id="appversion">v2021-04-14T00:23:00+02:00/001</span>
 			</div>
 		</div>
 		<template id="templateResultsRow">
@@ -226,6 +226,12 @@
 				row.classList.add("not-detected");
 			} else {
 				row.classList.remove("not-detected");
+			}
+
+			if (searchResults[compID].hidden) {
+				row.classList.add("not-highest");
+			} else {
+				row.classList.remove("not-highest");
 			}
 
 			// graph
@@ -380,6 +386,28 @@
 					}
 					searchResults[cannabinoid.id].variance = sumSquaredDelta / resultsNum;
 				})
+
+				// Get terpenes ordered by avg
+				let terpeneOrderAvg = Array.from(terpeneOrder);
+				terpeneOrderAvg.sort((a,b) => searchResults[b].avg - searchResults[a].avg);
+				let visibleTerpenes = 10;
+				terpeneOrderAvg.forEach(function(terpene_id){
+					if (visibleTerpenes <= 0) {
+						searchResults[terpene_id].hidden = true;
+					}
+					visibleTerpenes --;
+				});
+
+				// Get cannabinoids ordered by avg
+				let cannabinoidOrderAvg = Array.from(cannabinoidOrder);
+				cannabinoidOrderAvg.sort((a,b) => searchResults[b].avg - searchResults[a].avg);
+				let visibleCannabinoids = 10;
+				cannabinoidOrderAvg.forEach(function(cannabinoid_id){
+					if (visibleCannabinoids <= 0) {
+						searchResults[cannabinoid_id].hidden = true;
+					}
+					visibleCannabinoids --;
+				});
 
 				// Update component rows in the result tables
 				terpenes.forEach(function(terpene){
