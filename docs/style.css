@@ -120,6 +120,10 @@ html {
   background-color: rgb(222,222,222);
   text-align: center;
 }
+.not-detected {
+  color: #d9d9d9;
+  --component-color: #d9d9d9 !important;
+}
 .graphcell {
   width: 99%;
 }

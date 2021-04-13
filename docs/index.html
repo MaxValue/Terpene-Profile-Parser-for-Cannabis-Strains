@@ -207,6 +207,7 @@
 		function create_ComponentRow(component) {
 			let row = document.importNode(templateResultsRow.content, true).children[0];
 			row.setAttribute("data-component", component.id);
+			row.setAttribute("style", `--component-color: ${component.color}`);
 			row.children[0].innerText = component.name;
 			return row;
 		}
@@ -221,34 +222,29 @@
 			row.setAttribute("data-stability", stability);
 			row.setAttribute("data-variance", variance);
 
-			// name color
-			var cell = row.children[0];
 			if (average <= 0.01) {
-				cell.style.color = greyedOutColor;
+				row.classList.add("not-detected");
+			} else {
+				row.classList.remove("not-detected");
 			}
 
 			// graph
 			var cell = row.children[1];
-			if (average > 0.01) {
-				var graphColor = component.color;
-			} else {
-				var graphColor = greyedOutColor;
-			}
 			let graphStartPoint = (50-((50*average)/maxGraphPercentage));
 			let graphEndPoint = (50+((50*average)/maxGraphPercentage));
-			let backgroundImage = "linear-gradient(to right,#0000,#0000 "
-									+graphStartPoint+"%,"
-									+graphColor+" "+graphStartPoint+"%,"
-									+graphColor+" "+graphEndPoint+"%,#0000 "
-									+graphEndPoint+"%)";
+			let backgroundImage = `linear-gradient(
+					to right,
+					#0000,
+					#0000 ${graphStartPoint}%,
+					var(--component-color) ${graphStartPoint}%,
+					var(--component-color) ${graphEndPoint}%,
+					#0000 ${graphEndPoint}%
+			)`;
 			cell.style.backgroundImage = backgroundImage;
 
 			// component amount
 			var cell = row.children[2];
 			cell.innerText = FormatAverage.format(average);
-			if (average <= 0.01) {
-				cell.style.color = greyedOutColor;
-			}
 
 			////component variance
 			var cell = row.children[3];
@@ -466,7 +462,6 @@
 
 		// Hi there fellow code enthusiast!
 		// You can change those values directly below, but please don't touch the others.
-		var greyedOutColor = "#d9d9d9";
 		var maxGraphPercentage = 1;
 		var terpeneStabilityThreshold = 0.01;
 		var cannabinoidStabilityThreshold = 0.01;
