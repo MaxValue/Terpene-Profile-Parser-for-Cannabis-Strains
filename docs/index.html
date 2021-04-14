@@ -33,46 +33,52 @@
 
 					<label for="search">Strain Name:</label>
 					<input type="search" name="q" id="search" inputmode="search" placeholder="Chocolope" autofocus="" oninput="load_sample_data(this.form);"><br>
-					<label for="exactmatch">Exact Match?</label>
-					<input type="checkbox" name="exact" id="exactmatch" value="1">
+					<label for="exactmatch" class="expert-mode">Exact Match?</label>
+					<input type="checkbox" name="exact" id="exactmatch" value="1" class="expert-mode">
 
-					<div>
+					<div class="expert-mode">
 						<fieldset>
 							<legend>Sample Types:</legend>
 							<ul id="sampleTypes" onchange="checkTypeCheckboxes()">
 							</ul>
 						</fieldset>
 					</div>
-					<div>
+					<div class="expert-mode">
 						<fieldset>
 							<legend>Labs:</legend>
 							<ul id="labs">
 							</ul>
 						</fieldset>
 					</div>
+					<div>
+						<label for="expertmode">Expert Mode</label>
+						<input type="checkbox" name="expert" id="expertmode" value="1" onchange="toggle_expertMode(this);">
+					</div>
 					<input type="submit" value="Search">
 				</div>
 				<output name="resultswrapper" class="searchform-output" for="search exactmatch sampleTypes labs">
 					<div class="placeholder-noresults">No results found</div>
 					<div class="placeholder-results">
-						<div class="segmented-control" onchange="update_sortOrder()"
-							><label
-								><input type="radio" name="sortorder" value="average" checked=""
-								><div title="Sort by Average Descending">Average &#9660;</div
-							></label
-							><label
-								><input type="radio" name="sortorder" value="static"
-								><div title="Sort by Names">Static</div
-							></label
-							><label
-								><input type="radio" name="sortorder" value="variance"
-								><div title="Sort by Variance Descending">Variance &sigma;&sup2; &#9660;</div
-							></label
-							><label
-								><input type="radio" name="sortorder" value="stability"
-								><div title="Sort by Stability Descending">Stability &#9660;</div
-							></label
-						></div>
+						<div class="expert-mode">
+							<div class="segmented-control" onchange="update_sortOrder()"
+								><label
+									><input type="radio" name="sortorder" value="average" checked=""
+									><div title="Sort by Average Descending">Average &#9660;</div
+								></label
+								><label
+									><input type="radio" name="sortorder" value="static"
+									><div title="Sort by Names">Static</div
+								></label
+								><label
+									><input type="radio" name="sortorder" value="variance"
+									><div title="Sort by Variance Descending">Variance &sigma;&sup2; &#9660;</div
+								></label
+								><label
+									><input type="radio" name="sortorder" value="stability"
+									><div title="Sort by Stability Descending">Stability &#9660;</div
+								></label
+							></div>
+						</div>
 						<div id="searchSummary"></div>
 						<table id="terpenes" class="ResultsTable">
 							<thead>
@@ -105,7 +111,7 @@
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://gitlab.com/cannabis-terpene-parser/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2021-04-14T00:23:00+02:00/001</span>
+				<span id="appversion">v2021-04-14T10:30:00+02:00/002</span>
 			</div>
 		</div>
 		<template id="templateResultsRow">
@@ -174,6 +180,16 @@
 				})
 			};
 		}
+		function toggle_expertMode(elem_expertSwitch) {
+			let elems_expert = document.querySelectorAll(".expert-mode");
+			elems_expert.forEach(function(elem_expert){
+				if (elem_expertSwitch.checked) {
+					elem_expert.classList.add("show");
+				} else {
+					elem_expert.classList.remove("show");
+				}
+			});
+		}
 		function sort_table(tableElem, componentOrder) {
 			for (let tBody of tableElem.tBodies) {
 				let rows = Array.from(tBody.rows);
@@ -229,9 +245,9 @@
 			}
 
 			if (searchResults[compID].hidden) {
-				row.classList.add("not-highest");
+				row.classList.add("hidden");
 			} else {
-				row.classList.remove("not-highest");
+				row.classList.remove("hidden");
 			}
 
 			// graph

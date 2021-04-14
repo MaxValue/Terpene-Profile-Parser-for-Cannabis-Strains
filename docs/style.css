@@ -120,8 +120,14 @@ html {
   background-color: rgb(222,222,222);
   text-align: center;
 }
-.not-highest {
+.expert-mode {
   display: none;
+}
+.hidden {
+  display: none;
+}
+.expert-mode.show {
+  display: unset;
 }
 .not-detected {
   color: #d9d9d9;
