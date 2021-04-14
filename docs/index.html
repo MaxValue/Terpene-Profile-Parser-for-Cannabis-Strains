@@ -43,7 +43,7 @@
 								placeholder="Search"
 								autofocus=""
 								minlength="1"
-								oninput="load_sample_data(this.form);"
+								oninput="delay_search();"
 						>
 					</div>
 
@@ -127,7 +127,7 @@
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://gitlab.com/cannabis-terpene-parser/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2021-04-14T11:13:00+02:00/003</span>
+				<span id="appversion">v2021-04-14T11:24:00+02:00/004</span>
 			</div>
 		</div>
 		<template id="templateResultsRow">
@@ -293,6 +293,10 @@
 			////component stability
 			var cell = row.children[4];
 			cell.innerText = FormatStability.format(stability);
+		}
+		function delay_search() {
+			window.clearTimeout(search_timeoutID);
+			search_timeoutID = window.setTimeout(load_sample_data, 100, elem_form);
 		}
 		function load_sample_data(elem_form) {
 			let searchResults = {};
@@ -552,6 +556,7 @@
 		var elem_pageogtitle = document.getElementById("ogtitle");
 		var elem_pageogurl = document.getElementById("ogurl");
 		var elem_form = document.getElementById("searchform");
+		var search_timeoutID;
 		var elem_resultswrapper = elem_form.resultswrapper;
 		var elem_labList = document.getElementById("labs");
 		var elem_sampleTypes = document.getElementById("sampleTypes");
