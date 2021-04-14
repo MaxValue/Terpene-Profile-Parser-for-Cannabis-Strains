@@ -29,21 +29,34 @@
 		<div id="GUI">
 			<form id="searchform" action="." onsubmit="return load_sample_data(this);">
 				<div id="searchwrapper">
-					<input type="submit" value="Search"><br>
+					<input class="UIKit-UIButton"
+							value="Search"
+							type="submit"
+					>
 
-					<label for="search">Strain Name:</label>
-					<input type="search" name="q" id="search" inputmode="search" placeholder="Chocolope" autofocus="" oninput="load_sample_data(this.form);"><br>
-					<label for="exactmatch" class="expert-mode">Exact Match?</label>
-					<input type="checkbox" name="exact" id="exactmatch" value="1" class="expert-mode">
+					<div class="UIKit-UISearchBar">
+						<label for="search">Strain Name:</label>
+						<input type="search"
+								name="q"
+								id="search"
+								inputmode="search"
+								placeholder="Search"
+								autofocus=""
+								minlength="1"
+								oninput="load_sample_data(this.form);"
+						>
+					</div>
 
 					<div class="expert-mode">
+						<label for="exactmatch">Exact Match?</label>
+						<input class="UIKit-UISwitch" type="checkbox" name="exact" id="exactmatch" value="1">
+
 						<fieldset>
 							<legend>Sample Types:</legend>
 							<ul id="sampleTypes" onchange="checkTypeCheckboxes()">
 							</ul>
 						</fieldset>
-					</div>
-					<div class="expert-mode">
+
 						<fieldset>
 							<legend>Labs:</legend>
 							<ul id="labs">
@@ -52,9 +65,12 @@
 					</div>
 					<div>
 						<label for="expertmode">Expert Mode</label>
-						<input type="checkbox" name="expert" id="expertmode" value="1" onchange="toggle_expertMode(this);">
+						<input class="UIKit-UISwitch" type="checkbox" name="expert" id="expertmode" value="1" onchange="toggle_expertMode(this);">
 					</div>
-					<input type="submit" value="Search">
+					<input class="UIKit-UIButton"
+							value="Search"
+							type="submit"
+					>
 				</div>
 				<output name="resultswrapper" class="searchform-output" for="search exactmatch sampleTypes labs">
 					<div class="placeholder-noresults">No results found</div>
@@ -111,7 +127,7 @@
 			</form>
 			<div id="about">
 				<a id="infolink" href="https://gitlab.com/cannabis-terpene-parser/Terpene-Profile-Parser-for-Cannabis-Strains#terpene-profile-parser-for-cannabis-strains">Learn more about this project here</a>.</span>
-				<span id="appversion">v2021-04-14T10:30:00+02:00/002</span>
+				<span id="appversion">v2021-04-14T11:13:00+02:00/003</span>
 			</div>
 		</div>
 		<template id="templateResultsRow">
@@ -129,6 +145,7 @@
 			labInput.name = "lab";
 			labInput.id = "lab_" + identifier;
 			labInput.value = identifier;
+			labInput.classList.add("UIKit-UISwitch");
 			labListItem.appendChild(labInput);
 			labLabel.htmlFor = "lab_" + identifier;
 			labLabel.innerText = label;
@@ -145,6 +162,7 @@
 				input.name = "type";
 				input.id = "type_"+sampleType;
 				input.value = sampleType;
+				input.classList.add("UIKit-UISwitch");
 				li.appendChild(input);
 				label.htmlFor = "type_"+sampleType;
 				label.innerText = sampleType;
@@ -513,6 +531,8 @@
 			if (doSearch) {
 				load_sample_data(elem_form);
 			}
+
+			toggle_expertMode(elem_form.expert);
 		}
 
 		// Hi there fellow code enthusiast!

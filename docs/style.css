@@ -144,3 +144,143 @@ html {
   float: right;
   color: #C7C7CC;
 }
+
+/* STRUDLER CODE START */
+.UIKit-UISearchBar {
+  background-color: #FFF;
+  display: flex;
+  flex-wrap: nowrap;
+  width: 500px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.UIKit-UISearchBar input[type="search"] {
+  -webkit-appearance:  none;
+  appearance: none;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+
+  height: 36px;
+  margin: 5px 1em 5px 1em;
+
+  outline: none;
+  border:  none;
+  border-radius: 10px;
+
+  background-color: rgba(142, 142, 147, 0.24);
+
+  padding: 0 30px 0 8px;
+
+  font-size: 17px;
+  line-height: 36px;
+  caret-color: #007AFF;
+}
+.UIKit-UISearchBar input[type="search"]:focus {
+  color:  #000;
+}
+.UIKit-UISearchBar input[type="search"]::placeholder {
+  color: #8E8E93;
+}
+.UIKit-UIButton,
+.UIKit-UIButton:link {
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-block;
+
+  width: auto;
+  height: 44px;
+
+  border: none;
+
+  background-color: #FFF;
+
+  color: #007AFF;
+  font-size: 17px;
+  line-height: 44px;
+}
+.UIKit-UIButton:active {
+  opacity: 0.1;
+}
+.UIKit-UISwitch, .UIKit-UISwitch:link {
+  -webkit-appearance:  none;
+  appearance: none;
+  display: inline-block;
+
+  margin: 0;
+
+  width: 51px;
+  height: 31px;
+
+  transition: box-shadow 0.25s;
+
+  outline: none;
+
+  border: none;
+
+  box-shadow: inset 0 0 0 2px #E5E5EA;
+
+  border-radius: 31px;
+
+  background-color: #FFF;
+
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: #0000;
+  pointer-events: auto;
+}
+.UIKit-UISwitch:active {
+  box-shadow: inset 0 0 0 31px #E5E5EA;
+  transition: box-shadow 0.5s 0.25s;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.UIKit-UISwitch:checked {
+  box-shadow: inset 0 0 0 31px #4CD964;
+  transition: box-shadow 0.25s;
+}
+.UIKit-UISwitch::after {
+  display: inline-block;
+
+  position: relative;
+  top: 1.25px;
+  left: 1.5px;
+
+  width: 27.5px;
+  height: 27.5px;
+
+  transition: width 0.25s cubic-bezier(0.175, 0.885, 0.320, 1.275), left 0.25s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+
+  border: 0.5px solid rgba(0,0,0,0.04);
+  border-radius: 13.75px;
+
+  filter: drop-shadow(0px 3px 4px rgba(0, 0, 0, 0.15)) drop-shadow(0px 3px 0.5px rgba(0, 0, 0, 0.06));
+
+  background-color: #FFF;
+  background-clip: padding-box;
+
+  content: "";
+
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: #0000;
+}
+.UIKit-UISwitch:active::after {
+  width: 33px;
+  transition: width 0.5s 0.25s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.UIKit-UISwitch:checked::after {
+  left: 21px;
+  /* transition: width 0.25s, left 0.25s; */
+  transition: width 0.25s cubic-bezier(0.175, 0.885, 0.320, 1.275), left 0.25s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+}
+.UIKit-UISwitch:active:checked::after {
+  width: 33px;
+  left: 15.5px;
+  transition: width 0.25s 0.5s, left 0.25s 0.5s;
+}
+/* STRUDLER CODE END */
